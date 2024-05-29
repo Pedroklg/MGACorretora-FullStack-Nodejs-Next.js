@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@context/*": ["./src/pages/context/*"],
+      "@context/AuthContext": ["./src/pages/context/AuthContext.jsx"]
     }
   }
 }
