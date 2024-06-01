@@ -2,15 +2,8 @@ import db from './utils/db';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const { tipoMostrado, estado, cidade, categoria, minPrice, maxPrice, q } = req.query;
-
-    let queryText = '';
-    let queryParams = [];
-
-    const addFilter = (filter, value) => {
-      queryText += filter;
-      queryParams.push(value);
-    };
+    const { tipoMostrado, q } = req.query;
+    let queryText;
 
     if (tipoMostrado === 'Empresas') {
       queryText = 'SELECT * FROM empresas WHERE 1=1';
@@ -26,18 +19,8 @@ export default async function handler(req, res) {
       `;
     }
 
-    if (estado) addFilter(` AND estado = $${queryParams.length + 1}`, estado);
-    if (cidade) addFilter(` AND cidade = $${queryParams.length + 1}`, cidade);
-    if (categoria) addFilter(` AND categoria = $${queryParams.length + 1}`, categoria);
-    if (minPrice) addFilter(` AND valor_pretendido >= $${queryParams.length + 1}`, minPrice);
-    if (maxPrice) addFilter(` AND valor_pretendido <= $${queryParams.length + 1}`, maxPrice);
-    if (q) {
-      const likeValue = `%${q}%`;
-      addFilter(` AND (titulo ILIKE $${queryParams.length + 1} OR sobre_o_imovel ILIKE $${queryParams.length + 1})`, likeValue);
-    }
-
     try {
-      const result = await db.query(queryText, queryParams);
+      const result = await db.query(queryText); // Pass the queryText to db.query()
       res.status(200).json(result.rows);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });

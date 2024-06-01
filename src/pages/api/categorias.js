@@ -3,7 +3,7 @@ import db from './utils/db';
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            const queryText = 'SELECT DISTINCT nome FROM categorias';
+            const queryText = 'SELECT DISTINCT categoria FROM empresas';
             const result = await db.query(queryText);
             res.status(200).json(result.rows);
         } catch (error) {

@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icones';
+import React, { useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router'; // Import useRouter from Next.js router
 import useFetchData from '../../../pages/api/utils/useFetchData';
 import FilteredData from '../../../pages/api/utils/FilteredData';
+import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icones';
+import { ItemContext } from './context/ItemContext'; // Import the context
 
-const EmpresasImoveisTable = ({ tipoMostrado }) => {
+const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
+    const { setItemToEdit } = useContext(ItemContext);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
+    const [error, setError] = useState(null);
+
+    const router = useRouter(); // Initialize Next.js router
 
     const dataToShow = useFetchData(tipoMostrado);
-
     const itemsPerPage = 9;
     let titulo;
 
     // Function to filter data based on search term
-    // Function to filter data based on search term
     const filteredData = FilteredData(dataToShow, searchTerm);
-
 
     if (tipoMostrado === "Empresas") {
         titulo = "Empresas cadastradas";
@@ -43,6 +46,47 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
         setCurrentPage(1); // Reset current page when search term changes
+    };
+
+    const handleDetails = async (id) => {
+        try {
+            const response = await fetch(`/api/empresasImoveis?id=${id}`);
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error('Failed to fetch item details');
+            }
+
+            // Handle response data as needed
+        } catch (error) {
+            setError(error.message);
+            console.error('Error fetching item details:', error);
+        }
+    };
+    
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`/api/empresasImoveis?id=${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete item');
+            }
+            alert('Item deleted successfully');
+            // Optionally, you can update the UI after successful deletion
+        } catch (error) {
+            setError(error.message);
+            console.error('Error deleting item:', error);
+        }
+    };
+
+    // Function to handle edit button click
+    const handleEdit = (id) => {
+        const itemToEdit = currentItems.find(item => item.id === id);
+        if (itemToEdit) {
+            setShowRegistrar(true); // This line is causing the error
+            setItemToEdit(itemToEdit);
+            console.log(itemToEdit);
+        }
     };
 
     return (
@@ -85,17 +129,20 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
                                     <td className="col-span-3 px-4 py-4">R$ {item.valor_pretendido}</td>
                                     <td className="col-span-3 px-4 py-4">{item.sobre_o_imovel}</td>
                                     <td className="col-span-1 px-4 py-3">
-                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                            onClick={() => handleDetails(item.id)}>
                                             {IconEye}
                                         </button>
                                     </td>
                                     <td className="col-span-1 px-4 py-3">
-                                        <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">
+                                        <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded"
+                                            onClick={() => handleEdit(item.id)}>
                                             {IconEdit}
                                         </button>
                                     </td>
                                     <td className="col-span-1 px-4 py-3">
-                                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                            onClick={() => handleDelete(item.id)}>
                                             {IconTrash}
                                         </button>
                                     </td>
@@ -140,3 +187,4 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
 };
 
 export default EmpresasImoveisTable;
+

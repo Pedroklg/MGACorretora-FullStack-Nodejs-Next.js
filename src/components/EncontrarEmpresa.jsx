@@ -3,104 +3,100 @@ import { useRouter } from 'next/router';
 import { IconSeach } from './Icones';
 
 export default function EncontrarEmpresa() {
-    const router = useRouter();
+  const router = useRouter();
 
-    const [estados, setEstados] = useState([]);
-    const [cidades, setCidades] = useState([]);
-    const [categorias, setCategorias] = useState([]);
-    const [estado, setEstado] = useState('');
-    const [cidade, setCidade] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [minPrice, setMinPrice] = useState('');
-    const [maxPrice, setMaxPrice] = useState('');
+  const [estados, setEstados] = useState([]);
+  const [cidades, setCidades] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [estado, setEstado] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
-    useEffect(() => {
-        // Fetch estados from the database
-        const fetchEstados = async () => {
-            try {
-                const response = await fetch('/api/estados');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch estados');
-                }
-                const data = await response.json();
-                setEstados(data);
-            } catch (error) {
-                console.error('Error fetching estados:', error);
-            }
-        };
-
-        // Fetch cidades from the database
-        const fetchCidades = async () => {
-            try {
-                const response = await fetch('/api/cidades');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch cidades');
-                }
-                const data = await response.json();
-                setCidades(data);
-            } catch (error) {
-                console.error('Error fetching cidades:', error);
-            }
-        };
-
-        // Fetch categorias from the database
-        const fetchCategorias = async () => {
-            try {
-                const response = await fetch('/api/categorias');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch categorias');
-                }
-                const data = await response.json();
-                setCategorias(data);
-            } catch (error) {
-                console.error('Error fetching categorias:', error);
-            }
-        };
-
-        fetchEstados();
-        fetchCidades();
-        fetchCategorias();
-    }, []);
-
-    const handleEstadoChange = (e) => {
-        setEstado(e.target.value);
+  useEffect(() => {
+    const fetchEstados = async () => {
+      try {
+        const response = await fetch('/api/estados');
+        if (!response.ok) {
+          throw new Error('Failed to fetch estados');
+        }
+        const data = await response.json();
+        setEstados(data);
+      } catch (error) {
+        console.error('Error fetching estados:', error);
+      }
     };
 
-    const handleCidadeChange = (e) => {
-        setCidade(e.target.value);
+    const fetchCidades = async () => {
+      try {
+        const response = await fetch('/api/cidades');
+        if (!response.ok) {
+          throw new Error('Failed to fetch cidades');
+        }
+        const data = await response.json();
+        setCidades(data);
+      } catch (error) {
+        console.error('Error fetching cidades:', error);
+      }
     };
 
-    const handleCategoriaChange = (e) => {
-        setCategoria(e.target.value);
+    const fetchCategorias = async () => {
+      try {
+        const response = await fetch('/api/categorias');
+        if (!response.ok) {
+          throw new Error('Failed to fetch categorias');
+        }
+        const data = await response.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error('Error fetching categorias:', error);
+      }
     };
 
-    const handleMinPriceChange = (e) => {
-        setMinPrice(e.target.value);
+    fetchEstados();
+    fetchCidades();
+    fetchCategorias();
+  }, []);
+
+  const handleEstadoChange = (e) => {
+    setEstado(e.target.value);
+  };
+
+  const handleCidadeChange = (e) => {
+    setCidade(e.target.value);
+  };
+
+  const handleCategoriaChange = (e) => {
+    setCategoria(e.target.value);
+  };
+
+  const handleMinPriceChange = (e) => {
+    setMinPrice(e.target.value);
+  };
+
+  const handleMaxPriceChange = (e) => {
+    setMaxPrice(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const queryParams = {
+      estado,
+      cidade,
+      categoria,
+      minPrice,
+      maxPrice,
     };
 
-    const handleMaxPriceChange = (e) => {
-        setMaxPrice(e.target.value);
-    };
+    const queryString = new URLSearchParams(queryParams).toString();
 
-    const handleSearch = () => {
-        const query = {
-            estado,
-            cidade,
-            categoria,
-            minPrice,
-            maxPrice,
-        };
+    router.push(`/Search?${queryString}`);
+  };
 
-        router.push({
-            pathname: '/Search',
-            query,
-        });
-    };
-
-    return (
+  return (
     <div className="flex justify-center">
       <div className="sm:relative lg:absolute z-10 flex items-center justify-center w-full max-w-5xl">
-        <div className="bg-gray-100 opacity-90 shadow-md rounded-md p-5 w-full">
+        <div className="bg-gray-100 opacity-90 shadow-md rounded-md p-5 w-full" onKeyUp={(e) => e.key === 'Enter' && handleSearch()}>
           <div className="flex items-center mb-4">
             {IconSeach}
             <h1 className="text-3xl text-red-900 ml-3">Encontre sua Empresa</h1>
@@ -146,8 +142,8 @@ export default function EncontrarEmpresa() {
                 className="form-select w-full"
               >
                 <option value="">Selecione uma categoria</option>
-                {categorias.map((categoria) => (
-                  <option key={categoria.id} value={categoria.nome}>{categoria.nome}</option>
+                {categorias.map((categoriaObject, index) => (
+                  <option key={index} value={categoriaObject.categoria}>{categoriaObject.categoria}</option>
                 ))}
               </select>
             </div>
