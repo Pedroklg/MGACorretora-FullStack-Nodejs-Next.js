@@ -12,25 +12,19 @@ export default async function handler(req, res) {
 
   if (query.toLowerCase() === 'empresas') {
     searchQuery = `
-      SELECT id, titulo, sobre_o_imovel, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta, NULL AS tem_divida, NULL AS motivo_da_venda, 
+      SELECT id, titulo, sobre_o_imovel, imagem, categoria, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta, NULL AS tem_divida, NULL AS motivo_da_venda, 
              valor_pretendido, NULL AS condicoes, estado, cidade, endereco 
-      FROM empresas;
-    `;
-  } else if (query.toLowerCase() === 'imoveis') {
-    searchQuery = `
-      SELECT id, titulo, sobre_o_imovel, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, estado, cidade, endereco
-      FROM imoveis;
-    `;
-  } else {
-    searchQuery = `
-      SELECT id, titulo, sobre_o_imovel, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta, NULL AS tem_divida, NULL AS motivo_da_venda, valor_pretendido, NULL AS condicoes, estado, cidade, endereco
       FROM empresas
       WHERE estado ILIKE $1
          OR cidade ILIKE $1
          OR titulo ILIKE $1
+         OR categoria ILIKE $1
          OR CAST(id AS TEXT) ILIKE $1
-      UNION ALL
-      SELECT id, titulo, sobre_o_imovel, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, estado, cidade, endereco
+    `;
+    queryParams.push(searchTerm);
+  } else if (query.toLowerCase() === 'imoveis') {
+    searchQuery = `
+      SELECT id, titulo, sobre_o_imovel, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, estado, cidade, endereco
       FROM imoveis
       WHERE estado ILIKE $1
          OR cidade ILIKE $1
@@ -38,6 +32,24 @@ export default async function handler(req, res) {
          OR CAST(id AS TEXT) ILIKE $1
     `;
     queryParams.push(searchTerm);
+  } else {
+    searchQuery = `
+      SELECT id, titulo, sobre_o_imovel, imagem, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta, NULL AS tem_divida, NULL AS motivo_da_venda, valor_pretendido, NULL AS condicoes, estado, cidade, endereco
+      FROM empresas
+      WHERE estado ILIKE $1
+         OR cidade ILIKE $1
+         OR titulo ILIKE $1
+         OR categoria ILIKE $1
+         OR CAST(id AS TEXT) ILIKE $1
+      UNION ALL
+      SELECT id, titulo, sobre_o_imovel, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, estado, cidade, endereco
+      FROM imoveis
+      WHERE estado ILIKE $2
+         OR cidade ILIKE $2
+         OR titulo ILIKE $2
+         OR CAST(id AS TEXT) ILIKE $2
+    `;
+    queryParams.push(searchTerm, searchTerm);
   }
 
   try {

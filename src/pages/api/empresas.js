@@ -1,15 +1,10 @@
 import nextConnect from 'next-connect';
 import multer from 'multer';
 import db from './utils/db';
+import sharp from 'sharp';
 
 // Configure multer storage
-const storage = multer.diskStorage({
-    destination: 'public/imgEmpresas',
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
-
+const storage = multer.memoryStorage(); // Store images in memory for processing
 const upload = multer({ storage });
 
 const apiRoute = nextConnect({
@@ -24,19 +19,32 @@ const apiRoute = nextConnect({
 
 apiRoute.use(upload.single('imagem'));
 
+apiRoute.get(async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM empresas');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error in GET /api/empresas:', error.message);
+        res.status(500).json({ error: 'Failed to fetch empresas' });
+    }
+});
+
 apiRoute.post(async (req, res) => {
     try {
-        console.log('POST Request Body:', req.body);
-        console.log('Uploaded File:', req.file);
-
         const {
             titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
             condicoes, sobre_o_imovel, endereco, aceita_permuta, tem_divida,
             estado, cidade, categoria
         } = req.body;
 
-        const imageUrl = req.file ? `/imgEmpresas/${req.file.filename}` : null;
+        let imageUrl = null;
 
+        if (req.file) {
+            // Process and store the image
+            imageUrl = await processAndStoreImage(req.file);
+        }
+
+        // Insert data into the database
         const result = await db.query(
             'INSERT INTO empresas (titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, endereco, aceita_permuta, tem_divida, imagem, estado, cidade, categoria) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
             [
@@ -53,16 +61,6 @@ apiRoute.post(async (req, res) => {
     }
 });
 
-apiRoute.get(async (req, res) => {
-    try {
-        const result = await db.query('SELECT * FROM empresas');
-        res.status(200).json(result.rows);
-    } catch (error) {
-        console.error('Error in GET /api/empresas:', error.message);
-        res.status(500).json({ error: 'Failed to fetch empresas' });
-    }
-});
-
 apiRoute.put(async (req, res) => {
     try {
         const { id } = req.query;
@@ -72,12 +70,14 @@ apiRoute.put(async (req, res) => {
             estado, cidade, categoria
         } = req.body;
 
-        let imageUrl = null;
+        let imageUrl = req.body.imagem; // Default to existing image URL
+
         if (req.file) {
-            const { filename } = req.file;
-            imageUrl = filename ? `/imgEmpresas/${filename}` : null;
+            // Process and store the new image
+            imageUrl = await processAndStoreImage(req.file);
         }
 
+        // Update data in the database
         const result = await db.query(
             'UPDATE empresas SET titulo = $1, tempo_de_mercado = $2, funcionarios = $3, motivo_da_venda = $4, valor_pretendido = $5, condicoes = $6, sobre_o_imovel = $7, endereco = $8, aceita_permuta = $9, tem_divida = $10, imagem = $11, estado = $12, cidade = $13, categoria = $14 WHERE id = $15 RETURNING *',
             [
@@ -94,16 +94,21 @@ apiRoute.put(async (req, res) => {
     }
 });
 
-apiRoute.delete(async (req, res) => {
-    try {
-        const { id } = req.query;
-        await db.query('DELETE FROM empresas WHERE id = $1', [id]);
-        res.status(200).json({ message: 'Empresa deleted successfully' });
-    } catch (error) {
-        console.error('Error in DELETE /api/empresas:', error.message);
-        res.status(500).json({ error: 'Failed to delete empresa' });
-    }
-});
+// Function to process and store image 
+async function processAndStoreImage(file) {
+    // Resize and compress the image
+    const resizedImageBuffer = await sharp(file.buffer)
+        .resize({ width: 800, height: 600 }) // Resize to 800x600 pixels
+        .jpeg({ quality: 80 }) // Compress to JPEG format with 80% quality
+        .toBuffer(); // Convert to buffer
+
+    // Store the resized and compressed image
+    const filename = `${Date.now()}-${file.originalname}`;
+    await sharp(resizedImageBuffer).toFile(`public/imgEmpresas/${filename}`);
+
+    // Construct image URL
+    return `/imgEmpresas/${filename}`;
+}
 
 export const config = {
     api: {

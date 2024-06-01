@@ -35,7 +35,7 @@ const Registrar = () => {
 
 
     return (
-        <div className="h-svh p-0 m-5 w-svw overflow-hidden bg-gray-200 rounded-xl" style={{ height: 'calc(100vh - 3rem)' }}>
+        <div className="h-svh p-0 m-5 w-svw overflow-scroll bg-gray-200 rounded-xl" style={{ height: 'calc(100vh - 3rem)' }}>
             <div className="p-8 grid gap-8">
                 <div className="flex items-center justify-start shadow-lg rounded-lg">
                     <h1 className="text-3xl font-bold p-5">Registrar</h1>

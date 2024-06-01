@@ -5,6 +5,7 @@ import Cards from "../components/Cards";
 function Imoveis() {
     return (
         <div>
+            <title>Imóveis</title>
             <Header />
             <body className="flex flex-grow">
                 <Cards tipoMostrado="Imoveis" />

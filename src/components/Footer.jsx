@@ -15,9 +15,8 @@ export default function Footer() {
                     <div className="mx-8">
                         <h4 className="p-2 text-2xl text-red-800">A MGA</h4>
                         <ul>
-                            <li className="p-1 hover:text-red-800"><a href="/sobre">Sobre</a></li>
-                            <li className="p-1 hover:text-red-800"><a href="/contato">Fale Conosco</a></li>
-                            <li className="p-1 hover:text-red-800"><a href="/politica-de-privacidade">Política de Privacidade</a></li>
+                            <li className="p-1 hover:text-red-800"><a href="/Sobre">Sobre</a></li>
+                            <li className="p-1 hover:text-red-800"><a href="/Contato">Fale Conosco</a></li>
                         </ul>
                     </div>
                     <div className="mx-16">

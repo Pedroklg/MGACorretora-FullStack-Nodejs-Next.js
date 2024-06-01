@@ -1,25 +1,28 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useRouter } from 'next/router'; // Import useRouter from Next.js router
+import { useRouter } from 'next/router';
 import useFetchData from '../../../pages/api/utils/useFetchData';
 import FilteredData from '../../../pages/api/utils/FilteredData';
 import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icones';
-import { ItemContext } from './context/ItemContext'; // Import the context
+import { ItemContext } from './context/ItemContext';
+import ItemDetailsModal from './ItemDetailsModal'; // Import the modal component
 
 const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
     const { setItemToEdit } = useContext(ItemContext);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);
+    const [selectedItemId, setSelectedItemId] = useState(null); // State to store selected item id
+    const [isModalOpen, setIsModalOpen] = useState(false);  // State to manage modal visibility
 
-    const router = useRouter(); // Initialize Next.js router
+    const router = useRouter();
 
     const dataToShow = useFetchData(tipoMostrado);
+
     const itemsPerPage = 9;
-    let titulo;
-
-    // Function to filter data based on search term
     const filteredData = FilteredData(dataToShow, searchTerm);
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
+    let titulo;
     if (tipoMostrado === "Empresas") {
         titulo = "Empresas cadastradas";
     } else if (tipoMostrado === "Imoveis") {
@@ -28,24 +31,18 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
         titulo = "Empresas e Imóveis cadastrados";
     }
 
-    // Calculate index of the last item for current page
     const indexOfLastItem = currentPage * itemsPerPage;
-    // Calculate index of the first item for current page
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    // Slice the filtered data array to display only items for the current page
     const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-    // Function to handle pagination
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
-        // Scroll to the top of the table after pagination
         window.scrollTo(0, 0);
     };
 
-    // Function to handle search input change
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-        setCurrentPage(1); // Reset current page when search term changes
+        setCurrentPage(1);
     };
 
     const handleDetails = async (id) => {
@@ -55,14 +52,14 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
             if (!response.ok) {
                 throw new Error('Failed to fetch item details');
             }
-
-            // Handle response data as needed
+            setSelectedItemId(id);
+            setIsModalOpen(true);
         } catch (error) {
             setError(error.message);
             console.error('Error fetching item details:', error);
         }
     };
-    
+
     const handleDelete = async (id) => {
         try {
             const response = await fetch(`/api/empresasImoveis?id=${id}`, {
@@ -72,20 +69,19 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                 throw new Error('Failed to delete item');
             }
             alert('Item deleted successfully');
-            // Optionally, you can update the UI after successful deletion
+            window.location.reload();
         } catch (error) {
             setError(error.message);
             console.error('Error deleting item:', error);
         }
     };
 
-    // Function to handle edit button click
     const handleEdit = (id) => {
         const itemToEdit = currentItems.find(item => item.id === id);
         if (itemToEdit) {
-            setShowRegistrar(true); // This line is causing the error
+            setShowRegistrar(true);
             setItemToEdit(itemToEdit);
-            console.log(itemToEdit);
+            setSelectedItemId(id);
         }
     };
 
@@ -101,7 +97,7 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                             className="w-60 rounded-sm"
                             placeholder="Search..."
                             value={searchTerm}
-                            onChange={handleSearchChange} // Call handleSearchChange on input change
+                            onChange={handleSearchChange}
                         />
                     </div>
                     <button className="bg-red-800 rounded-sm text-white px-1 py-0.5 ml-3">
@@ -114,8 +110,8 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                             <tr className="grid grid-cols-12 text-xl">
                                 <th className="col-span-1 px-4 py-3 text-left">ID</th>
                                 <th className="col-span-2 px-4 py-3 text-left">Título</th>
-                                <th className="col-span-3 px-4 py-3 text-left">Valor Pretendido</th>
-                                <th className="col-span-3 px-4 py-3 text-left">Sobre o Imovel</th>
+                                <th className="col-span-2 px-4 py-3 text-left">Valor Pretendido</th>
+                                <th className="col-span-4 px-4 py-3 text-left">Sobre o Imovel</th>
                                 <th className="col-span-1 px-4 py-3 text-left">Detalhes</th>
                                 <th className="col-span-1 px-4 py-3 text-left">Editar</th>
                                 <th className="col-span-1 px-4 py-3 text-left">Excluir</th>
@@ -126,8 +122,13 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                                 <tr key={item.id} className="border-b border-gray-200 grid grid-cols-12">
                                     <td className="col-span-1 px-4 py-4">{item.id}</td>
                                     <td className="col-span-2 px-4 py-4">{item.titulo}</td>
-                                    <td className="col-span-3 px-4 py-4">R$ {item.valor_pretendido}</td>
-                                    <td className="col-span-3 px-4 py-4">{item.sobre_o_imovel}</td>
+                                    <td className="col-span-2 px-4 py-4">R$ {item.valor_pretendido}</td>
+                                    <td className="col-span-4 px-4 py-4">
+                                        {item.sobre_o_imovel.length > 50
+                                            ? `${item.sobre_o_imovel.slice(0, 50)}...`
+                                            : item.sobre_o_imovel
+                                        }
+                                    </td>
                                     <td className="col-span-1 px-4 py-3">
                                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                             onClick={() => handleDetails(item.id)}>
@@ -154,13 +155,13 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                 <div className="flex justify-center">
                     <button
                         onClick={() => paginate(currentPage - 1)}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l"
+                        className={`bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l ${currentPage === 1 ? 'disabled' : ''}`}
                         disabled={currentPage === 1}
                     >
                         Previous
                     </button>
                     <div className="flex">
-                        {[...Array(Math.ceil(filteredData.length / itemsPerPage)).keys()].map(number => (
+                        {[...Array(totalPages).keys()].map(number => (
                             <button
                                 key={number}
                                 onClick={() => paginate(number + 1)}
@@ -175,16 +176,25 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                     </div>
                     <button
                         onClick={() => paginate(currentPage + 1)}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r"
-                        disabled={currentPage === Math.ceil(filteredData.length / itemsPerPage)}
+                        className={`bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r ${currentPage === totalPages ? 'disabled' : ''
+                            }`}
+                        disabled={currentPage === totalPages}
                     >
                         Next
                     </button>
                 </div>
             </div>
+
+            {/* Modal Component */}
+            {isModalOpen && (
+                <ItemDetailsModal
+                    isOpen={isModalOpen}
+                    onRequestClose={() => setIsModalOpen(false)}
+                    itemId={selectedItemId} // Pass the selected item id to the modal
+                />
+            )}
         </div>
     );
 };
 
 export default EmpresasImoveisTable;
-

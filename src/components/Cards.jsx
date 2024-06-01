@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import useFetchData from '../pages/api/utils/useFetchData';
+import { useRouter } from 'next/router';
 
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [cardsPerPage] = useState(12);
+  const cardsPerPage = 12;
+  const router = useRouter();
 
   // Ensure dataToShow is always an array
   const filteredData = Array.isArray(dataToShow) ? dataToShow : useFetchData(tipoMostrado);
 
-  // Pagination logic
+  // Calculate indexes for slicing data based on pagination
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = filteredData.slice(indexOfFirstCard, indexOfLastCard);
 
-  const paginate = pageNumber => setCurrentPage(pageNumber);
+  // Function to handle pagination
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Function to handle card click
+  const handleCardClick = (id) => {
+    router.push(`/product/${id}`);
+  };
 
   // Determine title based on tipoMostrado
   let titulo;
@@ -43,20 +51,28 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         <div className="flex-grow h-px bg-red-700 ml-4 p-0.5 rounded-md"></div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {currentCards.map((card) => (
-          <div key={card.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <img src={card.imagem} alt={card.titulo} className="w-full h-48 object-cover" />
+        {currentCards.map((card, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer"
+            onClick={() => handleCardClick(card.id)} // Navigate to product page on click
+          >
+            <img
+              src={card.imagem}
+              alt={card.titulo}
+              className="w-full h-48 object-cover"
+            />
             <div className="p-6">
               <h2 className="text-xl font-bold mb-2">{card.titulo}</h2>
               <p className="text-gray-700">{card.cidade} - {card.estado}</p>
-              <p className="text-gray-700">R$ {card.valor_pretendido * 0.10},00</p>
+              <p className="text-gray-700">R$ {card.valor_pretendido}</p>
             </div>
           </div>
         ))}
       </div>
       <div className="flex justify-center mt-4">
         <nav className="inline-flex">
-          {[...Array(Math.ceil(filteredData.length / cardsPerPage)).keys()].map(number => (
+          {[...Array(Math.ceil(filteredData.length / cardsPerPage)).keys()].map((number) => (
             <button
               key={number}
               onClick={() => paginate(number + 1)}

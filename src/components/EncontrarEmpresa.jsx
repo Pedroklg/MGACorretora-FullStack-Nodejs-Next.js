@@ -99,7 +99,7 @@ export default function EncontrarEmpresa() {
         <div className="bg-gray-100 opacity-90 shadow-md rounded-md p-5 w-full" onKeyUp={(e) => e.key === 'Enter' && handleSearch()}>
           <div className="flex items-center mb-4">
             {IconSeach}
-            <h1 className="text-3xl text-red-900 ml-3">Encontre sua Empresa</h1>
+            <h1 className="text-3xl text-red-900 ml-3">Encontre sua Empresa ou Imóvel</h1>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>

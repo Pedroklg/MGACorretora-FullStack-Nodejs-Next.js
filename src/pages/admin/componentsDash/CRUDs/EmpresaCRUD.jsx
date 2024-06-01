@@ -79,7 +79,7 @@ const EmpresasCRUD = ({ item }) => {
         createOrUpdateEmpresa();
     };
 
-    return (
+    return ( 
         <form onSubmit={handleSubmit}>
             <div className="container flex flex-col justify-center items-center w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
@@ -127,6 +127,7 @@ const EmpresasCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                     </div>
+                    {empresaData.imagem ? <img src={empresaData.imagem} alt="Selected Image" /> : <span>Selecione uma imagem:</span>}
                     <input className="p-1 rounded-lg"
                         type="file"
                         accept="image/*"

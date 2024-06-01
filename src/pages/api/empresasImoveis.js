@@ -33,7 +33,7 @@ apiRoute.get(async (req, res) => {
         } else {
             result = { error: 'ID not provided' };
         }
-
+        
         res.status(200).json(result);
     } catch (error) {
         console.error('Error in GET /api/empresasImoveis:', error.message);

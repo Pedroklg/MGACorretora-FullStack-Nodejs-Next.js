@@ -1,15 +1,10 @@
 import nextConnect from 'next-connect';
 import multer from 'multer';
 import db from './utils/db';
+import sharp from 'sharp';
 
 // Configure multer storage
-const storage = multer.diskStorage({
-    destination: 'public/imgImoveis',
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
-
+const storage = multer.memoryStorage(); // Store images in memory for processing
 const upload = multer({ storage });
 
 const apiRoute = nextConnect({
@@ -24,18 +19,29 @@ const apiRoute = nextConnect({
 
 apiRoute.use(upload.single('imagem'));
 
+apiRoute.get(async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM imoveis');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error in GET /api/imoveis:', error.message);
+        res.status(500).json({ error: 'Failed to fetch imóveis' });
+    }
+});
+
 apiRoute.post(async (req, res) => {
     try {
-        console.log('POST Request Body:', req.body);
-        console.log('Uploaded File:', req.file);
-
         const {
             titulo, area_construida, area_util, aceita_permuta, tem_divida,
             motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, endereco, aluguel
         } = req.body;
 
-        // Construct image URL
-        const imageUrl = req.file ? `/imgImoveis/${req.file.filename}` : null;
+        let imageUrl = null;
+
+        if (req.file) {
+            // Process and store the image
+            imageUrl = await processAndStoreImage(req.file);
+        }
 
         // Insert data into the database
         const result = await db.query(
@@ -58,11 +64,16 @@ apiRoute.put(async (req, res) => {
         const { id } = req.query;
         const {
             titulo, area_construida, area_util, aceita_permuta, tem_divida,
-            motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, endereco, aluguel
+            motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel,
+            estado, cidade, endereco, aluguel
         } = req.body;
 
-        // Construct image URL
-        const imageUrl = req.file ? `/imgImoveis/${req.file.filename}` : null;
+        let imageUrl = req.body.imagem; // Default to existing image URL
+
+        if (req.file) {
+            // Process and store the new image
+            imageUrl = await processAndStoreImage(req.file);
+        }
 
         // Update data in the database
         const result = await db.query(
@@ -80,16 +91,21 @@ apiRoute.put(async (req, res) => {
     }
 });
 
-apiRoute.delete(async (req, res) => {
-    try {
-        const { id } = req.query;
-        await db.query('DELETE FROM imoveis WHERE id = $1', [id]);
-        res.status(200).json({ message: 'Imóvel deleted successfully' });
-    } catch (error) {
-        console.error('Error in DELETE /api/imoveis:', error.message);
-        res.status(500).json({ error: 'Failed to delete imóvel' });
-    }
-});
+// Function to process and store image
+async function processAndStoreImage(file) {
+    // Resize and compress the image
+    const resizedImageBuffer = await sharp(file.buffer)
+        .resize({ width: 800, height: 600 }) // Resize to 800x600 pixels
+        .jpeg({ quality: 80 }) // Compress to JPEG format with 80% quality
+        .toBuffer(); // Convert to buffer
+
+    // Store the resized and compressed image
+    const filename = `${Date.now()}-${file.originalname}`;
+    await sharp(resizedImageBuffer).toFile(`public/imgImoveis/${filename}`);
+
+    // Construct image URL
+    return `/imgImoveis/${filename}`;
+}
 
 export const config = {
     api: {

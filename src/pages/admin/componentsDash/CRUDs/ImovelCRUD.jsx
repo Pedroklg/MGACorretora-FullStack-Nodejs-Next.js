@@ -116,6 +116,7 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                     </div>
+                    {imovelData.imagem ? imovelData.imagem : <span>Selecione uma imagem:</span>}
                     <input className="p-1 rounded-lg"
                         type="file"
                         accept="image/jpeg, image/png"

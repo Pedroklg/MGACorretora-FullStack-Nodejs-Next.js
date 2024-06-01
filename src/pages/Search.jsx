@@ -57,6 +57,7 @@ const Search = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <title>Resultado da Busca</title>
       <Header />
       <main className="flex-grow">
         <Cards dataToShow={dataToShow} />
