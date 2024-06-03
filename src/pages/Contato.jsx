@@ -5,7 +5,7 @@ import { IconPhone, IconEmail } from '../components/Icones';
 function Contato() {
     return (
         <div className="flex flex-col min-h-screen">
-            <Header></Header>
+            <Header/>
             <main className="flex-grow flex flex-col items-center justify-center">
                 <div className="flex justify-center items-center p-5 flex-row">
                     <div className="flex justify-center items-center p-10 flex-col">
@@ -35,7 +35,7 @@ function Contato() {
                     </div>
                 </div>
                 <div className="flex justify-center items-center flex-col mt-5">
-                    <p className="p-1 hover:text-red-800 flex flex-col flex-wrap gap-2 items-center justify-center">
+                    <div className="p-1 hover:text-red-800 flex flex-col flex-wrap gap-2 items-center justify-center">
                         <span className='text-2xl p-2 font-semibold'>Ou entre em contato por e-mail</span>
                         <a href="mailto:contato@mgacorretora.com.br" className="hidden md:flex">
                             <div className='flex p-2 gap-2 text-xl'>
@@ -43,10 +43,10 @@ function Contato() {
                                 <span>contato@mgacorretora.com.br</span>
                             </div>
                         </a>
-                    </p>
+                    </div>
                 </div>
             </main>
-            <Footer></Footer>
+            <Footer />
         </div>
 
     )

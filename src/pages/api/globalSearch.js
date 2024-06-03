@@ -10,29 +10,6 @@ export default async function handler(req, res) {
   const searchTerm = '%' + query + '%';
   let queryParams = [];
 
-  if (query.toLowerCase() === 'empresas') {
-    searchQuery = `
-      SELECT id, titulo, sobre_o_imovel, imagem, categoria, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta, NULL AS tem_divida, NULL AS motivo_da_venda, 
-             valor_pretendido, NULL AS condicoes, estado, cidade, endereco 
-      FROM empresas
-      WHERE estado ILIKE $1
-         OR cidade ILIKE $1
-         OR titulo ILIKE $1
-         OR categoria ILIKE $1
-         OR CAST(id AS TEXT) ILIKE $1
-    `;
-    queryParams.push(searchTerm);
-  } else if (query.toLowerCase() === 'imoveis') {
-    searchQuery = `
-      SELECT id, titulo, sobre_o_imovel, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, estado, cidade, endereco
-      FROM imoveis
-      WHERE estado ILIKE $1
-         OR cidade ILIKE $1
-         OR titulo ILIKE $1
-         OR CAST(id AS TEXT) ILIKE $1
-    `;
-    queryParams.push(searchTerm);
-  } else {
     searchQuery = `
       SELECT id, titulo, sobre_o_imovel, imagem, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta, NULL AS tem_divida, NULL AS motivo_da_venda, valor_pretendido, NULL AS condicoes, estado, cidade, endereco
       FROM empresas
@@ -50,7 +27,6 @@ export default async function handler(req, res) {
          OR CAST(id AS TEXT) ILIKE $2
     `;
     queryParams.push(searchTerm, searchTerm);
-  }
 
   try {
     const { rows } = await db.query(searchQuery, queryParams);

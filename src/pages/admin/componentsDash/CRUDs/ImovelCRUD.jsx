@@ -17,7 +17,7 @@ const ImoveisCRUD = ({ item }) => {
         endereco: '',
         aluguel: false,
     };
-
+ 
     const [imovelData, setImovelData] = useState(initialImovelData);
 
     // Set initial state based on the provided item when component mounts
@@ -116,10 +116,10 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                     </div>
-                    {imovelData.imagem ? imovelData.imagem : <span>Selecione uma imagem:</span>}
+                    {imovelData.imagem ? <img src={imovelData.imagem} alt="Selected Image" /> : <span>Selecione uma imagem:</span>}
                     <input className="p-1 rounded-lg"
                         type="file"
-                        accept="image/jpeg, image/png"
+                        accept="image/*"
                         onChange={handleImageChange}
                     />
                 </div>

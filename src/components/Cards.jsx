@@ -54,7 +54,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         {currentCards.map((card, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer"
+            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:cursor-pointer hover:shadow-xl transition duration-300 ease-in-out"
             onClick={() => handleCardClick(card.id)} // Navigate to product page on click
           >
             <img

@@ -16,6 +16,13 @@ const Header = () => {
   // Function to handle search button click
   const handleSearchSend = () => {
     // Redirect to the search page with the search term as a query parameter
+    if(searchTerm.toLowerCase() === 'empresas'){
+      router.push(`/Empresas`);
+      return;
+    }else if(searchTerm.toLowerCase() === 'imoveis'){
+      router.push(`/Imoveis`);
+      return;
+    }
     router.push(`/Search?q=${searchTerm}`);
   };
 

@@ -26,8 +26,6 @@ export default async function handler(req, res) {
         searchQueryEmpresas += ` AND valor_pretendido <= ${maxPrice}`;
     }
 
-    console.log('Generated SQL query for empresas:', searchQueryEmpresas); // Debugging: Print generated SQL query for empresas
-
     let searchQueryImoveis = `
         SELECT id, titulo, sobre_o_imovel, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda,
         valor_pretendido, condicoes, estado, cidade, endereco, NULL AS categoria
@@ -48,15 +46,11 @@ export default async function handler(req, res) {
         searchQueryImoveis += ` AND valor_pretendido <= ${maxPrice}`;
     }
 
-    console.log('Generated SQL query for imoveis:', searchQueryImoveis); // Debugging: Print generated SQL query for imoveis
-
     try {
         const { rows: empresas } = await db.query(searchQueryEmpresas);
-        console.log('Query result for empresas:', empresas); // Debugging: Print query result for empresas
 
         if (empresas.length === 0) {
             const { rows: imoveis } = await db.query(searchQueryImoveis);
-            console.log('Query result for imoveis:', imoveis); // Debugging: Print query result for imoveis
             res.status(200).json(imoveis);
         } else {
             res.status(200).json(empresas);

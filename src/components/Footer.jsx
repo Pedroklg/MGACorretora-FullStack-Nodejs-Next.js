@@ -25,7 +25,7 @@ export default function Footer() {
                             {IconWhatsapp} 
                             Curitiba - PR |
                             <a href="tel:+5541995400788">41 99540-0788</a>
-                            
+                             
                         </p>
                         <p className="p-1 hover:text-red-800 flex flex-wrap gap-2 justify-center items-center">
                         {IconWhatsapp}
