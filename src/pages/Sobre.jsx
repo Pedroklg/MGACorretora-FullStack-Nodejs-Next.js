@@ -7,7 +7,7 @@ function sobre() {
             <title>Sobre</title>
             <Header />
             <div className="flex justify-center pb-8">
-                <div className="w-3/6 flex flex-col justify-center items-start p-4">
+                <div className="md:w-3/6 w-11/12 flex flex-col justify-center items-start p-4">
                     <div className="p-5 text-4xl text-red-800">
                         <h1>Institucional</h1>
                     </div>

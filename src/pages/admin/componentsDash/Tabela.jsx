@@ -87,7 +87,7 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
     };
 
     return (
-        <div className="h-svh p-0 m-5 w-svw overflow-hidden bg-gray-200 rounded-xl"
+        <div className="h-svh p-0 m-5 w-svw overflow-scroll bg-gray-200 rounded-xl"
             style={{ height: 'calc(100vh - 3rem)' }}>
             <div className="p-8 grid gap-8">
                 <div className="flex items-center justify-items-center shadow-lg rounded-lg p-5">

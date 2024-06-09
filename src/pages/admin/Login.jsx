@@ -40,9 +40,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-stone-900 to-red-900">
       <div className="p-6 bg-gray-100 rounded-md shadow-md">
-        <h1 className="text-2xl font-semibold mb-4">Admin Login</h1>
+        <h1 className="text-3xl font-semibold mb-4 text-red-800">MGA Corretora Admin </h1>
         <input
           type="text"
           placeholder="Username"
