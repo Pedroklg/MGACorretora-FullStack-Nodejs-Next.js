@@ -1,1 +1,1 @@
-Project with Next.js(JS, Tailwind, React, Postgresql), made a new website for https://www.mgacorretora.com.br/corretora/, with a admin loggin and a dasboard for create, read, update and delete "Empresas e Imoveis".
+Project with Node.js and Next.js(JS, Tailwind, React) and Postgresql, made a new website for https://www.mgacorretora.com.br/corretora/, with a admin loggin and a dasboard for create, read, update and delete "Empresas e Imoveis" with image.
