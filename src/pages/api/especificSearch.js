@@ -31,7 +31,7 @@ export default async function handler(req, res) {
         valor_pretendido, condicoes, estado, cidade, endereco, NULL AS categoria
         FROM imoveis
         WHERE 1=1
-    `;
+    `; 
 
     if (cidade) {
         searchQueryImoveis += ` AND LOWER(cidade) LIKE LOWER('%${cidade}%')`; // Case-insensitive comparison

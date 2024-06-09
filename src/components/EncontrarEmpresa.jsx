@@ -17,7 +17,7 @@ export default function EncontrarEmpresa() {
   useEffect(() => {
     const fetchEstados = async () => {
       try {
-        const response = await fetch('/api/estados');
+        const response = await fetch('/api/estados'); 
         if (!response.ok) {
           throw new Error('Failed to fetch estados');
         }
@@ -103,7 +103,7 @@ export default function EncontrarEmpresa() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>
-              <label htmlFor="estado" className="block text-xs font-medium text-gray-700 mb-1">Estado</label>
+              <label htmlFor="estado" className="block text-xs font-medium text-gray-700 mb-1 durat">Estado</label>
               <select
                 id="estado"
                 name="estado"
@@ -177,7 +177,7 @@ export default function EncontrarEmpresa() {
             </div>
           </div>
           <div className="flex justify-center mt-4">
-            <button onClick={handleSearch} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Buscar</button>
+            <button onClick={handleSearch} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 duration-150 hover:scale-105">Buscar</button>
           </div>
         </div>
       </div>

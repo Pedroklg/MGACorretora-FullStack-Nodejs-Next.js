@@ -7,9 +7,9 @@ function Imoveis() {
         <div>
             <title>Imóveis</title>
             <Header />
-            <body className="flex flex-grow">
+            <div className="flex flex-grow">
                 <Cards tipoMostrado="Imoveis" />
-            </body>
+            </div>
             <Footer />
         </div>
     )

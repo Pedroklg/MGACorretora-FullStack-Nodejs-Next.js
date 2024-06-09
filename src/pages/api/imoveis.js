@@ -82,7 +82,7 @@ apiRoute.put(async (req, res) => {
                 titulo, imageUrl, area_construida, area_util, aceita_permuta, tem_divida,
                 motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, endereco, aluguel, id
             ]
-        );
+        ); 
 
         res.status(200).json(result.rows[0]);
     } catch (error) {

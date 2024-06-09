@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useFetchData from '../pages/api/utils/useFetchData';
 import { useRouter } from 'next/router';
+import toBrMoney from '../pages/api/utils/toBrMoney';
 
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,7 +55,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         {currentCards.map((card, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:cursor-pointer hover:shadow-xl transition duration-300 ease-in-out"
+            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out"
             onClick={() => handleCardClick(card.id)} // Navigate to product page on click
           >
             <img
@@ -65,7 +66,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
             <div className="p-6">
               <h2 className="text-xl font-bold mb-2">{card.titulo}</h2>
               <p className="text-gray-700">{card.cidade} - {card.estado}</p>
-              <p className="text-gray-700">R$ {card.valor_pretendido}</p>
+              <p className="text-gray-700">{toBrMoney(card.valor_pretendido)}</p>
             </div>
           </div>
         ))}

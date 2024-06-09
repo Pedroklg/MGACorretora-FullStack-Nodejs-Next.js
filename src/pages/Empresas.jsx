@@ -56,9 +56,9 @@ function Empresas() {
     <div className="flex flex-col min-h-screen">
       <title>Empresas</title>
       <Header />
-      <div className="flex justify-center">
-        <aside className="w-1/6 p-4 m-12 mt-16 shadow-lg rounded-xl items-start flex flex-col h-full">
-          <h2 className="text-3xl font-bold mb-8 text-red-800">Categorias</h2>
+      <div className="flex flex-col sm:flex-row justify-center">
+        <aside className="w-fit p-4 sm:m-12 sm:mt-16 mt-8 shadow-lg rounded-xl items-start flex flex-row flex-wrap sm:flex-col h-full">
+          <h2 className="text-3xl font-bold sm:mb-8 text-red-800 w-full">Categorias</h2>
           {categorias.map((categoria) => (
             <div key={categoria.id} className="mb-2">
               <button
@@ -71,7 +71,7 @@ function Empresas() {
           ))}
         </aside>
         <div className="flex flex-grow">
-          <div className="w-3/4 p-4">
+          <div className="sm:w-11/12 w-full p-4">
             <Cards tipoMostrado="Empresas" dataToShow={filteredData} />
           </div>
         </div>

@@ -27,8 +27,8 @@ const Header = () => {
   };
 
   return (
-    <header className="flex flex-wrap md:flex-nowrap justify-evenly items-center px-10 bg-gray-200 text-black shadow-lg">
-      <div className="p-1 flex flex-col justify-center items-center">
+    <header className="flex flex-wrap md:flex-nowrap justify-evenly items-center px-1 md:px-10 bg-gray-200 text-black shadow-lg">
+      <div className="p-1 flex flex-col justify-center items-center hover:scale-105 duration-150">
         <Link href="/" passHref legacyBehavior>
           <a>
             <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} />
@@ -37,28 +37,28 @@ const Header = () => {
         <span className="text-lg text-red-800 font-medium mt-2">CRECI J5087</span>
       </div>
 
-      <nav className="flex space-x-6 mt-4 md:mt-0">
+      <nav className="flex space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">
         <Link href="/Empresas" passHref legacyBehavior>
-          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer">
+          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconShop}
             <a className="ml-2">Empresas</a>
           </div>
         </Link>
         <Link href="/Imoveis" passHref legacyBehavior>
-          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer">
+          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconHouse}
             <a className="ml-2">Imóveis</a>
           </div>
         </Link>
         <Link href="/Contato" passHref legacyBehavior>
-          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer">
+          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconEmail}
             <a className="ml-2">Contato</a>
           </div>
         </Link>
         <div className="hidden lg:flex">
           <Link href="/Sobre" passHref legacyBehavior>
-            <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer">
+            <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
               <a className="ml-2">Sobre nós</a>
             </div>
           </Link>
@@ -74,7 +74,7 @@ const Header = () => {
           onKeyUp={(e) => e.key === 'Enter' && handleSearchSend()} // Call handleSearchChange on input change
         />
         <button
-          className="flex bg-red-800 text-gray-200 p-1 ml-2 rounded-sm shadow-lg"
+          className="flex bg-red-800 text-gray-200 p-1 ml-2 rounded-sm shadow-lg duration-150 hover:scale-105"
           onClick={handleSearchSend} // Call handleSearchClick on button click
         >
           {IconSearchSmall}

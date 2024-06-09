@@ -5,6 +5,7 @@ import FilteredData from '../../../pages/api/utils/FilteredData';
 import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icones';
 import { ItemContext } from './context/ItemContext';
 import ItemDetailsModal from './ItemDetailsModal'; // Import the modal component
+import toBrMoney from '../../../pages/api/utils/toBrMoney';
 
 const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
     const { setItemToEdit } = useContext(ItemContext);
@@ -122,7 +123,7 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                                 <tr key={item.id} className="border-b border-gray-200 grid grid-cols-12">
                                     <td className="col-span-1 px-4 py-4">{item.id}</td>
                                     <td className="col-span-2 px-4 py-4">{item.titulo}</td>
-                                    <td className="col-span-2 px-4 py-4">R$ {item.valor_pretendido}</td>
+                                    <td className="col-span-2 px-4 py-4">{toBrMoney(item.valor_pretendido)}</td>
                                     <td className="col-span-4 px-4 py-4">
                                         {item.sobre_o_imovel.length > 50
                                             ? `${item.sobre_o_imovel.slice(0, 50)}...`

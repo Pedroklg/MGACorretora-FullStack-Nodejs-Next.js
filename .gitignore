@@ -36,5 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 # Images
-/imgEmpresas/*
-/imgImoveis/*
+/public/imgEmpresas/*
+/public/imgImoveis/*

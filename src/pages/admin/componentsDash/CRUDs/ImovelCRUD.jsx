@@ -84,8 +84,10 @@ const ImoveisCRUD = ({ item }) => {
                         type="number" name="area_util" value={imovelData.area_util} onChange={handleChange} placeholder="Área Útil" />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="motivo_da_venda" value={imovelData.motivo_da_venda} onChange={handleChange} placeholder="Motivo da Venda" />
+                    
                     <input className="p-1 rounded-lg shadow-lg"
                         type="number" name="valor_pretendido" value={imovelData.valor_pretendido} onChange={handleChange} placeholder="Valor Pretendido" />
+                        
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="condicoes" value={imovelData.condicoes} onChange={handleChange} placeholder="Condições" />
                     <input className="p-1 rounded-lg shadow-lg"
