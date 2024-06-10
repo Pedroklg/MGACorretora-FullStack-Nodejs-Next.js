@@ -18,7 +18,7 @@ const ImoveisCRUD = ({ item }) => {
         endereco: '',
         aluguel: false,
     };
- 
+
     const [imovelData, setImovelData] = useState(initialImovelData);
 
     // Set initial state based on the provided item when component mounts
@@ -35,8 +35,18 @@ const ImoveisCRUD = ({ item }) => {
     };
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0]; // Get the first selected file
-        setImovelData(prevData => ({ ...prevData, imagem: file }));
+        const file = e.target.files[0];
+
+        // Check if a file is selected
+        if (file) {
+            // Read the file as a data URL
+            const reader = new FileReader();
+            reader.onload = () => {
+                // Set the data URL as the image source
+                setImovelData(prevData => ({ ...prevData, imagem: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const createOrUpdateImovel = async () => {
@@ -45,20 +55,20 @@ const ImoveisCRUD = ({ item }) => {
             Object.entries(imovelData).forEach(([key, value]) => {
                 formData.append(key, value);
             });
-    
+
             const endpoint = item ? `/api/imoveis?id=${item.id}` : '/api/imoveis';
             const method = item ? 'PUT' : 'POST';
-    
+
             const response = await fetch(endpoint, {
                 method: method,
                 body: formData,
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Failed to create or update imovel');
             }
-    
+
             console.log('Imovel created or updated successfully');
             alert('Imovel criada ou atualizada com sucesso!');
             // Reset form state to initial values
@@ -85,10 +95,10 @@ const ImoveisCRUD = ({ item }) => {
                         type="number" name="area_util" value={imovelData.area_util} onChange={handleChange} placeholder="Área Útil" />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="motivo_da_venda" value={imovelData.motivo_da_venda} onChange={handleChange} placeholder="Motivo da Venda" />
-                    
+
                     <input className="p-1 rounded-lg shadow-lg"
                         type="number" name="valor_pretendido" value={imovelData.valor_pretendido} onChange={handleChange} placeholder="Valor Pretendido" />
-                        
+
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="condicoes" value={imovelData.condicoes} onChange={handleChange} placeholder="Condições" />
                     <input className="p-1 rounded-lg shadow-lg"
@@ -119,7 +129,11 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                     </div>
-                    {imovelData.imagem ? <Image src={imovelData.imagem} alt="Selected Image" width={400} height={200} /> : <span>Selecione uma imagem:</span>}
+                    {imovelData.imagem ? (
+                        <Image src={imovelData.imagem} alt="Selected Image" width={400} height={200} />
+                    ) : (
+                        <span>Selecione uma imagem:</span>
+                    )}
                     <input className="p-1 rounded-lg"
                         type="file"
                         accept="image/*"
