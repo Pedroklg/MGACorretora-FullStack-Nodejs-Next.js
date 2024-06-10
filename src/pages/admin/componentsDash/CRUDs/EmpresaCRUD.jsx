@@ -26,7 +26,7 @@ const EmpresasCRUD = ({ item }) => {
         if (item) {
             setEmpresaData(item);
         }
-    }, [item]);
+    }, [item]); 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,17 +40,7 @@ const EmpresasCRUD = ({ item }) => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-
-        // Check if a file is selected
-        if (file) {
-            // Read the file as a data URL
-            const reader = new FileReader();
-            reader.onload = () => {
-                // Set the data URL as the image source
-                setEmpresaData(prevData => ({ ...prevData, imagem: reader.result }));
-            };
-            reader.readAsDataURL(file);
-        }
+        setEmpresaData(prevData => ({ ...prevData, imagem: file }));
     };
 
     const createOrUpdateEmpresa = async () => {
@@ -90,7 +80,7 @@ const EmpresasCRUD = ({ item }) => {
         createOrUpdateEmpresa();
     };
 
-    return (
+    return ( 
         <form onSubmit={handleSubmit}>
             <div className="container flex flex-col justify-center items-center w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
@@ -102,10 +92,10 @@ const EmpresasCRUD = ({ item }) => {
                         type="number" name="funcionarios" value={empresaData.funcionarios} onChange={handleChange} placeholder="Funcionários" />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="motivo_da_venda" value={empresaData.motivo_da_venda} onChange={handleChange} placeholder="Motivo da Venda" />
-
+                    
                     <input className="p-1 rounded-lg shadow-lg"
                         type="number" name="valor_pretendido" value={empresaData.valor_pretendido} onChange={handleChange}
-                        placeholder="Valor Pretendido"
+                        placeholder="Valor Pretendido" 
                     />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="condicoes" value={empresaData.condicoes} onChange={handleChange} placeholder="Condições" />
@@ -139,11 +129,10 @@ const EmpresasCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                     </div>
-                    {empresaData.imagem ? (
-                        <Image src={empresaData.imagem} alt="Selected Image" width={400} height={200} />
-                    ) : (
-                        <span>Selecione uma imagem:</span>
-                    )}
+                    {empresaData.imagem ? 
+                            <Image src={empresaData.imagem} alt="Selected Image" width={400} height={200}/> 
+                        :
+                            <span>Selecione uma imagem:</span>}
                     <input className="p-1 rounded-lg"
                         type="file"
                         accept="image/*"
