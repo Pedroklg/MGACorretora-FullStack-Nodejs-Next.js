@@ -7,9 +7,9 @@ export default function Footer() {
         <footer className="h-fit pb-5" style={{ backgroundImage: "url(/footer-bg.png)" }}>
             <div className='flex justify-center text-xl font-bold gap-24'>
                 <Link href="/" passHref legacyBehavior>
-                    <a className="hidden md:flex hover:scale-105 duration-150">
+                    <div className="hidden md:flex hover:scale-105 duration-150">
                         <Image src="/logo.png" alt="MGA Corretora" width={200} height={200} />
-                    </a>
+                    </div>
                 </Link>
                 <div className="flex ml-4 flex-col md:flex-row">
                     <div className="md:mx-16 md:flex-col">
@@ -38,12 +38,12 @@ export default function Footer() {
                         <ul>
                             <li className="p-1 hover:text-red-800 hover:scale-105 duration-150">
                                 <Link href="/Sobre" passHref>
-                                    <a>Sobre</a>
+                                    <span>Sobre</span>
                                 </Link>
                             </li>
                             <li className="p-1 hover:text-red-800 hover:scale-105 duration-150">
                                 <Link href="/Contato" passHref>
-                                    <a>Fale Conosco</a>
+                                    <span>Fale Conosco</span>
                                 </Link>
                             </li>
                         </ul>

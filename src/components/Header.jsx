@@ -41,25 +41,25 @@ const Header = () => {
         <Link href="/Empresas" passHref legacyBehavior>
           <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconShop}
-            <a className="ml-2">Empresas</a>
+            <span className="ml-2">Empresas</span>
           </div>
         </Link>
         <Link href="/Imoveis" passHref legacyBehavior>
           <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconHouse}
-            <a className="ml-2">Imóveis</a>
+            <span className="ml-2">Imóveis</span>
           </div>
         </Link>
         <Link href="/Contato" passHref legacyBehavior>
           <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconEmail}
-            <a className="ml-2">Contato</a>
+            <span className="ml-2">Contato</span>
           </div>
         </Link>
         <div className="hidden lg:flex">
           <Link href="/Sobre" passHref legacyBehavior>
             <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
-              <a className="ml-2">Sobre nós</a>
+              <span className="ml-2">Sobre nós</span>
             </div>
           </Link>
         </div>
