@@ -1,6 +1,10 @@
+import React from 'react';
+
 function App({ Component, pageProps }) {
   return (
-      <Component {...pageProps} />
+    <React.Fragment>
+      {Component && <Component {...pageProps} />}
+    </React.Fragment>
   );
 }
 

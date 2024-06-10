@@ -1,19 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import EmpresaCRUD from './componentsDash/CRUDs/EmpresaCRUD';
 import ImovelCRUD from './componentsDash/CRUDs/ImovelCRUD';
-import { ItemContext } from './componentsDash/context/ItemContext';
+import { ItemContext } from '../../context/ItemContext'; // Adjust path if necessary
 
 const Registrar = () => {
-    const { itemToEdit, setItemToEdit } = useContext(ItemContext); // Access itemToEdit from context
-
+    const { itemToEdit, setItemToEdit } = useContext(ItemContext) || {}; // Access itemToEdit from context
     const [currentCRUD, setCurrentCRUD] = useState('Empresa'); // Default to 'Empresa'
-
-    useEffect(() => {
-        if (itemToEdit && itemToEdit.id) {
-            // Fetch item details only in edit mode
-            fetchItem(itemToEdit.id);// Set current CRUD based on item type
-        }
-    }, [itemToEdit]);
 
     const fetchItem = async (id) => {
         try {
@@ -29,10 +21,17 @@ const Registrar = () => {
         }
     };
 
+    useEffect(() => {
+        if (itemToEdit && itemToEdit.id) {
+            // Fetch item details only in edit mode
+            fetchItem(itemToEdit.id);
+        }
+    }, [itemToEdit]);
+
+
     const handleTipoChange = (tipo) => {
         setCurrentCRUD(tipo);
     };
-
 
     return (
         <div className="h-svh p-0 m-5 w-svw overflow-scroll bg-gray-200 rounded-xl" style={{ height: 'calc(100vh - 3rem)' }}>

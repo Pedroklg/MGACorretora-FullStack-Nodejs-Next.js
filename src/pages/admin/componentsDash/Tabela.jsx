@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import useFetchData from '../../../pages/api/utils/useFetchData';
 import FilteredData from '../../../pages/api/utils/FilteredData';
 import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icones';
-import { ItemContext } from './context/ItemContext';
+import { ItemContext } from '../../../context/ItemContext';
 import ItemDetailsModal from './ItemDetailsModal'; // Import the modal component
 import toBrMoney from '../../../pages/api/utils/toBrMoney';
 
 const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
-    const { setItemToEdit } = useContext(ItemContext);
+    const { itemToEdit, setItemToEdit } = useContext(ItemContext) || {};
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);

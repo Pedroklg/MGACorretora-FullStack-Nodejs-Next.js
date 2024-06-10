@@ -18,6 +18,8 @@ const query = async (text, params) => {
   }
 };
 
-export default {
+const db = {
   query,
 };
+
+export default db;

@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import useFetchData from '../pages/api/utils/useFetchData';
 import { useRouter } from 'next/router';
 import toBrMoney from '../pages/api/utils/toBrMoney';
+import Image from 'next/image';
 
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 12;
   const router = useRouter();
 
-  // Ensure dataToShow is always an array
-  const filteredData = Array.isArray(dataToShow) ? dataToShow : useFetchData(tipoMostrado);
+  // Fetch data regardless of the dataToShow prop
+  const fetchedData = useFetchData(tipoMostrado);
+
+  // Ensure dataToShow is always an array or use fetchedData if dataToShow is not provided
+  const filteredData = Array.isArray(dataToShow) ? dataToShow : fetchedData;
 
   // Calculate indexes for slicing data based on pagination
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -58,9 +62,11 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
             className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out"
             onClick={() => handleCardClick(card.id)} // Navigate to product page on click
           >
-            <img
+            <Image
               src={card.imagem}
               alt={card.titulo}
+              width={400}
+              height={200}
               className="w-full h-48 object-cover"
             />
             <div className="p-6">

@@ -17,9 +17,7 @@
     "next-iron-session": "^4.2.0",
     "pg": "^8.11.5",
     "react": "^18",
-    "react-currency-input-field": "^3.8.0",
     "react-dom": "^18",
-    "react-input-mask": "^2.0.4",
     "sharp": "^0.33.4",
     "uuid": "^9.0.1"
   },

@@ -4,41 +4,49 @@ import { IconEmail, IconWhatsapp } from './Icones'
 
 export default function Footer() {
     return (
-        <footer className="h-60" style={{ backgroundImage: "url(/footer-bg.png)" }}>
+        <footer className="h-fit pb-5" style={{ backgroundImage: "url(/footer-bg.png)" }}>
             <div className='flex justify-center text-xl font-bold gap-24'>
                 <Link href="/" passHref legacyBehavior>
                     <a className="hidden md:flex hover:scale-105 duration-150">
                         <Image src="/logo.png" alt="MGA Corretora" width={200} height={200} />
                     </a>
                 </Link>
-                <div className="flex ml-4">
-                    <div className="md:mx-8">
-                        <h4 className="p-2 text-2xl text-red-800">A MGA</h4>
-                        <ul>
-                            <li className="p-1 hover:text-red-800 hover:scale-105 duration-150"><a href="/Sobre">Sobre</a></li>
-                            <li className="p-1 hover:text-red-800 hover:scale-105 duration-150"><a href="/Contato">Fale Conosco</a></li>
-                        </ul>
-                    </div>
+                <div className="flex ml-4 flex-col md:flex-row">
                     <div className="md:mx-16 md:flex-col">
                         <h4 className="p-2 text-2xl text-red-800">ONDE ESTAMOS?</h4>
-                        <p className="p-1 hover:text-red-800 flex flex-wrap gap-2 justify-center items-center hover:scale-105 duration-150">
-                            {IconWhatsapp} 
+                        <p className="p-1 hover:text-red-800 flex flex-wrap gap-2 justify-start items-center hover:scale-105 duration-150">
+                            {IconWhatsapp}
                             Curitiba - PR |
                             <a href="tel:+5541995400788">41 99540-0788</a>
-                             
+
                         </p>
-                        <p className="p-1 hover:text-red-800 flex flex-wrap gap-2 justify-center items-center hover:scale-105 duration-150">
-                        {IconWhatsapp}
-                            Ponta Grossa - PR | 
+                        <p className="p-1 hover:text-red-800 flex flex-wrap gap-2 justify-start items-center hover:scale-105 duration-150">
+                            {IconWhatsapp}
+                            Ponta Grossa - PR |
                             <a href="tel:+5542999094741">42 99909-4741</a>
-                            
+
                         </p>
-                        <p className="p-1 hover:text-red-800 flex flex-wrap gap-2 items-center justify-center hover:scale-105 duration-150">
+                        <p className="p-1 hover:text-red-800 flex flex-wrap gap-2 items-center justify-start hover:scale-105 duration-150">
                             {IconEmail}
                             <a href="mailto:contato@mgacorretora.com.br" className="flex text-sm md:text-base flex-wrap">
                                 contato@mgacorretora.com.br
                             </a>
                         </p>
+                    </div>
+                    <div className="md:mx-8">
+                        <h4 className="p-2 text-2xl text-red-800">A MGA</h4>
+                        <ul>
+                            <li className="p-1 hover:text-red-800 hover:scale-105 duration-150">
+                                <Link href="/Sobre" passHref>
+                                    <a>Sobre</a>
+                                </Link>
+                            </li>
+                            <li className="p-1 hover:text-red-800 hover:scale-105 duration-150">
+                                <Link href="/Contato" passHref>
+                                    <a>Fale Conosco</a>
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

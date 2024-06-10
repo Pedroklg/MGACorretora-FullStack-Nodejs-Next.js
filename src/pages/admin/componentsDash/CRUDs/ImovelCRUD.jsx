@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 
 const ImoveisCRUD = ({ item }) => {
@@ -118,7 +119,7 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                     </div>
-                    {imovelData.imagem ? <img src={imovelData.imagem} alt="Selected Image" /> : <span>Selecione uma imagem:</span>}
+                    {imovelData.imagem ? <Image src={imovelData.imagem} alt="Selected Image" width={400} height={200} /> : <span>Selecione uma imagem:</span>}
                     <input className="p-1 rounded-lg"
                         type="file"
                         accept="image/*"

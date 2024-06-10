@@ -37,7 +37,7 @@ const Header = () => {
         <span className="text-lg text-red-800 font-medium mt-2">CRECI J5087</span>
       </div>
 
-      <nav className="flex space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">
+      <nav className="flex space-x-3 md:space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">
         <Link href="/Empresas" passHref legacyBehavior>
           <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconShop}

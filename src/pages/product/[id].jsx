@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import toBrMoney from '../api/utils/toBrMoney';
+import Image from 'next/image';
 
 const ProductPage = () => {
     const router = useRouter();
@@ -37,7 +38,7 @@ const ProductPage = () => {
 
                             <div className='col-span-12'>
                                 <div className='h-auto min-h-80 mb-5'>
-                                    <img src={product.item.imagem} alt={product.item.titulo} className="w-full" />
+                                    <Image src={product.item.imagem} alt={product.item.titulo} className="w-full" width={400} height={200}/>
                                 </div>
 
                                 <div className='flex flex-col p-5 shadow-lg rounded-lg mt-4'>

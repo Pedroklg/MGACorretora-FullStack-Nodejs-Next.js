@@ -4,7 +4,7 @@ import { withSession } from '../api/utils/session';
 import Aside from './componentsDash/Aside';
 import Tabela from './componentsDash/Tabela';
 import Registrar from './Registrar';
-import { ItemProvider } from './componentsDash/context/ItemContext'; // Import the ItemProvider
+import { ItemProvider } from '../../context/ItemContext'; // Import the ItemProvider
 
 const AdminDashboardPage = () => {
   const [tipoMostrado, setTipoMostrado] = useState('ambos');
