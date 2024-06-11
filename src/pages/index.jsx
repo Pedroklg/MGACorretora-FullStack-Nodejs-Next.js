@@ -1,4 +1,3 @@
-import '../styles/globals.css';
 import EncontrarEmpresa from '../components/EncontrarEmpresa';
 import Cards from '../components/Cards';
 import Banner from '../components/Banner';
