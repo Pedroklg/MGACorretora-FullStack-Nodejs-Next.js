@@ -2,6 +2,8 @@ import nextConnect from 'next-connect';
 import multer from 'multer';
 import db from './utils/db';
 import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
 
 // Configure multer storage
 const storage = multer.memoryStorage(); // Store images in memory for processing
@@ -41,7 +43,7 @@ apiRoute.post(async (req, res) => {
 
         if (req.file) {
             // Process and store the image
-            imageUrl = await processAndStoreImage(req.file);
+            imageUrl = await processAndStoreImage(req.file, 'empresas');
         }
 
         // Insert data into the database
@@ -74,7 +76,7 @@ apiRoute.put(async (req, res) => {
 
         if (req.file) {
             // Process and store the new image
-            imageUrl = await processAndStoreImage(req.file);
+            imageUrl = await processAndStoreImage(req.file, 'empresas');
         }
 
         // Update data in the database
@@ -95,19 +97,26 @@ apiRoute.put(async (req, res) => {
 });
 
 // Function to process and store image 
-async function processAndStoreImage(file) {
+async function processAndStoreImage(file, folder) {
+    // Create a directory for storing uploaded images if it doesn't exist
+    const uploadDir = `./public/img${folder}`;
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
     // Resize and compress the image
     const resizedImageBuffer = await sharp(file.buffer)
         .resize({ width: 800, height: 600 }) // Resize to 800x600 pixels
         .jpeg({ quality: 80 }) // Compress to JPEG format with 80% quality
         .toBuffer(); // Convert to buffer
 
-    // Store the resized and compressed image in the new folder
+    // Store the resized and compressed image
     const filename = `${Date.now()}-${file.originalname}`;
-    await sharp(resizedImageBuffer).toFile(`images/${filename}`);
+    const imagePath = path.join(uploadDir, filename);
+    fs.writeFileSync(imagePath, resizedImageBuffer);
 
     // Construct image URL
-    return `/images/${filename}`;
+    return `/img${folder}/${filename}`;
 }
 
 export const config = {
