@@ -102,12 +102,12 @@ async function processAndStoreImage(file) {
         .jpeg({ quality: 80 }) // Compress to JPEG format with 80% quality
         .toBuffer(); // Convert to buffer
 
-    // Store the resized and compressed image
+    // Store the resized and compressed image in the new folder
     const filename = `${Date.now()}-${file.originalname}`;
-    await sharp(resizedImageBuffer).toFile(`public/imgEmpresas/${filename}`);
+    await sharp(resizedImageBuffer).toFile(`images/${filename}`);
 
     // Construct image URL
-    return `/imgEmpresas/${filename}`;
+    return `/images/${filename}`;
 }
 
 export const config = {
