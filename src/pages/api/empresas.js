@@ -42,6 +42,7 @@ apiRoute.post(async (req, res) => {
         if (req.file) {
             // Process and store the image
             imageUrl = await processAndStoreImage(req.file, 'empresas');
+            console.log('Image URL:', imageUrl);
         }
 
         // Insert data into the database
