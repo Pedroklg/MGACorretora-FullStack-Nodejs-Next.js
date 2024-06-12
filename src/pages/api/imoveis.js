@@ -96,7 +96,7 @@ apiRoute.put(async (req, res) => {
 // Function to process and store image
 async function processAndStoreImage(file, folder) {
     // Create a directory for storing uploaded images if it doesn't exist
-    const uploadDir = `./public/img${folder}`;
+    const uploadDir = `./uploads/${folder}`;
     if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
     }
