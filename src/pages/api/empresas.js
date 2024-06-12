@@ -41,7 +41,7 @@ apiRoute.post(async (req, res) => {
 
         if (req.file) {
             // Process and store the image
-            imageUrl = await processAndStoreImage(req.file, 'empresas');
+            imageUrl = await processAndStoreImage(req.file, 'uploads/empresas');
             console.log('Image URL:', imageUrl);
         }
 
@@ -75,7 +75,7 @@ apiRoute.put(async (req, res) => {
 
         if (req.file) {
             // Process and store the new image
-            imageUrl = await processAndStoreImage(req.file, 'empresas');
+            imageUrl = await processAndStoreImage(req.file, 'uploads/empresas');
         }
 
         // Update data in the database
