@@ -22,7 +22,7 @@ const AdminDashboardPage = () => {
 
   return (
     <ItemProvider> {/* Wrap the component tree with ItemProvider */}
-      <div className="flex h-screen bg-red-900">
+      <div className="flex flex-col md:flex-row">
         <Aside
           handleTipoMostradoChange={handleTipoMostradoChange}
           handleRegistrarClick={handleRegistrarClick}

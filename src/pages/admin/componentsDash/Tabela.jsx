@@ -87,12 +87,11 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
     };
 
     return (
-        <div className="h-svh p-0 m-5 w-svw overflow-scroll bg-gray-200 rounded-xl"
-            style={{ height: 'calc(100vh - 3rem)' }}>
-            <div className="p-8 grid gap-8">
-                <div className="flex items-center justify-items-center shadow-lg rounded-lg p-5">
-                    <h2 className="text-3xl font-bold">{titulo}</h2>
-                    <div className="ml-20">
+        <div className="min-h-svh h-fit p-0 w-svw overflow-scroll">
+            <div className="md:p-5 grid md:gap-8">
+                <div className="flex flex-col md:flex-row items-center justify-items-center shadow-lg rounded-lg p-5">
+                    <h2 className="text-xl md:text-3xl font-bold">{titulo}</h2>
+                    <div className="md:ml-20">
                         <input
                             type="text"
                             className="w-60 rounded-sm"
@@ -100,50 +99,50 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                             value={searchTerm}
                             onChange={handleSearchChange}
                         />
-                    </div>
                     <button className="bg-red-800 rounded-sm text-white px-1 py-0.5 ml-3">
                         {IconSearchSmall}
                     </button>
+                    </div>
                 </div>
                 <div className="p-4 grid shadow-lg rounded-sm">
                     <table>
                         <thead className="border-b-2 border-red-800">
                             <tr className="grid grid-cols-12 text-xl">
-                                <th className="col-span-1 px-4 py-3 text-left">ID</th>
-                                <th className="col-span-2 px-4 py-3 text-left">Título</th>
-                                <th className="col-span-2 px-4 py-3 text-left">Valor Pretendido</th>
-                                <th className="col-span-4 px-4 py-3 text-left">Sobre o Imovel</th>
-                                <th className="col-span-1 px-4 py-3 text-left">Detalhes</th>
-                                <th className="col-span-1 px-4 py-3 text-left">Editar</th>
-                                <th className="col-span-1 px-4 py-3 text-left">Excluir</th>
+                                <th className="col-span-1 md:px-4 md:py-3 text-left">ID</th>
+                                <th className="col-span-4 md:col-span-2 md:px-4 md:py-3 text-left">Título</th>
+                                <th className="col-span-4 md:col-span-2 md:px-4 md:py-3 text-left">Valor Pretendido</th>
+                                <th className="hidden md:col-span-4 md:px-4 md:py-3 md:block text-left">Sobre o Imovel</th>
+                                <th className="col-span-1 md:px-4 md:py-3 hidden md:block text-left">Detalhes</th>
+                                <th className="col-span-1 md:px-4 md:py-3 hidden md:block text-left">Editar</th>
+                                <th className="col-span-1 md:px-4 md:py-3 hidden md:block text-left">Excluir</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentItems.map(item => (
                                 <tr key={item.id} className="border-b border-gray-200 grid grid-cols-12">
-                                    <td className="col-span-1 px-4 py-4">{item.id}</td>
-                                    <td className="col-span-2 px-4 py-4">{item.titulo}</td>
-                                    <td className="col-span-2 px-4 py-4">{toBrMoney(item.valor_pretendido)}</td>
-                                    <td className="col-span-4 px-4 py-4">
+                                    <td className="col-span-1 md:px-4 md:py-3 text-left">{item.id}</td>
+                                    <td className="col-span-4 md:col-span-2 md:px-4 md:py-3 text-left">{item.titulo}</td>
+                                    <td className="col-span-4 md:col-span-2 md:px-4 md:py-3 text-left">{toBrMoney(item.valor_pretendido)}</td>
+                                    <td className="hidden md:col-span-4 px-4 md:py-3 md:block text-left">
                                         {item.sobre_o_imovel.length > 50
                                             ? `${item.sobre_o_imovel.slice(0, 50)}...`
                                             : item.sobre_o_imovel
                                         }
                                     </td>
-                                    <td className="col-span-1 px-4 py-3">
-                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    <td className="col-span-1 md:px-4 py-3 text-left">
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-0.5 md:py-2 md:px-4 rounded"
                                             onClick={() => handleDetails(item.id)}>
                                             {IconEye}
                                         </button>
                                     </td>
-                                    <td className="col-span-1 px-4 py-3">
-                                        <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded"
+                                    <td className="col-span-1 md:px-4 py-3 text-left">
+                                        <button className="bg-emerald-600 hover:bg-emerald-700 text-white py-0.5 px-0.5 font-bold md:py-2 md:px-4 rounded"
                                             onClick={() => handleEdit(item.id)}>
                                             {IconEdit}
                                         </button>
                                     </td>
-                                    <td className="col-span-1 px-4 py-3">
-                                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                    <td className="col-span-1 md:px-4 py-3 text-left">
+                                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-0.5 px-0.5 md:py-2 md:px-4 rounded"
                                             onClick={() => handleDelete(item.id)}>
                                             {IconTrash}
                                         </button>
@@ -153,7 +152,7 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-5">
                     <button
                         onClick={() => paginate(currentPage - 1)}
                         className={`bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l ${currentPage === 1 ? 'disabled' : ''}`}

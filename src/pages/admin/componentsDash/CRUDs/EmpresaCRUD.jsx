@@ -82,7 +82,7 @@ const EmpresasCRUD = ({ item }) => {
 
     return ( 
         <form onSubmit={handleSubmit}>
-            <div className="container flex flex-col justify-center items-center w-5/6">
+            <div className="container flex flex-col justify-center items-center w-full md:w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="titulo" value={empresaData.titulo} onChange={handleChange} placeholder="Título" />

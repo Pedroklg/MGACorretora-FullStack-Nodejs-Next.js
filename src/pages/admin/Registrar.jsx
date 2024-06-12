@@ -34,11 +34,11 @@ const Registrar = () => {
     };
 
     return (
-        <div className="h-svh p-0 m-5 w-svw overflow-scroll bg-gray-200 rounded-xl" style={{ height: 'calc(100vh - 3rem)' }}>
+        <div className="h-fit min-h-svh w-svw overflow-scroll">
             <div className="p-8 grid gap-8">
-                <div className="flex items-center justify-start shadow-lg rounded-lg">
+                <div className="flex items-center justify-start shadow-lg rounded-lg flex-col md:flex-row">
                     <h1 className="text-3xl font-bold p-5">Registrar</h1>
-                    <div className="ml-10">
+                    <div className="md:ml-10">
                         <button onClick={() => handleTipoChange('Empresa')} className={`p-2 m-4 ${currentCRUD === 'Empresa' ? 'bg-red-800' : 'bg-red-700'} hover:bg-red-800 rounded-xl text-xl font-bold text-gray-200 shadow-xl`}>
                             Empresa
                         </button>

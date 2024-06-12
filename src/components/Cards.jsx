@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useFetchData from '../pages/api/utils/useFetchData';
 import { useRouter } from 'next/router';
 import toBrMoney from '../pages/api/utils/toBrMoney';
@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true); // Add loading state
   const cardsPerPage = 12;
   const router = useRouter();
 
@@ -38,9 +39,15 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
     titulo = "Empresas e Imóveis";
   }
 
-  // Conditional rendering for empty search results
-  if (filteredData.length === 0) {
-    return (
+  // Set loading to false after data is fetched
+  useEffect(() => {
+    setLoading(false);
+  }, [filteredData]);
+
+  // Conditional rendering for empty search results or loading state
+  let content;
+  if (filteredData.length === 0 && !loading) {
+    content = (
       <div className="container mx-auto p-4 m-5">
         <h4 className='flex justify-center w-full text-4xl text-red-800'>Nada encontrado conforme sua busca!</h4>
       </div>

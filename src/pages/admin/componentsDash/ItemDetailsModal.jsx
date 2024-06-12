@@ -19,7 +19,7 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white rounded-lg p-8 max-w-4xl w-3/4 flex flex-col items-center">
+            <div className="rounded-lg m-5 md:p-8 md:max-w-4xl w-4/4 md:w-3/4 flex flex-col items-center bg-white">
                 {itemDetails ? (
                     <>
                         <h1 className="text-xl font-bold mb-4">Detalhes {itemDetails.tipo === "Empresa" ? <span>da Empresa</span> : <span>do Imóvel</span>}</h1>
@@ -94,7 +94,7 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                                 }
                                 <tr>
                                     <td className="font-semibold">Imagem:</td>
-                                    <td>{itemDetails.item.imagem}</td>
+                                    <td className='flex flex-wrap'>{itemDetails.item.imagem}</td>
                                 </tr>
                             </tbody>
                         </table>
