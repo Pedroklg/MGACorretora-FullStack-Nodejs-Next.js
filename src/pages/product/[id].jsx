@@ -38,7 +38,7 @@ const ProductPage = () => {
 
                             <div className='col-span-12'>
                                 <div className='h-auto min-h-80 mb-5'>
-                                    <Image src={encodeURIComponent(product.item.imagem)} alt={product.item.titulo} className="w-full" width={400} height={200}/>
+                                    <Image src={product.item.imagem} alt={product.item.titulo} className="w-full" width={400} height={200}/>
                                 </div>
 
                                 <div className='flex flex-col p-5 shadow-lg rounded-lg mt-4'>
