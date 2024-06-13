@@ -83,7 +83,6 @@ const EmpresasCRUD = ({ item }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         createOrUpdateEmpresa();
-        location.reload();
     };
 
     return ( 

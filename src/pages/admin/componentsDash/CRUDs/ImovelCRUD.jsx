@@ -76,7 +76,6 @@ const ImoveisCRUD = ({ item }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         createOrUpdateImovel();
-        location.reload();
     };
 
     return (
