@@ -16,10 +16,10 @@ const Header = () => {
   // Function to handle search button click
   const handleSearchSend = () => {
     // Redirect to the search page with the search term as a query parameter
-    if(searchTerm.toLowerCase() === 'empresas'){
+    if (searchTerm.toLowerCase() === 'empresas') {
       router.push(`/Empresas`);
       return;
-    }else if(searchTerm.toLowerCase() === 'imoveis'){
+    } else if (searchTerm.toLowerCase() === 'imoveis') {
       router.push(`/Imoveis`);
       return;
     }
@@ -64,11 +64,11 @@ const Header = () => {
           </Link>
         </div>
       </nav>
-      <div className="flex items-center justify-center ml-3">
+      <div className="flex items-center justify-center ml-3 mb-4 md:mb-0">
         <input
           type="text"
           placeholder=" O que você procura?  "
-          className="mb-2 md:mb-0 p-1 rounded-sm shadow-md"
+          className="p-1 rounded-sm shadow-md"
           value={searchTerm} // Set input value to the search term state
           onChange={handleSearchChange}
           onKeyUp={(e) => e.key === 'Enter' && handleSearchSend()} // Call handleSearchChange on input change

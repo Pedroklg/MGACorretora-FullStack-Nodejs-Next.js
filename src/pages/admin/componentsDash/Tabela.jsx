@@ -114,10 +114,10 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
             <div className="md:p-5 grid md:gap-8">
                 <div className="flex flex-col md:flex-row items-center justify-items-center shadow-lg rounded-lg p-5">
                     <h2 className="text-xl md:text-3xl font-bold">{titulo}</h2>
-                    <div className="md:ml-20">
+                    <div className="md:ml-20 flex justify-center items-center">
                         <input
                             type="text"
-                            className="w-60 rounded-sm"
+                            className="w-60 rounded-sm p-1"
                             placeholder="Search..."
                             value={searchTerm}
                             onChange={handleSearchChange}

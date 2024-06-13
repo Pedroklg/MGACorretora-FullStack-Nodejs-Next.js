@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { NumericFormat } from 'react-number-format';  // Correct the import statement
 import { IconSeach } from './Icones';
 
 export default function EncontrarEmpresa() {
@@ -71,15 +72,18 @@ export default function EncontrarEmpresa() {
     setCategoria(e.target.value);
   };
 
-  const handleMinPriceChange = (e) => {
-    setMinPrice(e.target.value);
+  const handleMinPriceChange = (values) => {
+    setMinPrice(values.floatValue);
   };
 
-  const handleMaxPriceChange = (e) => {
-    setMaxPrice(e.target.value);
+  const handleMaxPriceChange = (values) => {
+    setMaxPrice(values.floatValue);
   };
 
   const handleSearch = () => {
+    if (!estado && !cidade && !categoria && !minPrice && !maxPrice) {
+      return;
+    }
     const queryParams = {
       estado,
       cidade,
@@ -103,7 +107,7 @@ export default function EncontrarEmpresa() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>
-              <label htmlFor="estado" className="block text-xs font-medium text-gray-700 mb-1 durat">Estado</label>
+              <label htmlFor="estado" className="block text-xs font-medium text-gray-700 mb-1">Estado</label>
               <select
                 id="estado"
                 name="estado"
@@ -149,30 +153,32 @@ export default function EncontrarEmpresa() {
             </div>
             <div>
               <label htmlFor="minPrice" className="block text-sm font-medium text-gray-700 mb-1">Preço Mínimo (R$)</label>
-              <input
-                type="number"
+              <NumericFormat
                 id="minPrice"
                 name="minPrice"
-                min="0"
-                max="10000"
                 value={minPrice}
-                onChange={handleMinPriceChange}
+                onValueChange={handleMinPriceChange}
+                thousandSeparator='.'
+                decimalSeparator=","
+                prefix="R$ "
                 className="form-input w-full"
                 placeholder="Mínimo"
+                isNumericString
               />
             </div>
             <div>
               <label htmlFor="maxPrice" className="block text-sm font-medium text-gray-700 mb-1">Preço Máximo (R$)</label>
-              <input
-                type="number"
+              <NumericFormat
                 id="maxPrice"
                 name="maxPrice"
-                min="0"
-                max="10000"
                 value={maxPrice}
-                onChange={handleMaxPriceChange}
+                onValueChange={handleMaxPriceChange}
+                thousandSeparator='.'
+                decimalSeparator=","
+                prefix="R$ "
                 className="form-input w-full"
                 placeholder="Máximo"
+                isNumericString
               />
             </div>
           </div>

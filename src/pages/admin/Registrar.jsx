@@ -4,7 +4,7 @@ import ImovelCRUD from './componentsDash/CRUDs/ImovelCRUD';
 import { ItemContext } from '../../context/ItemContext'; // Adjust path if necessary
 import ProgressBar from '../../components/animations/ProgressBar';
 
-const Registrar = () => {
+const Registrar = ({ setShowRegistrar }) => {
     const { itemToEdit, setItemToEdit } = useContext(ItemContext) || {}; // Access itemToEdit from context
     const [currentCRUD, setCurrentCRUD] = useState('Empresa'); // Default to 'Empresa'
     const [loading, setLoading] = useState(false);
@@ -33,15 +33,19 @@ const Registrar = () => {
         }
     }, [itemToEdit]);
 
-
     const handleTipoChange = (tipo) => {
         setCurrentCRUD(tipo);
+    };
+
+    const onSubmitSuccess = () => {
+        // Callback function to set showRegistrar to true in AdminDashboardPage
+        setShowRegistrar(false);
     };
 
     return (
         <div className="h-fit min-h-svh w-svw overflow-scroll">
             <ProgressBar loading={loading}/>
-            <div className="p-8 grid gap-8">
+            <div className="p-5 md:p-8 flex flex-col gap-8">
                 <div className="flex items-center justify-start shadow-lg rounded-lg flex-col md:flex-row">
                     <h1 className="text-3xl font-bold p-5">Registrar</h1>
                     <div className="md:ml-10">
@@ -55,9 +59,9 @@ const Registrar = () => {
                 </div>
 
                 {currentCRUD === 'Empresa' ? (
-                    <EmpresaCRUD item={itemToEdit && itemToEdit.tipo === 'Empresa' ? itemToEdit.item : null} />
+                    <EmpresaCRUD item={itemToEdit && itemToEdit.tipo === 'Empresa' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
                 ) : (
-                    <ImovelCRUD item={itemToEdit && itemToEdit.tipo === 'Imovel' ? itemToEdit.item : null} />
+                    <ImovelCRUD item={itemToEdit && itemToEdit.tipo === 'Imovel' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
                 )}
             </div>
         </div>

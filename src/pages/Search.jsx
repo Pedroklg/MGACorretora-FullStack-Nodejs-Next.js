@@ -29,6 +29,9 @@ const Search = () => {
                 if (maxPrice) queryParams.maxPrice = maxPrice;
 
                 url = `/api/especificSearch?${new URLSearchParams(queryParams).toString()}`;
+            } else {
+                // If no search parameters are provided, fetch all data
+                url = '/api/tipoSearch';
             }
 
             if (!url) return;

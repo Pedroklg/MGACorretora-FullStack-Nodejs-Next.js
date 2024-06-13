@@ -28,7 +28,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
       setLoading(false); // Stop loading
     }
   };
-  
+
   useEffect(() => {
     if (dataToShow) {
       setcurrentData(dataToShow);
@@ -79,6 +79,12 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         </h1>
         <div className="flex-grow h-px bg-red-700 ml-4 p-0.5 rounded-md"></div>
       </div>
+      {currentData.length === 0 ?
+        <div className='text-center text-3xl font-semibold text-black flex justify-center'>
+          <span className=''>Nenhum resultado encontrado</span>
+        </div>
+        :
+        ""}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentCards.map((card, index) => (
           <div

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { IconEdit, IconHouse, IconShop } from "../../../components/Icones";
 
-const Aside = ({ handleTipoMostradoChange, handleRegistrarClick }) => { // Receive handleRegistrarClick as a prop
+const Nav = ({ handleTipoMostradoChange, handleRegistrarClick }) => { // Receive handleRegistrarClick as a prop
   return (
-    <nav className="box-border bg-red-900 w-full md:w-72 shadow-xl flex flex-col h-72 md:h-svh items-center pt-2 md:pt-12">
+    <nav className="box-border bg-red-900 w-full md:w-72 shadow-xl flex flex-col h-fit md:h-svh items-center pt-2 md:pt-12">
       <div className="hover:cursor-pointer bg-slate-200 p-2 rounded-md" onClick={() => handleTipoMostradoChange('ambos')}>
         <Image src="/logo.png" alt="MGA Corretora" width={180} height={180} priority style={{ width: "auto" }} />
       </div>
@@ -23,4 +23,4 @@ const Aside = ({ handleTipoMostradoChange, handleRegistrarClick }) => { // Recei
   );
 };
 
-export default Aside;
+export default Nav;

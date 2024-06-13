@@ -19,6 +19,7 @@
     "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-number-format": "^5.4.0",
     "sharp": "^0.33.4",
     "uuid": "^9.0.1"
   },

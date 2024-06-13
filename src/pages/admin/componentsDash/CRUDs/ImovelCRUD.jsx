@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
+import ProgressBar from '../../../../components/animations/ProgressBar';
+import { NumericFormat } from 'react-number-format';
 
-const ImoveisCRUD = ({ item }) => {
+const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
     const [loading, setLoading] = useState(false);
+    const [unsavedChanges, setUnsavedChanges] = useState(false);
     const initialImovelData = {
         titulo: '',
         imagem: null,
@@ -20,7 +22,7 @@ const ImoveisCRUD = ({ item }) => {
         endereco: '',
         aluguel: false,
     };
- 
+
     const [imovelData, setImovelData] = useState(initialImovelData);
 
     // Set initial state based on the provided item when component mounts
@@ -30,15 +32,33 @@ const ImoveisCRUD = ({ item }) => {
         }
     }, [item]);
 
+    // Check if any field is filled to trigger unsaved changes alert
+    useEffect(() => {
+        const isFieldFilled = Object.values(imovelData).some(value => !!value);
+        if (isFieldFilled) {
+            window.addEventListener('beforeunload', handleBeforeUnload);
+        } else {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [imovelData]);
+
+    const handleBeforeUnload = (event) => {
+        event.preventDefault();
+        event.returnValue = '';
+    };
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         const newValue = type === 'checkbox' ? checked : value;
         setImovelData(prevData => ({ ...prevData, [name]: newValue }));
+        setUnsavedChanges(true);
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0]; // Get the first selected file
         setImovelData(prevData => ({ ...prevData, imagem: file }));
+        setUnsavedChanges(true);
     };
 
     const createOrUpdateImovel = async () => {
@@ -48,25 +68,27 @@ const ImoveisCRUD = ({ item }) => {
             Object.entries(imovelData).forEach(([key, value]) => {
                 formData.append(key, value);
             });
-    
+
             const endpoint = item ? `/api/imoveis?id=${item.id}` : '/api/imoveis';
             const method = item ? 'PUT' : 'POST';
-    
+
             const response = await fetch(endpoint, {
                 method: method,
                 body: formData,
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Failed to create or update imovel');
             }
-    
-            console.log('Imovel created or updated successfully');
-            alert('Imovel criada ou atualizada com sucesso!');
-            // Reset form state to initial values
-            setImovelData(initialImovelData);
+
             setLoading(false);
+            alert('Imovel criada ou atualizada com sucesso!');
+            // Reset form state to initial values and clear unsaved changes flag
+            setImovelData(initialImovelData);
+            setUnsavedChanges(false);
+
+            onSubmitSuccess();
         } catch (error) {
             console.error('Error creating or updating imovel:', error.message);
             setLoading(false);
@@ -75,34 +97,53 @@ const ImoveisCRUD = ({ item }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        createOrUpdateImovel();
+        if (validateForm()) {
+            createOrUpdateImovel();
+        } else {
+            alert('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado');
+        }
+    };
+
+    const validateForm = () => {
+        return imovelData.titulo && 
+        imovelData.valor_pretendido && 
+        imovelData.cidade && 
+        imovelData.estado;
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <LoadingSpinner loading={loading} />
-            <div className="conteiner flex flex-col justify-center items-center w-5/6">
+            <ProgressBar loading={loading} />
+            <div className="conteiner flex flex-col justify-center items-center md:w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
                     <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="titulo" value={imovelData.titulo} onChange={handleChange} placeholder="Titulo" />
+                        type="text" name="titulo" value={imovelData.titulo} onChange={handleChange} placeholder="Titulo" required />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="number" name="area_construida" value={imovelData.area_construida} onChange={handleChange} placeholder="Área Construída" />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="number" name="area_util" value={imovelData.area_util} onChange={handleChange} placeholder="Área Útil" />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="motivo_da_venda" value={imovelData.motivo_da_venda} onChange={handleChange} placeholder="Motivo da Venda" />
-                    
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="number" name="valor_pretendido" value={imovelData.valor_pretendido} onChange={handleChange} placeholder="Valor Pretendido" />
-                        
+                    <NumericFormat
+                        className="p-1 rounded-lg shadow-lg"
+                        name="valor_pretendido"
+                        value={imovelData.valor_pretendido}
+                        onValueChange={(values) => handleChange({ target: { name: 'valor_pretendido', value: values.floatValue } })}
+                        placeholder="Valor Pretendido"
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        prefix="R$ "
+                        isNumericString
+                        required
+                    />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="condicoes" value={imovelData.condicoes} onChange={handleChange} placeholder="Condições" />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="sobre_o_imovel" value={imovelData.sobre_o_imovel} onChange={handleChange} placeholder="Sobre o Imóvel" />
                     <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="estado" value={imovelData.estado} onChange={handleChange} placeholder="Estado" />
+                        type="text" name="estado" value={imovelData.estado} onChange={handleChange} placeholder="Estado" required />
                     <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="cidade" value={imovelData.cidade} onChange={handleChange} placeholder="Cidade" />
+                        type="text" name="cidade" value={imovelData.cidade} onChange={handleChange} placeholder="Cidade" required />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="endereco" value={imovelData.endereco} onChange={handleChange} placeholder="Endereço" />
                     <div className='flex p-3 gap-10 text-lg'>
@@ -125,10 +166,10 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                     </div>
-                    {imovelData.imagem ? 
-                            <Image src={imovelData.imagem} alt="Selected Image" width={400} height={200} /> 
-                        : 
-                            <span>Selecione uma imagem:</span>}
+                    {imovelData.imagem ?
+                        <Image src={imovelData.imagem} alt="Selected Image" width={400} height={200} />
+                        :
+                        <span>Selecione uma imagem:</span>}
                     <input className="p-1 rounded-lg"
                         type="file"
                         accept="image/*"
