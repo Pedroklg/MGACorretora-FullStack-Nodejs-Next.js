@@ -1,20 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import useFetchData from '../pages/api/utils/useFetchData';
 import { useRouter } from 'next/router';
 import toBrMoney from '../pages/api/utils/toBrMoney';
 import Image from 'next/image';
+import SkeletonLoader from './animations/SkeletonLoader';
 
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const [filteredData, setFilteredData] = useState([]);
   const cardsPerPage = 12;
   const router = useRouter();
 
-  // Fetch data regardless of the dataToShow prop
-  const fetchedData = useFetchData(tipoMostrado);
+  // Function to fetch data based on tipoMostrado
+  const fetchData = async () => {
+    try {
+      setLoading(true); // Start loading
+      let url = `/api/tipoSearch?tipoMostrado=${tipoMostrado}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+      setFilteredData(data); // Set fetched data
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
 
-  // Ensure dataToShow is always an array or use fetchedData if dataToShow is not provided
-  const filteredData = Array.isArray(dataToShow) ? dataToShow : fetchedData;
+  useEffect(() => {
+    fetchData(); // Initial fetch
+  }, [tipoMostrado]); // Fetch again if tipoMostrado changes
 
   // Calculate indexes for slicing data based on pagination
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -39,21 +56,16 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
     titulo = "Empresas e Imóveis";
   }
 
-  // Set loading to false after data is fetched
-  useEffect(() => {
-    setLoading(false);
-  }, [filteredData]);
-
-  // Conditional rendering for empty search results or loading state
-  let content;
-  if (filteredData.length === 0 && !loading) {
-    content = (
+  // Conditional rendering for loading state
+  if (loading) {
+    return (
       <div className="container mx-auto p-4 m-5">
-        <h4 className='flex justify-center w-full text-4xl text-red-800'>Nada encontrado conforme sua busca!</h4>
+        <SkeletonLoader />
       </div>
     );
   }
 
+  // Render content once loading is false
   return (
     <div className="container mx-auto p-4 m-5">
       <div className="flex items-center mb-6">

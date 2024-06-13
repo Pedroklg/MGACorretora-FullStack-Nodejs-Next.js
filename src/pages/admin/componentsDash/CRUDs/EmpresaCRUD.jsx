@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
+import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 
 const EmpresasCRUD = ({ item }) => {
+    const [loading, setLoading] = useState(false);
     const initialEmpresaData = {
         titulo: '',
         tempo_de_mercado: '',
@@ -45,6 +47,7 @@ const EmpresasCRUD = ({ item }) => {
 
     const createOrUpdateEmpresa = async () => {
         try {
+            setLoading(true);
             const formData = new FormData();
             Object.entries(empresaData).forEach(([key, value]) => {
                 formData.append(key, value);
@@ -70,18 +73,22 @@ const EmpresasCRUD = ({ item }) => {
             alert('Empresa criada ou atualizada com sucesso!');
             // Reset form state to initial values
             setEmpresaData(initialEmpresaData);
+            setLoading(false);
         } catch (error) {
             console.error('Error creating or updating empresa:', error.message);
+            setLoading(false);
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         createOrUpdateEmpresa();
+        location.reload();
     };
 
     return ( 
         <form onSubmit={handleSubmit}>
+            <LoadingSpinner loading={loading} />
             <div className="container flex flex-col justify-center items-center w-full md:w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
                     <input className="p-1 rounded-lg shadow-lg"

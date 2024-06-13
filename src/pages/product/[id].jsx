@@ -4,6 +4,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import toBrMoney from '../api/utils/toBrMoney';
 import Image from 'next/image';
+import LoadingSpinner from '../../components/animations/LoadingSpinner';
 
 const ProductPage = () => {
     const router = useRouter();
@@ -20,7 +21,15 @@ const ProductPage = () => {
     }, [id]);
 
     if (!product) {
-        return <div>Loading...</div>;
+        return (
+            <div className="flex flex-col min-h-screen">
+                <Header />
+                <div className="flex-grow">
+                    <LoadingSpinner isLoading={true} />
+                </div>
+                <Footer />
+            </div>
+        );
     }
 
     return (
@@ -38,7 +47,7 @@ const ProductPage = () => {
 
                             <div className='col-span-12'>
                                 <div className='h-auto min-h-80 mb-5'>
-                                    <Image src={product.item.imagem} alt={product.item.titulo} className="w-full" width={400} height={200}/>
+                                    <Image src={product.item.imagem} alt={product.item.titulo} className="w-full" width={400} height={200} />
                                 </div>
 
                                 <div className='flex flex-col p-5 shadow-lg rounded-lg mt-4'>
@@ -52,45 +61,25 @@ const ProductPage = () => {
                         <div className='col-span-12 md:col-span-5 flex flex-col gap-4 shadow-lg p-3 rounded-lg mt-5 md:mt-0'>
 
                             <div className='flex justify-between p-1 flex-col md:flex-row'>
-                                <h1 className="font-semibold">Valor:</h1>
-                                <p>{toBrMoney(product.item.valor_pretendido)}</p>
+                                <h1 className="font-semibold text-2xl text-red-800">Valor:</h1>
+                                <p className="text-xl">{toBrMoney(product.item.valor_pretendido)}</p>
                             </div>
 
                             <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                <h1 className="font-semibold">Estado:</h1>
-                                <p>{product.item.estado}</p>
+                                <h1 className="font-semibold text-xl">Estado:</h1>
+                                <p className="text-lg">{product.item.estado}</p>
                             </div>
 
                             <div className='flex justify-between p-1'>
-                                <h1 className="font-semibold">Cidade:</h1>
-                                <p>{product.item.cidade}</p>
-                            </div>
-
-                            <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                <h1 className="font-semibold">Motivo da Venda:</h1>
-                                <p>{product.item.motivo_da_venda}</p>
-                            </div>
-
-                            <div className='flex justify-between p-1'>
-                                <h1 className="font-semibold">Condições:</h1>
-                                <p>{product.item.condicoes}</p>
-                            </div>
-
-                            <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                <h1 className="font-semibold">Aceita Permuta:</h1>
-                                <p>{product.item.aceita_permuta ? <span>Sim</span> : <span>Não</span>}</p>
-                            </div>
-
-                            <div className='flex justify-between p-1'>
-                                <h1 className="font-semibold">Tem Dívida:</h1>
-                                <p>{product.item.tem_divida ? <span>Sim</span> : <span>Não</span>}</p>
+                                <h1 className="font-semibold text-xl">Cidade:</h1>
+                                <p className="text-lg">{product.item.cidade}</p>
                             </div>
 
                             {product.tipo === 'Empresa' ?
                                 <>
                                     <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                        <h1 className="font-semibold">Categoria: </h1>
-                                        <p>{product.item.categoria}</p>
+                                        <h1 className="font-semibold text-xl">Categoria: </h1>
+                                        <p className="text-lg">{product.item.categoria}</p>
                                     </div>
                                     <div className='flex justify-between p-1 w-full'>
                                         <h1 className="font-semibold">Tempo de Mercado:</h1>
@@ -113,13 +102,34 @@ const ProductPage = () => {
                                         <h1 className="font-semibold">Área Útil:</h1>
                                         <p>{product.item.area_util} m²</p>
                                     </div>
-                                    <div className='flex justify-between p-1 w-full bg-gray-200'>
+                                    <div className='flex justify-between bg-gray-200 p-1 w-full'>
                                         <h1 className="font-semibold">Finalidade:</h1>
                                         <p>{product.item.aluguel ? <span>Aluguel</span> : <span>Venda</span>}</p>
                                     </div>
                                 </>
 
                             }
+
+                            <div className='flex justify-between p-1 w-full'>
+                                <h1 className="font-semibold">Motivo da Venda:</h1>
+                                <p>{product.item.motivo_da_venda}</p>
+                            </div>
+
+                            <div className='flex justify-between bg-gray-200 p-1'>
+                                <h1 className="font-semibold">Condições:</h1>
+                                <p>{product.item.condicoes}</p>
+                            </div>
+
+                            <div className='flex justify-between p-1 w-full'>
+                                <h1 className="font-semibold">Aceita Permuta:</h1>
+                                <p>{product.item.aceita_permuta ? <span>Sim</span> : <span>Não</span>}</p>
+                            </div>
+
+                            <div className='flex justify-between bg-gray-200 p-1'>
+                                <h1 className="font-semibold">Tem Dívida:</h1>
+                                <p>{product.item.tem_divida ? <span>Sim</span> : <span>Não</span>}</p>
+                            </div>
+
                             <div className='flex justify-between p-1 w-full'>
                                 <h1 className="font-semibold">Código:</h1>
                                 <p>{product.item.id}</p>

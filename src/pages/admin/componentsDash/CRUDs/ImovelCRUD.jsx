@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 
 const ImoveisCRUD = ({ item }) => {
+    const [loading, setLoading] = useState(false);
     const initialImovelData = {
         titulo: '',
         imagem: null,
@@ -41,6 +43,7 @@ const ImoveisCRUD = ({ item }) => {
 
     const createOrUpdateImovel = async () => {
         try {
+            setLoading(true);
             const formData = new FormData();
             Object.entries(imovelData).forEach(([key, value]) => {
                 formData.append(key, value);
@@ -63,18 +66,22 @@ const ImoveisCRUD = ({ item }) => {
             alert('Imovel criada ou atualizada com sucesso!');
             // Reset form state to initial values
             setImovelData(initialImovelData);
+            setLoading(false);
         } catch (error) {
             console.error('Error creating or updating imovel:', error.message);
+            setLoading(false);
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         createOrUpdateImovel();
+        location.reload();
     };
 
     return (
         <form onSubmit={handleSubmit}>
+            <LoadingSpinner loading={loading} />
             <div className="conteiner flex flex-col justify-center items-center w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
                     <input className="p-1 rounded-lg shadow-lg"

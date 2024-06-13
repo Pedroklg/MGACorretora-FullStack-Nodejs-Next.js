@@ -1,23 +1,39 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import useFetchData from '../../../pages/api/utils/useFetchData';
 import FilteredData from '../../../pages/api/utils/FilteredData';
 import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icones';
 import { ItemContext } from '../../../context/ItemContext';
 import ItemDetailsModal from './ItemDetailsModal'; // Import the modal component
 import toBrMoney from '../../../pages/api/utils/toBrMoney';
+import ProgressBar from '../../../components/animations/ProgressBar'; // Import the ProgressBar component
 
 const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
-    const { itemToEdit, setItemToEdit } = useContext(ItemContext) || {};
+    const { setItemToEdit } = useContext(ItemContext) || {};
+    const [dataToShow, setDataToShow] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const [error, setError] = useState(null);
     const [selectedItemId, setSelectedItemId] = useState(null); // State to store selected item id
     const [isModalOpen, setIsModalOpen] = useState(false);  // State to manage modal visibility
+    const [loading, setLoading] = useState(false); // State to manage loading state
 
     const router = useRouter();
 
-    const dataToShow = useFetchData(tipoMostrado);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(`/api/tipoSearch?tipoMostrado=${tipoMostrado}`);
+                const data = await response.json();
+                setDataToShow(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [tipoMostrado]);
 
     const itemsPerPage = 9;
     const filteredData = FilteredData(dataToShow, searchTerm);
@@ -48,8 +64,10 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
 
     const handleDetails = async (id) => {
         try {
+            setLoading(true);
             const response = await fetch(`/api/empresasImoveis?id=${id}`);
             const data = await response.json();
+            setLoading(false);
             if (!response.ok) {
                 throw new Error('Failed to fetch item details');
             }
@@ -57,15 +75,18 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
             setIsModalOpen(true);
         } catch (error) {
             setError(error.message);
+            setLoading(false);
             console.error('Error fetching item details:', error);
         }
     };
 
     const handleDelete = async (id) => {
         try {
+            setLoading(true);
             const response = await fetch(`/api/empresasImoveis?id=${id}`, {
                 method: 'DELETE'
             });
+            setLoading(false);
             if (!response.ok) {
                 throw new Error('Failed to delete item');
             }
@@ -73,6 +94,7 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
             window.location.reload();
         } catch (error) {
             setError(error.message);
+            setLoading(false);
             console.error('Error deleting item:', error);
         }
     };
@@ -88,6 +110,7 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
 
     return (
         <div className="min-h-svh h-fit p-0 w-svw overflow-scroll">
+            <ProgressBar loading={loading} />
             <div className="md:p-5 grid md:gap-8">
                 <div className="flex flex-col md:flex-row items-center justify-items-center shadow-lg rounded-lg p-5">
                     <h2 className="text-xl md:text-3xl font-bold">{titulo}</h2>
@@ -99,9 +122,9 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                             value={searchTerm}
                             onChange={handleSearchChange}
                         />
-                    <button className="bg-red-800 rounded-sm text-white px-1 py-0.5 ml-3">
-                        {IconSearchSmall}
-                    </button>
+                        <button className="bg-red-800 rounded-sm text-white px-1 py-0.5 ml-3">
+                            {IconSearchSmall}
+                        </button>
                     </div>
                 </div>
                 <div className="p-4 grid shadow-lg rounded-sm">
