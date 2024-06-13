@@ -3,13 +3,18 @@ import Footer from "../components/Footer";
 import Cards from "../components/Cards";
 import SkeletonLoader from "../components/animations/SkeletonLoader"; // Import the SkeletonLoader component
 import { useState, useEffect } from "react";
-import FilteredData from "../pages/api/utils/FilteredData";
 
 function Empresas() {
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
     const [dataToShow, setDataToShow] = useState([]);
     const [loading, setLoading] = useState(true); // State to manage loading state
+
+    const FilteredData = (dataToShow, categoria) => {
+        if (!categoria) return dataToShow;
+
+        return dataToShow.filter((empresa) => empresa.categoria === categoria);
+    };
 
     useEffect(() => {
         fetchCategorias();
@@ -49,6 +54,7 @@ function Empresas() {
     };
 
     const filteredData = FilteredData(dataToShow, categoriaSelecionada);
+    console.log(filteredData);
 
     return (
         <div className="flex flex-col min-h-screen">

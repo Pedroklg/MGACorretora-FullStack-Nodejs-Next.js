@@ -31,12 +31,12 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
 
   useEffect(() => {
     if (dataToShow) {
-      setcurrentData(dataToShow);
-      setLoading(false);
+      setcurrentData(dataToShow); // Update currentData with filtered dataToShow
+      setLoading(false); // Stop loading once dataToShow is set
     } else {
-      fetchData();
+      fetchData(); // Fetch data if dataToShow is not available
     }
-  }, [tipoMostrado]); // Fetch again if tipoMostrado changes
+  }, [dataToShow, tipoMostrado]); // Fetch again if tipoMostrado changes
 
   // Calculate indexes for slicing data based on pagination
   const indexOfLastCard = currentPage * cardsPerPage;
