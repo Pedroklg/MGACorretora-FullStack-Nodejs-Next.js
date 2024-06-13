@@ -54,7 +54,6 @@ function Empresas() {
     };
 
     const filteredData = FilteredData(dataToShow, categoriaSelecionada);
-    console.log(filteredData);
 
     return (
         <div className="flex flex-col min-h-screen">

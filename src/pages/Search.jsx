@@ -38,18 +38,14 @@ const Search = () => {
 
             try {
                 setLoading(true);
-                console.log('Fetching data...');
-                console.log('Request URL:', url);
 
                 const response = await fetch(url);
-                console.log('Response:', response);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
                 }
 
                 const data = await response.json();
-                console.log('Received data:', data);
 
                 setDataToShow(data);
                 setLoading(false);
