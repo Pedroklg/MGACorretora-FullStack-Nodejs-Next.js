@@ -103,8 +103,9 @@ export default function EncontrarEmpresa() {
 
   return (
     <div className="flex justify-center">
-      <div className="sm:relative lg:absolute z-10 flex items-center justify-center w-full max-w-5xl">
-        <div className="bg-gray-100 opacity-90 shadow-md rounded-md p-5 w-full" onKeyUp={(e) => e.key === 'Enter' && handleSearch()}>
+      <div className="sm:relative lg:absolute z-10 flex items-center justify-center w-full md:max-w-3xl xl:max-w-5xl md:mt-2">
+        <div className="bg-gray-100 bg-opacity-70 shadow-md rounded-md p-5 w-full" 
+          onKeyUp={(e) => e.key === 'Enter' && handleSearch()}>
           <div className="flex items-center mb-4">
             {IconSeach}
             <h1 className="text-3xl text-red-900 ml-3">Encontre sua Empresa ou Imóvel</h1>

@@ -38,10 +38,10 @@ const ProductPage = () => {
             <Header />
             <div className="flex-grow flex m-4">
                 <div className="w-full grid grid-cols-12">
-                    <div className="w-full grid grid-cols-12 my-10 col-span-12 md:col-start-4 md:col-end-10">
+                    <div className="w-full grid grid-cols-12 my-10 col-span-12 md:col-start-3 md:col-end-11">
 
                         <div className='col-span-12 md:col-span-6'>
-                            <div className="text-4xl font-bold my-6 col-span-12 text-red-800">
+                            <div className="text-4xl font-bold mb-6 col-span-12 text-red-800">
                                 <h1>{product.item.titulo}</h1>
                             </div>
 
@@ -58,7 +58,7 @@ const ProductPage = () => {
                         </div>
 
                         <div className='col-span-0 md:col-span-1'></div>
-                        <div className='col-span-12 md:col-span-5 flex flex-col gap-4 shadow-lg p-3 rounded-lg mt-5 md:mt-0'>
+                        <div className='col-span-12 md:col-span-5 flex flex-col gap-4 shadow-lg p-3 rounded-lg mt-5 md:mt-0 h-fit'>
 
                             <div className='flex justify-between p-1 flex-col md:flex-row'>
                                 <h1 className="font-semibold text-2xl text-red-800">Valor:</h1>

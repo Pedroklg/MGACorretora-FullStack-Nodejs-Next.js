@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import toBrMoney from '../pages/api/utils/toBrMoney';
 import Image from 'next/image';
 import SkeletonLoader from './animations/SkeletonLoader';
+import { IconMapPin } from './Icones';
 
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,10 +100,13 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
               height={200}
               className="w-full h-48 object-cover"
             />
-            <div className="p-6">
+            <div className="p-6 flex flex-col">
               <h2 className="text-xl font-bold mb-2">{card.titulo}</h2>
-              <p className="text-gray-700">{card.cidade} - {card.estado}</p>
-              <p className="text-gray-700">{toBrMoney(card.valor_pretendido)}</p>
+              <div className="text-gray-700 flex items-center gap-1">
+                <span className='flex items-center text-green-700 mb-0.5'>{IconMapPin}</span>
+                {card.cidade} - {card.estado}
+              </div>
+              <p className="text-yellow-600 text-xl font-semibold">{toBrMoney(card.valor_pretendido)}</p>
             </div>
           </div>
         ))}
