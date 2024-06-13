@@ -27,38 +27,38 @@ const Header = () => {
   };
 
   return (
-    <header className="flex flex-wrap md:flex-nowrap justify-evenly items-center px-1 md:px-10 bg-gray-200 text-black shadow-lg">
-      <div className="p-1 flex flex-col justify-center items-center hover:scale-105 duration-150">
+    <header className="flex flex-wrap md:flex-nowrap justify-evenly items-center px-1 md:px-10 bg-red-900 text-black shadow-lg">
+      <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 bg-slate-100 cursor-pointer">
         <Link href="/" passHref legacyBehavior>
-          <a>
+          <div>
             <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} />
-          </a>
+          </div>
         </Link>
-        <span className="text-lg text-red-800 font-medium mt-2">CRECI J5087</span>
+        <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased">CRECI J5087</span>
       </div>
 
       <nav className="flex space-x-3 md:space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">
         <Link href="/Empresas" passHref legacyBehavior>
-          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
+          <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconShop}
             <span className="ml-2">Empresas</span>
           </div>
         </Link>
         <Link href="/Imoveis" passHref legacyBehavior>
-          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
+          <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconHouse}
             <span className="ml-2">Imóveis</span>
           </div>
         </Link>
         <Link href="/Contato" passHref legacyBehavior>
-          <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
+          <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconEmail}
             <span className="ml-2">Contato</span>
           </div>
         </Link>
         <div className="hidden lg:flex">
           <Link href="/Sobre" passHref legacyBehavior>
-            <div className="flex hover:text-red-800 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
+            <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
               <span className="ml-2">Sobre nós</span>
             </div>
           </Link>
@@ -74,7 +74,7 @@ const Header = () => {
           onKeyUp={(e) => e.key === 'Enter' && handleSearchSend()} // Call handleSearchChange on input change
         />
         <button
-          className="flex bg-red-800 text-gray-200 p-1 ml-2 rounded-sm shadow-lg duration-150 hover:scale-105"
+          className="flex bg-gray-200 text-red-800 p-1 ml-2 rounded-sm shadow-lg duration-150 hover:scale-105"
           onClick={handleSearchSend} // Call handleSearchClick on button click
         >
           {IconSearchSmall}

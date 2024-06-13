@@ -27,7 +27,7 @@ const ProgressBar = ({ loading }) => {
     return (
         <div className="bg-gray-200 h-1 fixed top-0 left-0 right-0 z-50">
             <div
-                className="bg-red-900 h-1"
+                className="bg-blue-600 h-1"
                 style={{ width: `${progress}%` }}
             ></div>
         </div>
