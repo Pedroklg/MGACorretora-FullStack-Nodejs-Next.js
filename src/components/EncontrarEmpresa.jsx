@@ -8,6 +8,7 @@ export default function EncontrarEmpresa() {
 
   const [estados, setEstados] = useState([]);
   const [cidades, setCidades] = useState([]);
+  const [currentCidades, setCurrentCidades] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [estado, setEstado] = useState('');
   const [cidade, setCidade] = useState('');
@@ -16,29 +17,23 @@ export default function EncontrarEmpresa() {
   const [maxPrice, setMaxPrice] = useState('');
 
   useEffect(() => {
-    const fetchEstados = async () => {
+    const fetchEstadosAndCidades = async () => {
       try {
-        const response = await fetch('/api/estados'); 
-        if (!response.ok) {
+        const estadosResponse = await fetch('/api/estados');
+        if (!estadosResponse.ok) {
           throw new Error('Failed to fetch estados');
         }
-        const data = await response.json();
-        setEstados(data);
-      } catch (error) {
-        console.error('Error fetching estados:', error);
-      }
-    };
+        const estadosData = await estadosResponse.json();
+        setEstados(estadosData);
 
-    const fetchCidades = async () => {
-      try {
-        const response = await fetch('/api/cidades');
-        if (!response.ok) {
+        const cidadesResponse = await fetch('/api/cidades');
+        if (!cidadesResponse.ok) {
           throw new Error('Failed to fetch cidades');
         }
-        const data = await response.json();
-        setCidades(data);
+        const cidadesData = await cidadesResponse.json();
+        setCidades(cidadesData);
       } catch (error) {
-        console.error('Error fetching cidades:', error);
+        console.error('Error fetching estados and cidades:', error);
       }
     };
 
@@ -55,13 +50,22 @@ export default function EncontrarEmpresa() {
       }
     };
 
-    fetchEstados();
-    fetchCidades();
+    fetchEstadosAndCidades();
     fetchCategorias();
   }, []);
 
+  useEffect(() => {
+    if (estado) {
+      const filteredCidades = cidades.filter((cidadeObject) => cidadeObject.estado === estado);
+      setCurrentCidades(filteredCidades);
+    } else {
+      setCurrentCidades(cidades);
+    }
+  }, [estado, cidades]);
+
   const handleEstadoChange = (e) => {
-    setEstado(e.target.value);
+    const selectedEstado = e.target.value;
+    setEstado(selectedEstado);
   };
 
   const handleCidadeChange = (e) => {
@@ -116,8 +120,8 @@ export default function EncontrarEmpresa() {
                 className="form-select w-full"
               >
                 <option key="default" value="">Selecione um estado</option>
-                {estados.map((estado, index) => (
-                  <option key={index} value={estado.estado}>{estado.estado}</option>
+                {estados.map((estadoObject, index) => (
+                  <option key={index} value={estadoObject.estado}>{estadoObject.estado}</option>
                 ))}
               </select>
             </div>
@@ -131,8 +135,8 @@ export default function EncontrarEmpresa() {
                 className="form-select w-full"
               >
                 <option key="default" value="">Selecione uma cidade</option>
-                {cidades.map((cidade, index) => (
-                  <option key={index} value={cidade.cidade}>{cidade.cidade}</option>
+                {currentCidades.map((cidadeObject, index) => (
+                  <option key={index} value={cidadeObject.cidade}>{cidadeObject.cidade}</option>
                 ))}
               </select>
             </div>

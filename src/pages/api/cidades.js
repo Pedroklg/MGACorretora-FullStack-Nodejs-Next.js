@@ -1,13 +1,11 @@
-// pages/api/cidades.js
-
 import db from './utils/db';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            const queryText = `SELECT DISTINCT cidade FROM empresas WHERE cidade IS NOT NULL 
+            const queryText = `SELECT cidade, estado FROM empresas WHERE cidade IS NOT NULL 
                                 UNION 
-                                SELECT DISTINCT cidade FROM imoveis WHERE cidade IS NOT NULL`;
+                                SELECT cidade, estado FROM imoveis WHERE cidade IS NOT NULL`;
             const result = await db.query(queryText);
             res.status(200).json(result.rows);
         } catch (error) {
