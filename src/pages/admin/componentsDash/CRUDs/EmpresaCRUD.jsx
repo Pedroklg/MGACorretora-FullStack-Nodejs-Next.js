@@ -36,8 +36,7 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
 
     // Check if any field is filled to trigger unsaved changes alert
     useEffect(() => {
-        const isFieldFilled = Object.values(empresaData).some(value => !!value);
-        if (isFieldFilled) {
+        if (unsavedChanges) {
             window.addEventListener('beforeunload', handleBeforeUnload);
         } else {
             window.removeEventListener('beforeunload', handleBeforeUnload);

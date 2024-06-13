@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LoadingSpinner from './../../../components/animations/LoadingSpinner'; // Assuming this is where your LoadingSpinner component is defined
+import toBrMoney  from './../../api/utils/toBrMoney'; // Assuming this is where your toBrMoney function is defined
 
 const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
     const [itemDetails, setItemDetails] = useState(null);
@@ -47,7 +48,7 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                             </tr>
                             <tr className="bg-gray-200">
                                 <td className="font-semibold break-words md:w-1/4">Valor:</td>
-                                <td className="break-words md:w-3/4">R$ {itemDetails.item.valor_pretendido}</td>
+                                <td className="break-words md:w-3/4">{toBrMoney(itemDetails.item.valor_pretendido)}</td>
                             </tr>
                             <tr>
                                 <td className="font-semibold break-words md:w-1/4">Estado:</td>
