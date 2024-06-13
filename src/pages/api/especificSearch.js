@@ -49,9 +49,10 @@ export default async function handler(req, res) {
     try {
         const { rows: empresas } = await db.query(searchQueryEmpresas);
 
-        if (empresas.length === 0) {
+        if (!categoria) {
             const { rows: imoveis } = await db.query(searchQueryImoveis);
-            res.status(200).json(imoveis);
+            const combinedResults = [...empresas, ...imoveis];
+            res.status(200).json(combinedResults);
         } else {
             res.status(200).json(empresas);
         }
