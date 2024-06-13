@@ -44,8 +44,10 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
     }, [imovelData]);
 
     const handleBeforeUnload = (event) => {
+        const message = 'You have unsaved changes. Are you sure you want to leave?';
         event.preventDefault();
-        event.returnValue = '';
+        event.returnValue = message;
+        return message;
     };
 
     const handleChange = (e) => {

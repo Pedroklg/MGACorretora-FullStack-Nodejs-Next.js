@@ -22,7 +22,6 @@ const AdminDashboardPage = () => {
 
     return (
         <ItemProvider> {/* Wrap the component tree with ItemProvider */}
-        <title>Dashboard MGA</title>
             <div className="flex flex-col md:flex-row">
                 <Nav
                     handleTipoMostradoChange={handleTipoMostradoChange}
