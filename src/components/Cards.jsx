@@ -7,7 +7,7 @@ import SkeletonLoader from './animations/SkeletonLoader';
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [filteredData, setFilteredData] = useState([]);
+  const [currentData, setcurrentData] = useState([]);
   const cardsPerPage = 12;
   const router = useRouter();
 
@@ -21,22 +21,27 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         throw new Error('Failed to fetch data');
       }
       const data = await response.json();
-      setFilteredData(data); // Set fetched data
+      setcurrentData(data); // Set fetched data
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false); // Stop loading
     }
   };
-
+  
   useEffect(() => {
-    fetchData(); // Initial fetch
+    if (dataToShow) {
+      setcurrentData(dataToShow);
+      setLoading(false);
+    } else {
+      fetchData();
+    }
   }, [tipoMostrado]); // Fetch again if tipoMostrado changes
 
   // Calculate indexes for slicing data based on pagination
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = filteredData.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = currentData.slice(indexOfFirstCard, indexOfLastCard);
 
   // Function to handle pagination
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -98,7 +103,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
       </div>
       <div className="flex justify-center mt-4">
         <nav className="inline-flex">
-          {[...Array(Math.ceil(filteredData.length / cardsPerPage)).keys()].map((number) => (
+          {[...Array(Math.ceil(currentData.length / cardsPerPage)).keys()].map((number) => (
             <button
               key={number}
               onClick={() => paginate(number + 1)}
