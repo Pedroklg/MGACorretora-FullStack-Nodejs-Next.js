@@ -8,6 +8,7 @@ export default function Home() {
   return (
     <>
       <Header />
+      <title>MGA Corretora</title>
       <div className="md:m-10 relative">
         <EncontrarEmpresa />
         <Banner />
