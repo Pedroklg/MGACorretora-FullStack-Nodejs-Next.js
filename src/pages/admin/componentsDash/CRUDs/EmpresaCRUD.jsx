@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import ProgressBar from '../../../../components/animations/ProgressBar';
+import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 import { NumericFormat } from 'react-number-format';
+import { showErrorToast, showSuccessToast } from '../../../../components/animations/toastService';
 
 const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
     const [loading, setLoading] = useState(false);
@@ -45,7 +46,7 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
     }, [empresaData]);
 
     const handleBeforeUnload = (event) => {
-        const message = 'You have unsaved changes. Are you sure you want to leave?';
+        const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';
         event.preventDefault();
         event.returnValue = message;
         return message;
@@ -90,28 +91,30 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to create or update empresa');
+                throw new Error(errorData.error || `Erro ao ${item ? 'atualizar' : 'criar'} empresa`);
             }
 
             setLoading(false);
-            alert('Empresa criada ou atualizada com sucesso!');
+            showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
             // Reset form state to initial values and clear unsaved changes flag
             setEmpresaData(initialEmpresaData);
             setUnsavedChanges(false);
             
             onSubmitSuccess();
         } catch (error) {
-            console.error('Error creating or updating empresa:', error.message);
+            console.error(`Erro ao ${item ? 'atualizar' : 'criar'} empresa:`, error.message);
+            showErrorToast(`Erro ao ${item ? 'atualizar' : 'criar'} empresa`);
             setLoading(false);
         }
     };
 
     const handleSubmit = (e) => {
+        if (loading) return;
         e.preventDefault();
         if (validateForm()) {
             createOrUpdateEmpresa();
         } else {
-            alert('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado, Categoria');
+            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado, Categoria');
         }
     };
 
@@ -127,7 +130,7 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <ProgressBar loading={loading} />
+            <LoadingSpinner isLoading={loading} />
             <div className="container flex flex-col justify-center items-center w-full md:w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
                     <input

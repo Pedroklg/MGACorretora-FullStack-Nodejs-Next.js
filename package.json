@@ -16,11 +16,13 @@
     "next": "14.2.3",
     "next-connect": "^0.12.1",
     "next-iron-session": "^4.2.0",
+    "nodemailer": "^6.9.13",
     "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18",
     "react-number-format": "^5.4.0",
     "react-slick": "^0.30.2",
+    "react-toastify": "^10.0.5",
     "sharp": "^0.33.4",
     "slick-carousel": "^1.8.1",
     "uuid": "^9.0.1"

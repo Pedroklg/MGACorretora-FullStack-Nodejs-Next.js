@@ -5,6 +5,7 @@ import Footer from '../../components/Footer';
 import toBrMoney from '../api/utils/toBrMoney';
 import Image from 'next/image';
 import LoadingSpinner from '../../components/animations/LoadingSpinner';
+import ContactForm from '../../components/ContactForm';
 
 const ProductPage = () => {
     const router = useRouter();
@@ -141,8 +142,9 @@ const ProductPage = () => {
                             </p>
                         </div>
                         <div className='col-span-12 flex justify-center items-center'>
-                            <h1 className='text-lg'>Se interessou {product.tipo === 'Empresa' ? <span>pela empresa</span> : <span>pelo imóvel</span>}? Entre em Contato pelos meios aqui em baixo:</h1>
+                            <h1 className='text-2xl'>Se interessou {product.tipo === 'Empresa' ? <span>pela empresa</span> : <span>pelo imóvel</span>}?</h1>
                         </div>
+                        <ContactForm />
                         <div className="col-span-3 md:col-start-10"></div>
                     </div>
                 </div>

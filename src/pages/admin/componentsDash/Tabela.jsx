@@ -6,6 +6,7 @@ import { ItemContext } from '../../../context/ItemContext';
 import ItemDetailsModal from './ItemDetailsModal'; // Import the modal component
 import toBrMoney from '../../../pages/api/utils/toBrMoney';
 import ProgressBar from '../../../components/animations/ProgressBar'; // Import the ProgressBar component
+import { showErrorToast, showSuccessToast } from '../../../components/animations/toastService';
 
 const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
     const { setItemToEdit } = useContext(ItemContext) || {};
@@ -16,52 +17,32 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);  // State to manage modal visibility
     const [loading, setLoading] = useState(false); // State to manage loading state
 
-    const router = useRouter();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`/api/tipoSearch?tipoMostrado=${tipoMostrado}`);
-                const data = await response.json();
-                setDataToShow(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [tipoMostrado]);
-
-    const itemsPerPage = 9;
-    const filteredData = FilteredData(dataToShow, searchTerm);
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-    let titulo;
-    if (tipoMostrado === "Empresas") {
-        titulo = "Empresas cadastradas";
-    } else if (tipoMostrado === "Imoveis") {
-        titulo = "Imóveis cadastrados";
-    } else {
-        titulo = "Empresas e Imóveis cadastrados";
-    }
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-
-    const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber);
-        window.scrollTo(0, 0);
+    // Function to fetch data based on tipoMostrado
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`/api/tipoSearch?tipoMostrado=${tipoMostrado}`);
+            const data = await response.json();
+            setDataToShow(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            showErrorToast('Erro ao buscar dados!');
+        } finally {
+            setLoading(false);
+        }
     };
 
+    useEffect(() => {
+        fetchData(); // Initial fetch when tipoMostrado changes
+    }, [tipoMostrado]);
+
+    // Function to handle search term change
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
         setCurrentPage(1);
     };
 
+    // Function to handle opening item details modal
     const handleDetails = async (id) => {
         try {
             setLoading(true);
@@ -74,12 +55,13 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
             setSelectedItemId(id);
             setIsModalOpen(true);
         } catch (error) {
-            setError(error.message);
             setLoading(false);
-            console.error('Error fetching item details:', error);
+            showErrorToast('Erro ao exibir detalhes do item!');
+            console.error('Erro ao exibir item details:', error);
         }
     };
 
+    // Function to handle item deletion
     const handleDelete = async (id) => {
         try {
             setLoading(true);
@@ -88,19 +70,20 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
             });
             setLoading(false);
             if (!response.ok) {
-                throw new Error('Failed to delete item');
+                throw new Error('Falha ao deletar item!');
             }
-            alert('Item deleted successfully');
-            window.location.reload();
+            showSuccessToast('Item deletado com sucesso!');
+            fetchData(); // Fetch data again after successful deletion to update table
         } catch (error) {
-            setError(error.message);
             setLoading(false);
             console.error('Error deleting item:', error);
+            showErrorToast('Erro ao deletar item!');
         }
     };
 
+    // Function to handle editing an item
     const handleEdit = (id) => {
-        const itemToEdit = currentItems.find(item => item.id === id);
+        const itemToEdit = dataToShow.find(item => item.id === id);
         if (itemToEdit) {
             setShowRegistrar(true);
             setItemToEdit(itemToEdit);
@@ -108,8 +91,32 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
         }
     };
 
+    // Function to paginate through table pages
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo(0, 0);
+    };
+
+    // Calculate items per page and current page items
+    const itemsPerPage = 9;
+    const filteredData = FilteredData(dataToShow, searchTerm);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+    // Determine table title based on tipoMostrado
+    let titulo;
+    if (tipoMostrado === "Empresas") {
+        titulo = "Empresas cadastradas";
+    } else if (tipoMostrado === "Imoveis") {
+        titulo = "Imóveis cadastrados";
+    } else {
+        titulo = "Empresas e Imóveis cadastrados";
+    }
+
     return (
-        <div className="min-h-svh h-fit p-0 w-svw overflow-auto">
+        <div className="min-h-svh h-fit p-0 w-svw">
             <ProgressBar loading={loading} />
             <div className="xl:p-5 grid xl:gap-8">
                 <div className="flex flex-col xl:flex-row items-center justify-items-center shadow-lg rounded-lg p-5">
@@ -171,6 +178,7 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
                                         </button>
                                     </td>
                                 </tr>
+
                             ))}
                         </tbody>
                     </table>

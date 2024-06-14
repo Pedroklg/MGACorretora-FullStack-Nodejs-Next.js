@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import ProgressBar from '../../../../components/animations/ProgressBar';
+import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 import { NumericFormat } from 'react-number-format';
+import { showErrorToast,showSuccessToast } from '../../../../components/animations/toastService';
 
 const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
     const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
     }, [imovelData]);
 
     const handleBeforeUnload = (event) => {
-        const message = 'You have unsaved changes. Are you sure you want to leave?';
+        const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';
         event.preventDefault();
         event.returnValue = message;
         return message;
@@ -80,19 +81,20 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to create or update imovel');
+                throw new Error(errorData.error || `Falha ao ${item ? 'atualizar' : 'criar'} imovel`);
             }
 
             setLoading(false);
-            alert('Imovel criada ou atualizada com sucesso!');
+            showSuccessToast(`Imovel ${item ? 'atualizado' : 'criado'} com sucesso!`);
             // Reset form state to initial values and clear unsaved changes flag
             setImovelData(initialImovelData);
             setUnsavedChanges(false);
 
             onSubmitSuccess();
         } catch (error) {
-            console.error('Error creating or updating imovel:', error.message);
+            console.error(`Falha ao ${item ? 'atualizar' : 'criar'} imovel`, error.message);
             setLoading(false);
+            showErrorToast(`Falha ao ${item ? 'atualizar' : 'criar'} imovel`);
         }
     };
 
@@ -101,7 +103,7 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
         if (validateForm()) {
             createOrUpdateImovel();
         } else {
-            alert('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado');
+            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado');
         }
     };
 
@@ -114,7 +116,7 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <ProgressBar loading={loading} />
+            <LoadingSpinner isLoading={loading} />
             <div className="conteiner flex flex-col justify-center items-center md:w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
                     <input className="p-1 rounded-lg shadow-lg"

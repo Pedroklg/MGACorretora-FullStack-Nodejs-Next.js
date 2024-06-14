@@ -43,7 +43,7 @@ const Registrar = ({ setShowRegistrar }) => {
     };
 
     return (
-        <div className="h-fit min-h-svh w-svw overflow-scroll">
+        <div className="h-fit min-h-svh w-svw">
             <ProgressBar loading={loading}/>
             <div className="p-5 md:p-8 flex flex-col gap-8">
                 <div className="flex items-center justify-start shadow-lg rounded-lg flex-col md:flex-row">
