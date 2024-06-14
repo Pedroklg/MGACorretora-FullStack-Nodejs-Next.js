@@ -48,6 +48,7 @@ export default function Footer() {
                             </li>
                         </ul>
                     </div>
+                    <p className='text-xl text-red-900 font-medium mt-2 subpixel-antialiased self-center flex md:hidden'>CRECI J5087</p>
                 </div>
             </div>
         </footer>

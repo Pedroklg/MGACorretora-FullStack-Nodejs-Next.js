@@ -32,7 +32,7 @@ function Empresas() {
         } catch (error) {
             console.error('Error fetching categorias:', error);
         }
-    };
+    }; 
 
     const fetchEmpresas = async () => {
         try {
@@ -60,13 +60,13 @@ function Empresas() {
             <title>Empresas</title>
             <Header />
             <div className="flex flex-col sm:flex-row justify-center flex-grow">
-                <aside className="w-fit p-4 sm:m-12 sm:mt-16 mt-8 shadow-lg rounded-xl items-start flex flex-row flex-wrap sm:flex-col h-full">
+                <aside className="w-fit p-4 sm:m-12 sm:mt-16 mt-8 shadow-md rounded-md items-start flex flex-row flex-wrap sm:flex-col h-full">
                     <h2 className="text-3xl font-bold sm:mb-8 text-red-800 w-full">Categorias</h2>
                     {categorias.map((categoria) => (
                         <div key={categoria.id} className="mb-2">
                             <button
                                 onClick={() => handleCategoriaClick(categoria.categoria)}
-                                className={`p-2 m-1 rounded-md shadow-md ${categoriaSelecionada === categoria.categoria ? 'bg-red-800 text-white' : 'bg-gray-200'}`}
+                                className={`p-2 m-1 rounded-sm shadow-md ${categoriaSelecionada === categoria.categoria ? 'bg-red-800 text-white' : 'bg-gray-200'}`}
                             >
                                 {categoria.categoria}
                             </button>

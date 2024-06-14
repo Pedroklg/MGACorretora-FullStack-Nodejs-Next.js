@@ -134,7 +134,7 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
                         thousandSeparator="."
                         decimalSeparator=","
                         prefix="R$ "
-                        isNumericString
+                        isnumericstring="true"
                         required
                     />
                     <input className="p-1 rounded-lg shadow-lg"

@@ -34,7 +34,7 @@ const Header = () => {
             <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} />
           </div>
         </Link>
-        <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased">CRECI J5087</span>
+        <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden md:flex">CRECI J5087</span>
       </div>
 
       <nav className="flex space-x-3 md:space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">

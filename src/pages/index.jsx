@@ -10,7 +10,7 @@ export default function Home() {
       <Header />
       <title>MGA Corretora</title>
       <div className="w-full flex flex-col items-center">
-        <div className="w-10/12 md:mt-8">
+        <div className="md:w-10/12 md:mt-8">
           <EncontrarEmpresa />
           <Banner />
         </div>

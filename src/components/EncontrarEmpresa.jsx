@@ -168,7 +168,7 @@ export default function EncontrarEmpresa() {
                 prefix="R$ "
                 className="form-input w-full"
                 placeholder="Mínimo"
-                isNumericString
+                isnumericstring="true"
               />
             </div>
             <div>
@@ -183,7 +183,7 @@ export default function EncontrarEmpresa() {
                 prefix="R$ "
                 className="form-input w-full"
                 placeholder="Máximo"
-                isNumericString
+                isnumericstring="true"
               />
             </div>
           </div>
