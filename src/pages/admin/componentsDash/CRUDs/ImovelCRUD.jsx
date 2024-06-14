@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 import { NumericFormat } from 'react-number-format';
-import { showErrorToast,showSuccessToast } from '../../../../components/animations/toastService';
+import { showErrorToast, showSuccessToast } from '../../../../components/animations/toastService';
 
 const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
     const [loading, setLoading] = useState(false);
@@ -108,10 +108,10 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
     };
 
     const validateForm = () => {
-        return imovelData.titulo && 
-        imovelData.valor_pretendido && 
-        imovelData.cidade && 
-        imovelData.estado;
+        return imovelData.titulo &&
+            imovelData.valor_pretendido &&
+            imovelData.cidade &&
+            imovelData.estado;
     };
 
     return (
@@ -141,8 +141,14 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
                     />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="condicoes" value={imovelData.condicoes} onChange={handleChange} placeholder="Condições" />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="sobre_o_imovel" value={imovelData.sobre_o_imovel} onChange={handleChange} placeholder="Sobre o Imóvel" />
+                    <textarea
+                        className="p-1 rounded-lg shadow-lg"
+                        name="sobre_o_imovel"
+                        value={imovelData.sobre_o_imovel}
+                        onChange={handleChange}
+                        placeholder="Sobre o Imóvel"
+                        rows={4}
+                    />
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="estado" value={imovelData.estado} onChange={handleChange} placeholder="Estado" required />
                     <input className="p-1 rounded-lg shadow-lg"
@@ -167,6 +173,15 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
                                 onChange={handleChange}
                             />
                             <span className="p-2">Tem Dívida</span>
+                        </label>
+                        <label>
+                            <input className="p-1 rounded-lg shadow-lg"
+                                type="checkbox"
+                                name="aluguel"
+                                checked={imovelData.aluguel}
+                                onChange={handleChange}
+                            />
+                            <span className="p-2">Aluguel</span>
                         </label>
                     </div>
                     {imovelData.imagem ?

@@ -30,8 +30,11 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
     useEffect(() => {
         if (item) {
             setLoading(true);
-            setEmpresaData(item);
-            setLoading(false);
+            // Simulate asynchronous data loading
+            setTimeout(() => {
+                setEmpresaData(item);
+                setLoading(false);
+            }, 500); // Adjust timeout as per your API response time or loading requirements
         }
     }, [item]);
 
@@ -78,10 +81,7 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
                 formData.append(key, value);
             });
 
-            // Determine the API endpoint based on whether the item prop is provided
             const endpoint = item ? `/api/empresas?id=${item.id}` : '/api/empresas';
-
-            // Determine the HTTP method based on whether the item prop is provided
             const method = item ? 'PUT' : 'POST';
 
             const response = await fetch(endpoint, {
@@ -96,10 +96,9 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
 
             setLoading(false);
             showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
-            // Reset form state to initial values and clear unsaved changes flag
             setEmpresaData(initialEmpresaData);
             setUnsavedChanges(false);
-            
+
             onSubmitSuccess();
         } catch (error) {
             console.error(`Erro ao ${item ? 'atualizar' : 'criar'} empresa:`, error.message);
@@ -109,7 +108,6 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
     };
 
     const handleSubmit = (e) => {
-        if (loading) return;
         e.preventDefault();
         if (validateForm()) {
             createOrUpdateEmpresa();
@@ -179,7 +177,7 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
                         thousandSeparator="."
                         decimalSeparator=","
                         prefix="R$ "
-                        isnumericstring="true"
+                        isNumericString={true}
                         required
                     />
                     <input
@@ -190,13 +188,13 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
                         onChange={handleChange}
                         placeholder="Condições"
                     />
-                    <input
+                    <textarea
                         className="p-1 rounded-lg shadow-lg"
-                        type="text"
                         name="sobre_o_imovel"
                         value={empresaData.sobre_o_imovel}
                         onChange={handleChange}
-                        placeholder="Sobre a Empresa"
+                        placeholder="Sobre o Imóvel"
+                        rows={4}
                     />
                     <input
                         className="p-1 rounded-lg shadow-lg"
