@@ -118,7 +118,7 @@ export default function EncontrarEmpresa() {
                 name="estado"
                 value={estado}
                 onChange={handleEstadoChange}
-                className="form-select w-full"
+                className="form-select w-full rounded-md shadow-md"
               >
                 <option key="default" value="">Selecione um estado</option>
                 {estados.map((estadoObject, index) => (
@@ -133,7 +133,7 @@ export default function EncontrarEmpresa() {
                 name="cidade"
                 value={cidade}
                 onChange={handleCidadeChange}
-                className="form-select w-full"
+                className="form-select w-full rounded-md shadow-md"
               >
                 <option key="default" value="">Selecione uma cidade</option>
                 {currentCidades.map((cidadeObject, index) => (
@@ -148,7 +148,7 @@ export default function EncontrarEmpresa() {
                 name="categoria"
                 value={categoria}
                 onChange={handleCategoriaChange}
-                className="form-select w-full"
+                className="form-select w-full rounded-md shadow-md"
               >
                 <option value="">Selecione uma categoria</option>
                 {categorias.map((categoriaObject, index) => (
@@ -166,7 +166,7 @@ export default function EncontrarEmpresa() {
                 thousandSeparator='.'
                 decimalSeparator=","
                 prefix="R$ "
-                className="form-input w-full"
+                className="form-input w-full rounded-md shadow-md"
                 placeholder="Mínimo"
                 isnumericstring="true"
               />
@@ -181,7 +181,7 @@ export default function EncontrarEmpresa() {
                 thousandSeparator='.'
                 decimalSeparator=","
                 prefix="R$ "
-                className="form-input w-full"
+                className="form-input w-full rounded-md shadow-md"
                 placeholder="Máximo"
                 isnumericstring="true"
               />

@@ -142,7 +142,7 @@ const ProductPage = () => {
                             </p>
                         </div>
                         <div className='col-span-12 flex justify-center items-center'>
-                            <h1 className='text-2xl'>Se interessou {product.tipo === 'Empresa' ? <span>pela empresa</span> : <span>pelo imóvel</span>}?</h1>
+                            <h1 className='text-lg'>Se interessou {product.tipo === 'Empresa' ? <span>pela empresa</span> : <span>pelo imóvel</span>}? Entre em Contato:</h1>
                         </div>
                         <ContactForm />
                         <div className="col-span-3 md:col-start-10"></div>

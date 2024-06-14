@@ -28,8 +28,8 @@ const Header = () => {
 
   return (
     <header className="flex flex-wrap md:flex-nowrap justify-evenly items-center px-1 md:px-10 bg-red-900 text-black shadow-lg">
-      <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 bg-slate-100 cursor-pointer mt-2 sm:mt-0">
-        <Link href="/" passHref legacyBehavior>
+      <Link href="/" passHref legacyBehavior>
+        <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 bg-slate-100 cursor-pointer">
           <div>
             <div className='hidden sm:block'>
               <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} />
@@ -38,9 +38,9 @@ const Header = () => {
               <Image src="/logo_mobile.png" alt='MGA Corretora' width={300} height={200} />
             </div>
           </div>
-        </Link>
-        <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden md:flex">CRECI J5087</span>
-      </div>
+          <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden md:flex">CRECI J5087</span>
+        </div>
+      </Link>
 
       <nav className="flex space-x-3 md:space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">
         <Link href="/Empresas" passHref legacyBehavior>
