@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Cards from "../components/Cards";
 import SkeletonLoader from "../components/animations/SkeletonLoader"; // Import the SkeletonLoader component
 import { useState, useEffect } from "react";
+import EncontrarEmpresa from "../components/EncontrarEmpresa";
 
 function Imoveis() {
     const [modalidade, setModalidade] = useState('');
@@ -43,6 +44,11 @@ function Imoveis() {
         <div className="flex flex-col min-h-screen">
             <title>Imoveis</title>
             <Header />
+            <div className="flex w-full justify-center">
+                <div className="sm:w-10/12 w-full">
+                    <EncontrarEmpresa />
+                </div>
+            </div>
             <div className="flex flex-col sm:flex-row justify-center flex-grow">
                 <aside className="w-fit p-4 sm:m-12 sm:mt-16 mt-8 shadow-md rounded-md items-start flex flex-row flex-wrap sm:flex-col h-full m-5">
                     <h2 className="text-3xl font-bold sm:mb-8 text-red-800 w-full">Finalidade</h2>

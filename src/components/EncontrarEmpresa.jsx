@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { NumericFormat } from 'react-number-format';  // Correct the import statement
+import { NumericFormat } from 'react-number-format';
 import { IconSeach } from './Icones';
 
 export default function EncontrarEmpresa() {
@@ -9,29 +9,49 @@ export default function EncontrarEmpresa() {
   const [estados, setEstados] = useState([]);
   const [cidades, setCidades] = useState([]);
   const [currentCidades, setCurrentCidades] = useState([]);
+  const [bairros, setBairros] = useState([]);
+  const [currentBairros, setCurrentBairros] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [estado, setEstado] = useState('');
   const [cidade, setCidade] = useState('');
+  const [bairro, setBairro] = useState('');
   const [categoria, setCategoria] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [searchMode, setSearchMode] = useState('both');
+  const [isMenuOpen, setIsMenuOpen] = useState(true); // Set to true to open menu by default on larger devices
+  const [isMobile, setIsMobile] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    // Event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Clean up event listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // Empty dependency array to run effect only once on mount
+
+  // Fetch estados, cidades, and categorias
   useEffect(() => {
     const fetchEstadosAndCidades = async () => {
       try {
-        const estadosResponse = await fetch('/api/estados');
+        const estadosResponse = await fetch(`api/estados?searchMode=${searchMode}`);
         if (!estadosResponse.ok) {
           throw new Error('Failed to fetch estados');
         }
         const estadosData = await estadosResponse.json();
         setEstados(estadosData);
 
-        const cidadesResponse = await fetch('/api/cidades');
+        const cidadesResponse = await fetch(`api/cidades?searchMode=${searchMode}`);
         if (!cidadesResponse.ok) {
           throw new Error('Failed to fetch cidades');
         }
         const cidadesData = await cidadesResponse.json();
         setCidades(cidadesData);
+        setCurrentCidades(cidadesData); // Initially set all cidades
       } catch (error) {
         console.error('Error fetching estados and cidades:', error);
       }
@@ -39,158 +59,299 @@ export default function EncontrarEmpresa() {
 
     const fetchCategorias = async () => {
       try {
-        const response = await fetch('/api/categorias');
-        if (!response.ok) {
+        const categoriasResponse = await fetch('/api/categorias');
+        if (!categoriasResponse.ok) {
           throw new Error('Failed to fetch categorias');
         }
-        const data = await response.json();
-        setCategorias(data);
+        const categoriasData = await categoriasResponse.json();
+        setCategorias(categoriasData);
       } catch (error) {
         console.error('Error fetching categorias:', error);
       }
     };
 
-    fetchEstadosAndCidades();
-    fetchCategorias();
-  }, []);
+    const fetchBairros = async () => {
+      try {
+        const response = await fetch(`api/bairros?searchMode=${searchMode}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch bairros');
+        }
+        const data = await response.json();
+        setBairros(data);
+        setCurrentBairros(data); // Initially set all bairros
+      } catch (error) {
+        console.error('Error fetching bairros:', error);
+      }
+    };
 
+    fetchEstadosAndCidades();
+    (searchMode === 'both' || searchMode === 'empresas') && fetchCategorias();
+    fetchBairros();
+  }, [searchMode]);
+
+  // Update currentCidades based on selected estado
   useEffect(() => {
     if (estado) {
-      const filteredCidades = cidades.filter((cidadeObject) => cidadeObject.estado === estado);
+      const filteredCidades = cidades.filter(cidadeObject => cidadeObject.estado === estado);
       setCurrentCidades(filteredCidades);
+      setCurrentBairros([]); // Reset bairros when estado changes
     } else {
-      setCurrentCidades(cidades);
+      setCurrentCidades(cidades); // Show all cidades if no estado is selected
+      setCurrentBairros(bairros); // Show all bairros if no estado is selected
     }
-  }, [estado, cidades]);
+  }, [estado, cidades, bairros]);
 
-  const handleEstadoChange = (e) => {
+  // Update currentBairros based on selected cidade
+  useEffect(() => {
+    if (cidade) {
+      const filteredBairros = bairros.filter(bairroObject => bairroObject.cidade === cidade);
+      setCurrentBairros(filteredBairros);
+    } else {
+      setCurrentBairros(bairros); // Show all bairros if no cidade is selected
+    }
+  }, [cidade, bairros]);
+
+  const handleEstadoChange = e => {
     const selectedEstado = e.target.value;
     setEstado(selectedEstado);
+    setCidade(''); // Reset cidade and bairro when estado changes
+    setBairro('');
   };
 
-  const handleCidadeChange = (e) => {
-    setCidade(e.target.value);
+  const handleCidadeChange = e => {
+    const selectedCidade = e.target.value;
+    setCidade(selectedCidade);
+    setBairro(''); // Reset bairro when cidade changes
   };
 
-  const handleCategoriaChange = (e) => {
-    setCategoria(e.target.value);
+  const handleBairroChange = e => {
+    const selectedBairro = e.target.value;
+    setBairro(selectedBairro);
   };
 
-  const handleMinPriceChange = (values) => {
+  const handleCategoriaChange = e => {
+    const selectedCategoria = e.target.value;
+    setCategoria(selectedCategoria);
+  };
+
+  const handleMinPriceChange = values => {
     setMinPrice(values.floatValue);
   };
 
-  const handleMaxPriceChange = (values) => {
+  const handleMaxPriceChange = values => {
     setMaxPrice(values.floatValue);
   };
 
   const handleSearch = () => {
-    if (!estado && !cidade && !categoria && !minPrice && !maxPrice) {
+    if (!estado && !cidade && !bairro && !categoria && !minPrice && !maxPrice) {
       return;
     }
     const queryParams = {
       estado,
       cidade,
+      bairro,
       categoria,
       minPrice,
       maxPrice,
+      searchMode,
     };
 
     const queryString = new URLSearchParams(queryParams).toString();
+    console.log(queryString); // Outputs something like "estado=Acre&cidade=Rio%20de%20Janeiro&bairro=Botafogo&categoria=Comércio&minPrice=1000&maxPrice=5000&searchMode=both"
 
     router.push(`/Search?${queryString}`);
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="flex justify-center">
-      <div className="sm:relative lg:absolute z-10 flex items-center justify-center w-full md:max-w-3xl xl:max-w-5xl md:mt-2">
-        <div className="bg-gray-100 bg-opacity-70 shadow-md rounded-md p-5 w-full" 
-          onKeyUp={(e) => e.key === 'Enter' && handleSearch()}>
-          <div className="flex items-center mb-4">
-            {IconSeach}
-            <h1 className="text-3xl text-red-900 ml-3">Encontre sua Empresa ou Imóvel</h1>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            <div>
-              <label htmlFor="estado" className="block text-xs font-medium text-gray-700 mb-1">Estado</label>
-              <select
-                id="estado"
-                name="estado"
-                value={estado}
-                onChange={handleEstadoChange}
-                className="form-select w-full rounded-md shadow-md"
+      <div className="flex flex-col items-center justify-center w-full mt-2 md:mt-3 mb-4">
+        <div className="flex justify-between items-center w-full mb-2 md:mb-0">
+          <div className="flex items-center">
+            {isMobile ? (
+              <button
+                onClick={toggleMenu}
+                className={`px-4 py-2 cursor-pointer ${isMenuOpen ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
+                  }  hover:bg-red-900 duration-150 hover:scale-105`}
               >
-                <option key="default" value="">Selecione um estado</option>
-                {estados.map((estadoObject, index) => (
-                  <option key={index} value={estadoObject.estado}>{estadoObject.estado}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="cidade" className="block text-xs font-medium text-gray-700 mb-1">Cidade</label>
-              <select
-                id="cidade"
-                name="cidade"
-                value={cidade}
-                onChange={handleCidadeChange}
-                className="form-select w-full rounded-md shadow-md"
-              >
-                <option key="default" value="">Selecione uma cidade</option>
-                {currentCidades.map((cidadeObject, index) => (
-                  <option key={index} value={cidadeObject.cidade}>{cidadeObject.cidade}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="categoria" className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-              <select
-                id="categoria"
-                name="categoria"
-                value={categoria}
-                onChange={handleCategoriaChange}
-                className="form-select w-full rounded-md shadow-md"
-              >
-                <option value="">Selecione uma categoria</option>
-                {categorias.map((categoriaObject, index) => (
-                  <option key={index} value={categoriaObject.categoria}>{categoriaObject.categoria}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="minPrice" className="block text-sm font-medium text-gray-700 mb-1">Preço Mínimo (R$)</label>
-              <NumericFormat
-                id="minPrice"
-                name="minPrice"
-                value={minPrice}
-                onValueChange={handleMinPriceChange}
-                thousandSeparator='.'
-                decimalSeparator=","
-                prefix="R$ "
-                className="form-input w-full rounded-md shadow-md"
-                placeholder="Mínimo"
-                isnumericstring="true"
-              />
-            </div>
-            <div>
-              <label htmlFor="maxPrice" className="block text-sm font-medium text-gray-700 mb-1">Preço Máximo (R$)</label>
-              <NumericFormat
-                id="maxPrice"
-                name="maxPrice"
-                value={maxPrice}
-                onValueChange={handleMaxPriceChange}
-                thousandSeparator='.'
-                decimalSeparator=","
-                prefix="R$ "
-                className="form-input w-full rounded-md shadow-md"
-                placeholder="Máximo"
-                isnumericstring="true"
-              />
-            </div>
+                {searchMode === 'both' ? 'Tudo' : searchMode === 'empresas' ? 'Empresas' : 'Imóveis'}
+              </button>
+            ) : (
+              <>
+                <div
+                  onClick={() => setSearchMode('both')}
+                  className={`px-4 py-2 cursor-pointer ${searchMode === 'both' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
+                    }  hover:bg-red-900 duration-150 hover:scale-105`}
+                >
+                  Tudo
+                </div>
+                <div
+                  onClick={() => setSearchMode('empresas')}
+                  className={`px-4 py-2 cursor-pointer ${searchMode === 'empresas' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
+                    }  hover:bg-red-900 duration-150 hover:scale-105`}
+                >
+                  Empresas
+                </div>
+                <div
+                  onClick={() => setSearchMode('imoveis')}
+                  className={`px-4 py-2 cursor-pointer ${searchMode === 'imoveis' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
+                    }  hover:bg-red-900 duration-150 hover:scale-105`}
+                >
+                  Imóveis
+                </div>
+              </>
+            )}
           </div>
-          <div className="flex justify-center mt-4">
-            <button onClick={handleSearch} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 duration-150 hover:scale-105">Buscar</button>
-          </div>
+          {!isMobile && (
+            <button
+              onClick={toggleMenu}
+              className="p-2 focus:outline-none md:hidden"
+            >
+              {IconSeach}
+            </button>
+          )}
         </div>
+        {(isMobile && isMenuOpen) || !isMobile ? (
+          <div className="bg-gray-100 shadow-md rounded-md p-5 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <div>
+                <label htmlFor="estado" className="block text-xs font-medium text-gray-700 mb-1">
+                  Estado
+                </label>
+                <select
+                  id="estado"
+                  name="estado"
+                  value={estado}
+                  onChange={handleEstadoChange}
+                  className="form-select w-full rounded-md shadow-md"
+                >
+                  <option key="default" value="">
+                    Selecione um estado
+                  </option>
+                  {estados.map((estadoObject, index) => (
+                    <option key={index} value={estadoObject.estado}>
+                      {estadoObject.estado}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="cidade" className="block text-xs font-medium text-gray-700 mb-1">
+                  Cidade
+                </label>
+                <select
+                  id="cidade"
+                  name="cidade"
+                  value={cidade}
+                  onChange={handleCidadeChange}
+                  className="form-select w-full rounded-md shadow-md"
+                >
+                  <option key="default" value="">
+                    Selecione uma cidade
+                  </option>
+                  {(estado || estado === '') && (
+                    <>
+                      {currentCidades.map((cidadeObject, index) => (
+                        <option key={index} value={cidadeObject.cidade}>
+                          {cidadeObject.cidade}
+                        </option>
+                      ))}
+                    </>
+                  )}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="bairro" className="block text-xs font-medium text-gray-700 mb-1">
+                  Bairro
+                </label>
+                <select
+                  id="bairro"
+                  name="bairro"
+                  value={bairro}
+                  onChange={handleBairroChange}
+                  className="form-select w-full rounded-md shadow-md"
+                >
+                  <option key="default" value="">
+                    Selecione um bairro
+                  </option>
+                  {(cidade || cidade === '') && (
+                    <>
+                      {currentBairros.map((bairroObject, index) => (
+                        <option key={index} value={bairroObject.bairro}>
+                          {bairroObject.bairro}
+                        </option>
+                      ))}
+                    </>
+                  )}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="categoria" className="block text-xs font-medium text-gray-700 mb-1">
+                  Categoria
+                </label>
+                <select
+                  id="categoria"
+                  name="categoria"
+                  value={categoria}
+                  onChange={handleCategoriaChange}
+                  className="form-select w-full rounded-md shadow-md"
+                >
+                  <option key="default" value="">
+                    Selecione uma categoria
+                  </option>
+                  {categorias.map((categoriaObject, index) => (
+                    <option key={index} value={categoriaObject.categoria}>
+                      {categoriaObject.categoria}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="minPrice" className="block text-xs font-medium text-gray-700 mb-1">
+                  Preço Mínimo
+                </label>
+                <NumericFormat
+                  id="minPrice"
+                  name="minPrice"
+                  value={minPrice}
+                  allowNegative={false}
+                  decimalScale={2}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix="R$ "
+                  className="form-input w-full rounded-md shadow-md"
+                  onValueChange={handleMinPriceChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="maxPrice" className="block text-xs font-medium text-gray-700 mb-1">
+                  Preço Máximo
+                </label>
+                <NumericFormat
+                  id="maxPrice"
+                  name="maxPrice"
+                  value={maxPrice}
+                  allowNegative={false}
+                  decimalScale={2}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix="R$ "
+                  className="form-input w-full rounded-md shadow-md"
+                  onValueChange={handleMaxPriceChange}
+                />
+              </div>
+            </div>
+            <button
+              onClick={handleSearch}
+              className="w-full mt-4 bg-red-800 hover:bg-red-900 text-white py-2 rounded-md shadow-md duration-150"
+            >
+              Buscar
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

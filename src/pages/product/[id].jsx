@@ -6,6 +6,7 @@ import toBrMoney from '../api/utils/toBrMoney';
 import Image from 'next/image';
 import LoadingSpinner from '../../components/animations/LoadingSpinner';
 import ContactForm from '../../components/ContactForm';
+import EncontrarEmpresa from '../../components/EncontrarEmpresa';
 
 const ProductPage = () => {
     const router = useRouter();
@@ -37,6 +38,11 @@ const ProductPage = () => {
         <div className="flex flex-col min-h-screen">
             <title>{product.item.titulo}</title>
             <Header />
+            <div className="flex w-full justify-center">
+                <div className="sm:w-10/12 w-full">
+                    <EncontrarEmpresa />
+                </div>
+            </div>
             <div className="flex-grow flex m-4">
                 <div className="w-full grid grid-cols-12">
                     <div className="w-full grid grid-cols-12 my-10 col-span-12 md:col-start-3 md:col-end-11">

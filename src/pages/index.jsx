@@ -10,9 +10,9 @@ export default function Home() {
       <Header />
       <title>MGA Corretora</title>
       <div className="w-full flex flex-col items-center">
-        <div className="md:w-10/12 md:mt-8">
-          <EncontrarEmpresa />
+        <div className="w-full md:w-10/12 mt-4 md:mt-8">
           <Banner />
+          <EncontrarEmpresa />
         </div>
         <Cards tipoMostrado="ambos" />
       </div>

@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 export default function Banner() {
     const settings = {
@@ -11,34 +13,43 @@ export default function Banner() {
         autoplay: true,
         autoplaySpeed: 5000,
         arrows: false,
+        responsive: [
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            }
+        ]
     };
 
     return (
-        <div className="hidden md:flex h-auto w-full justify-center items-center content-center shadow-xl overflow-hidden">
+        <div className="flex h-auto w-full justify-center items-center content-center shadow-xl overflow-hidden mb-2">
             <Slider {...settings} className="w-full">
                 <div className="w-full flex justify-center items-center">
-                    <Image
-                        className="rounded-sm"
-                        src="/Banner_1.png"
-                        alt="banner"
-                        width={1170}
-                        height={440}
-                        quality={100}
-                        style={{ width: '100%', height: 'auto' }}
-                        priority
-
-                    />
+                    <div className="w-full">
+                        <Image
+                            src="/Banner_1.png"
+                            alt="banner 1"
+                            layout="responsive"
+                            width={1170}
+                            height={440}
+                            quality={100}
+                        />
+                    </div>
                 </div>
                 <div className="w-full flex justify-center items-center">
-                    <Image
-                        className="rounded-sm"
-                        src="/Banner_2.png"
-                        alt="banner"
-                        width={1170}
-                        height={440}
-                        quality={100}
-                        style={{ width: '100%', height: 'auto' }}
-                    />
+                    <div className="w-full">
+                        <Image
+                            src="/Banner_2.png"
+                            alt="banner 2"
+                            layout="responsive"
+                            width={1170}
+                            height={440}
+                            quality={100}
+                        />
+                    </div>
                 </div>
             </Slider>
         </div>
