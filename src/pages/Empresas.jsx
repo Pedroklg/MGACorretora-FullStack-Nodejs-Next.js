@@ -1,15 +1,31 @@
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Cards from "../components/Cards";
 import SkeletonLoader from "../components/animations/SkeletonLoader"; // Import the SkeletonLoader component
-import { useState, useEffect } from "react";
 import EncontrarEmpresa from "../components/EncontrarEmpresa";
+import { IconBars } from "../components/Icons";
 
 function Empresas() {
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
     const [dataToShow, setDataToShow] = useState([]);
     const [loading, setLoading] = useState(true); // State to manage loading state
+    const [isMobile, setIsMobile] = useState(false); // State to manage mobile view
+    const [menuOpen, setMenuOpen] = useState(false); // State to manage mobile menu
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 640);
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 640);
+        };
+
+        // Event listener for window resize
+        window.addEventListener('resize', handleResize);
+
+        // Clean up event listener on component unmount
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const FilteredData = (dataToShow, categoria) => {
         if (!categoria) return dataToShow;
@@ -56,6 +72,10 @@ function Empresas() {
 
     const filteredData = FilteredData(dataToShow, categoriaSelecionada);
 
+    const handleMenuClick = () => {
+        setMenuOpen(!menuOpen); // Toggle menuOpen state
+    }
+
     return (
         <div className="flex flex-col min-h-screen">
             <title>Empresas</title>
@@ -65,20 +85,25 @@ function Empresas() {
                     <EncontrarEmpresa />
                 </div>
             </div>
-            <div className="flex flex-col sm:flex-row justify-center flex-grow">
-                <aside className="w-fit p-4 sm:m-12 sm:mt-16 mt-8 shadow-md rounded-md items-start flex flex-row flex-wrap sm:flex-col h-full">
-                    <h2 className="text-3xl font-bold sm:mb-8 text-red-800 w-full">Categorias</h2>
-                    {categorias.map((categoria) => (
-                        <div key={categoria.id} className="mb-2">
-                            <button
-                                onClick={() => handleCategoriaClick(categoria.categoria)}
-                                className={`p-2 m-1 rounded-sm shadow-md ${categoriaSelecionada === categoria.categoria ? 'bg-red-800 text-white' : 'bg-gray-200'}`}
-                            >
-                                {categoria.categoria}
-                            </button>
-                        </div>
-                    ))}
-                </aside>
+            <div className="flex flex-col sm:flex-row justify-center flex-grow items-center md:items-start">
+                <nav className="w-11/12 md:w-fit p-4 sm:m-12 sm:mt-16 mt-4 shadow-md rounded-md items-start flex flex-row flex-wrap sm:flex-col h-full">
+                    <button className="text-3xl font-bold sm:mb-8 text-red-800 w-full flex justify-center items-center self-start" onClick={handleMenuClick}>
+                        Categorias
+                        {isMobile && IconBars(6)}
+                    </button>
+                    <div className={`${isMobile && !menuOpen ? 'hidden' : 'flex flex-wrap md:flex-col'}`}>
+                        {categorias.map((categoria) => (
+                            <div key={categoria.id} className="mb-2">
+                                <button
+                                    onClick={() => handleCategoriaClick(categoria.categoria)}
+                                    className={`p-2 m-1 rounded-sm shadow-md ${categoriaSelecionada === categoria.categoria ? 'bg-red-800 text-white' : 'bg-gray-200'}`}
+                                >
+                                    {categoria.categoria}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </nav>
                 <div className="flex flex-grow">
                     <div className="sm:w-11/12 w-full p-4">
                         {loading ? (

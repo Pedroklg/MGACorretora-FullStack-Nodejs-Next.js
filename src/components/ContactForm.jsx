@@ -130,7 +130,7 @@ export default function ContactForm() {
                     />
                 </div>
                 <button 
-                    className='bg-red-900 text-white p-2 rounded-md w-30 hover:bg-red-700 self-center'
+                    className='bg-red-900 text-white p-2 rounded-md w-30 hover:bg-red-700 self-center col-span-12 md:col-span-2 md:col-start-6 md:col-end-8'
                     type="submit">
                     Enviar
                 </button>

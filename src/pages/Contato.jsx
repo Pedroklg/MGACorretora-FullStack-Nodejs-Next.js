@@ -1,6 +1,6 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { IconPhone, IconEmail } from '../components/Icones';
+import { IconPhone, IconEmail } from '../components/Icons';
 import ContactForm from '../components/ContactForm';
 
 function Contato() {

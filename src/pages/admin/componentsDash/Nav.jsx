@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { IconEdit, IconHouse, IconShop } from "../../../components/Icones";
+import { IconEdit, IconHouse, IconShop } from "../../../components/Icons";
 import Link from "next/link";
 
 const Nav = () => {

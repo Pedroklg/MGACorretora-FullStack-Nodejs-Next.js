@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { IconEmail, IconWhatsapp } from './Icones'
+import { IconEmail, IconWhatsapp } from './Icons'
 
 export default function Footer() {
     return (

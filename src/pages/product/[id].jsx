@@ -45,7 +45,7 @@ const ProductPage = () => {
             </div>
             <div className="flex-grow flex m-4">
                 <div className="w-full grid grid-cols-12">
-                    <div className="w-full grid grid-cols-12 my-10 col-span-12 md:col-start-3 md:col-end-11">
+                    <div className="w-full grid grid-cols-12 md:my-4 col-span-12 md:col-start-3 md:col-end-11">
 
                         <div className='col-span-12 md:col-span-6'>
                             <div className="text-4xl font-bold mb-6 col-span-12 text-red-800">

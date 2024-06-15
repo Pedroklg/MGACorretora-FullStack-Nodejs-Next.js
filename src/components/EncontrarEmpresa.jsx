@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NumericFormat } from 'react-number-format';
-import { IconSeach } from './Icones';
+import { IconBars, IconSearch } from './Icons';
 
 export default function EncontrarEmpresa() {
   const router = useRouter();
@@ -19,10 +19,11 @@ export default function EncontrarEmpresa() {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [searchMode, setSearchMode] = useState('both');
-  const [isMenuOpen, setIsMenuOpen] = useState(true); // Set to true to open menu by default on larger devices
+  const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
     const handleResize = () => {
       setIsMobile(window.innerWidth < 640);
     };
@@ -32,7 +33,7 @@ export default function EncontrarEmpresa() {
 
     // Clean up event listener on component unmount
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // Empty dependency array to run effect only once on mount
+  }, []);
 
   // Fetch estados, cidades, and categorias
   useEffect(() => {
@@ -157,66 +158,65 @@ export default function EncontrarEmpresa() {
     };
 
     const queryString = new URLSearchParams(queryParams).toString();
-    console.log(queryString); // Outputs something like "estado=Acre&cidade=Rio%20de%20Janeiro&bairro=Botafogo&categoria=Comércio&minPrice=1000&maxPrice=5000&searchMode=both"
 
     router.push(`/Search?${queryString}`);
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setMenuOpen(!menuOpen);
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col items-center justify-center w-full mt-2 md:mt-3 mb-4">
-        <div className="flex justify-between items-center w-full mb-2 md:mb-0">
-          <div className="flex items-center">
-            {isMobile ? (
-              <button
-                onClick={toggleMenu}
-                className={`px-4 py-2 cursor-pointer ${isMenuOpen ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
-                  }  hover:bg-red-900 duration-150 hover:scale-105`}
-              >
-                {searchMode === 'both' ? 'Tudo' : searchMode === 'empresas' ? 'Empresas' : 'Imóveis'}
-              </button>
-            ) : (
-              <>
-                <div
-                  onClick={() => setSearchMode('both')}
-                  className={`px-4 py-2 cursor-pointer ${searchMode === 'both' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
-                    }  hover:bg-red-900 duration-150 hover:scale-105`}
-                >
-                  Tudo
-                </div>
-                <div
-                  onClick={() => setSearchMode('empresas')}
-                  className={`px-4 py-2 cursor-pointer ${searchMode === 'empresas' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
-                    }  hover:bg-red-900 duration-150 hover:scale-105`}
-                >
-                  Empresas
-                </div>
-                <div
-                  onClick={() => setSearchMode('imoveis')}
-                  className={`px-4 py-2 cursor-pointer ${searchMode === 'imoveis' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
-                    }  hover:bg-red-900 duration-150 hover:scale-105`}
-                >
-                  Imóveis
-                </div>
-              </>
-            )}
-          </div>
-          {!isMobile && (
+    <div className="flex justify-center w-full">
+      <div className="flex flex-col items-center justify-center w-full mt-2 md:mt-6 mb-2">
+        <div className={`flex justify-start self-start ${isMobile && !menuOpen ? 'hidden' : ''}`}>
+          <button
+            onClick={() => setSearchMode('both')}
+            className={`px-4 py-2 ${searchMode === 'both' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
+              }  hover:bg-red-900 hover:text-gray-100 duration-150 hover:scale-105`}
+          >
+            Tudo
+          </button>
+          <button
+            onClick={() => setSearchMode('empresas')}
+            className={`px-4 py-2 ${searchMode === 'empresas' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
+              }  hover:bg-red-900 hover:text-gray-100 duration-150 hover:scale-105`}
+          >
+            Empresas
+          </button>
+          <button
+            onClick={() => setSearchMode('imoveis')}
+            className={`px-4 py-2 ${searchMode === 'imoveis' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
+              }  hover:bg-red-900 hover:text-gray-100 duration-150 hover:scale-105`}
+          >
+            Imóveis
+          </button>
+        </div>
+        <div className="bg-gray-100 shadow-md rounded-md p-5 w-full">
+          {isMobile && (
             <button
               onClick={toggleMenu}
-              className="p-2 focus:outline-none md:hidden"
+              className="w-full m-2"
             >
-              {IconSeach}
+              <div className="flex items-center">
+                {IconSearch(12)}
+                <h1 className="text-3xl text-red-900 ml-3">
+                  Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
+                </h1>
+                {IconBars(12)}
+              </div>
             </button>
           )}
-        </div>
-        {(isMobile && isMenuOpen) || !isMobile ? (
-          <div className="bg-gray-100 shadow-md rounded-md p-5 w-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+
+          {(!isMobile) &&
+            <div className="flex items-center mb-4">
+              {IconSearch(12)}
+              <h1 className="text-3xl text-red-900 ml-3">
+                Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
+              </h1>
+            </div>}
+          <div className={`${isMobile && !menuOpen ? 'hidden' : ''}`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 items-baseline">
               <div>
                 <label htmlFor="estado" className="block text-xs font-medium text-gray-700 mb-1">
                   Estado
@@ -280,78 +280,89 @@ export default function EncontrarEmpresa() {
                   {(cidade || cidade === '') && (
                     <>
                       {currentBairros.map((bairroObject, index) => (
-                        <option key={index} value={bairroObject.bairro}>
-                          {bairroObject.bairro}
-                        </option>
+                        bairroObject.bairro !== "" && bairroObject.bairro !== " " && (
+                          <option key={index} value={bairroObject.bairro}>
+                            {bairroObject.bairro}
+                          </option>
+                        )
                       ))}
                     </>
                   )}
                 </select>
               </div>
+              {(searchMode === 'both' || searchMode === 'empresas') && (
+                <div>
+                  <label
+                    htmlFor="categoria"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Categoria
+                  </label>
+                  <select
+                    id="categoria"
+                    name="categoria"
+                    value={categoria}
+                    onChange={handleCategoriaChange}
+                    className="form-select w-full rounded-md shadow-md"
+                  >
+                    <option value="">Selecione uma categoria</option>
+                    {categorias.map((categoriaObject, index) => (
+                      <option key={index} value={categoriaObject.categoria}>
+                        {categoriaObject.categoria}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div>
-                <label htmlFor="categoria" className="block text-xs font-medium text-gray-700 mb-1">
-                  Categoria
-                </label>
-                <select
-                  id="categoria"
-                  name="categoria"
-                  value={categoria}
-                  onChange={handleCategoriaChange}
-                  className="form-select w-full rounded-md shadow-md"
+                <label
+                  htmlFor="minPrice"
+                  className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
-                  <option key="default" value="">
-                    Selecione uma categoria
-                  </option>
-                  {categorias.map((categoriaObject, index) => (
-                    <option key={index} value={categoriaObject.categoria}>
-                      {categoriaObject.categoria}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="minPrice" className="block text-xs font-medium text-gray-700 mb-1">
-                  Preço Mínimo
+                  Preço Mínimo (R$)
                 </label>
                 <NumericFormat
                   id="minPrice"
                   name="minPrice"
                   value={minPrice}
-                  allowNegative={false}
-                  decimalScale={2}
+                  onValueChange={handleMinPriceChange}
                   thousandSeparator="."
                   decimalSeparator=","
                   prefix="R$ "
                   className="form-input w-full rounded-md shadow-md"
-                  onValueChange={handleMinPriceChange}
+                  placeholder="Mínimo"
                 />
               </div>
               <div>
-                <label htmlFor="maxPrice" className="block text-xs font-medium text-gray-700 mb-1">
-                  Preço Máximo
+                <label
+                  htmlFor="maxPrice"
+                  className="block text-sm font-medium text-gray-700 mb-0.5"
+                >
+                  Preço Máximo (R$)
                 </label>
                 <NumericFormat
                   id="maxPrice"
                   name="maxPrice"
                   value={maxPrice}
-                  allowNegative={false}
-                  decimalScale={2}
+                  onValueChange={handleMaxPriceChange}
                   thousandSeparator="."
                   decimalSeparator=","
                   prefix="R$ "
                   className="form-input w-full rounded-md shadow-md"
-                  onValueChange={handleMaxPriceChange}
+                  placeholder="Máximo"
                 />
               </div>
             </div>
-            <button
-              onClick={handleSearch}
-              className="w-full mt-4 bg-red-800 hover:bg-red-900 text-white py-2 rounded-md shadow-md duration-150"
-            >
-              Buscar
-            </button>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleSearch}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 duration-150 hover:scale-105"
+              >
+                Buscar
+              </button>
+            </div>
           </div>
-        ) : null}
+        </div>
       </div>
     </div>
   );

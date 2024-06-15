@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { IconEmail, IconHouse, IconSearchSmall, IconShop } from './Icones';
+import { IconEmail, IconHouse, IconShop, IconSearch } from './Icons';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -82,7 +82,7 @@ const Header = () => {
           className="flex bg-gray-200 text-red-800 p-1 ml-2 rounded-sm shadow-lg duration-150 hover:scale-105"
           onClick={handleSearchSend} // Call handleSearchClick on button click
         >
-          {IconSearchSmall}
+          {IconSearch(6)}
         </button>
       </div>
     </header>
