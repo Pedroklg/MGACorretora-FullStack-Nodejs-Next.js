@@ -85,10 +85,9 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
             }
 
             setLoading(false);
-            showSuccessToast(`Imovel ${item ? 'atualizado' : 'criado'} com sucesso!`);
-            // Reset form state to initial values and clear unsaved changes flag
             setImovelData(initialImovelData);
             setUnsavedChanges(false);
+            showSuccessToast(`Imovel ${item ? 'atualizado' : 'criado'} com sucesso!`);
 
             onSubmitSuccess();
         } catch (error) {
@@ -103,7 +102,7 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
         if (validateForm()) {
             createOrUpdateImovel();
         } else {
-            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado');
+            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado e Imagem');
         }
     };
 
@@ -111,7 +110,8 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
         return imovelData.titulo &&
             imovelData.valor_pretendido &&
             imovelData.cidade &&
-            imovelData.estado;
+            imovelData.estado &&
+            imovelData.imagem;
     };
 
     return (

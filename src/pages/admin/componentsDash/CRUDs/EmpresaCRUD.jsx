@@ -95,9 +95,9 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
             }
 
             setLoading(false);
-            showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
             setEmpresaData(initialEmpresaData);
             setUnsavedChanges(false);
+            showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
 
             onSubmitSuccess();
         } catch (error) {
@@ -112,7 +112,7 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
         if (validateForm()) {
             createOrUpdateEmpresa();
         } else {
-            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado, Categoria');
+            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado, Categoria e Imagem');
         }
     };
 
@@ -122,7 +122,8 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
             empresaData.valor_pretendido &&
             empresaData.cidade &&
             empresaData.estado &&
-            empresaData.categoria
+            empresaData.categoria &&
+            empresaData.imagem
         );
     };
 

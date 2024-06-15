@@ -45,7 +45,7 @@ function Imoveis() {
             <Header />
             <div className="flex flex-col sm:flex-row justify-center flex-grow">
                 <aside className="w-fit p-4 sm:m-12 sm:mt-16 mt-8 shadow-md rounded-md items-start flex flex-row flex-wrap sm:flex-col h-full m-5">
-                    <h2 className="text-3xl font-bold sm:mb-8 text-red-800 w-full">Modalidade</h2>
+                    <h2 className="text-3xl font-bold sm:mb-8 text-red-800 w-full">Finalidade</h2>
                     <div className="mb-2 flex sm:flex-col">
                         <button
                             onClick={() => handleModalidadeClick('aluguel')}
