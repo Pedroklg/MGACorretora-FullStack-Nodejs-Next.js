@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import FilteredData from '../../../pages/api/utils/FilteredData';
-import { IconEye, IconEdit, IconTrash, IconSearch } from '../../../components/Icons';
+import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icons';
 import ItemDetailsModal from './ItemDetailsModal';
 import toBrMoney from '../../../pages/api/utils/toBrMoney';
 import ProgressBar from '../../../components/animations/ProgressBar';
@@ -124,7 +124,7 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
                             onChange={handleSearchChange}
                         />
                         <button className="bg-red-800 rounded-sm text-white px-1 py-0.5 ml-3">
-                            {IconSearch(6)}
+                            {IconSearchSmall}
                         </button>
                     </div>
                 </div>

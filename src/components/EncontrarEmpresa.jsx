@@ -199,18 +199,18 @@ export default function EncontrarEmpresa() {
               className="w-full m-2"
             >
               <div className="flex items-center">
-                {IconSearch(12)}
+                {IconSearch}
                 <h1 className="text-3xl text-red-900 ml-3">
                   Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
                 </h1>
-                {IconBars(12)}
+                {IconBars}
               </div>
             </button>
           )}
 
           {(!isMobile) &&
             <div className="flex items-center mb-4">
-              {IconSearch(12)}
+              {IconSearch}
               <h1 className="text-3xl text-red-900 ml-3">
                 Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
               </h1>
