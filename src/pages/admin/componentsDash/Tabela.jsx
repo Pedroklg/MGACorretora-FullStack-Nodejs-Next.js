@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import Router from 'next/router';
 import FilteredData from '../../../pages/api/utils/FilteredData';
 import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icones';
-import { ItemContext } from '../../../context/ItemContext';
-import ItemDetailsModal from './ItemDetailsModal'; // Import the modal component
+import ItemDetailsModal from './ItemDetailsModal';
 import toBrMoney from '../../../pages/api/utils/toBrMoney';
-import ProgressBar from '../../../components/animations/ProgressBar'; // Import the ProgressBar component
+import ProgressBar from '../../../components/animations/ProgressBar';
 import { showErrorToast, showSuccessToast } from '../../../components/animations/toastService';
 
-const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
-    const { setItemToEdit } = useContext(ItemContext) || {};
+const EmpresasImoveisTable = ({ tipoMostrado }) => {
     const [dataToShow, setDataToShow] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
@@ -83,13 +81,9 @@ const EmpresasImoveisTable = ({ tipoMostrado, setShowRegistrar }) => {
 
     // Function to handle editing an item
     const handleEdit = (id) => {
-        const itemToEdit = dataToShow.find(item => item.id === id);
-        if (itemToEdit) {
-            setShowRegistrar(true);
-            setItemToEdit(itemToEdit);
-            setSelectedItemId(id);
-        }
+        Router.push('/admin/Registrar?id=' + id);
     };
+
 
     // Function to paginate through table pages
     const paginate = (pageNumber) => {

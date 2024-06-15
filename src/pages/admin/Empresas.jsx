@@ -7,7 +7,7 @@ const AdminDashboardPage = () => {
         <div className="flex flex-col lg:flex-row overflow-auto">
             <Nav />
             <Tabela
-                tipoMostrado={"ambos"}
+                tipoMostrado={"Empresas"}
             />
         </div>
     );

@@ -178,7 +178,7 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
                         thousandSeparator="."
                         decimalSeparator=","
                         prefix="R$ "
-                        isNumericString={true}
+                        isnumericstring="true"
                         required
                     />
                     <input

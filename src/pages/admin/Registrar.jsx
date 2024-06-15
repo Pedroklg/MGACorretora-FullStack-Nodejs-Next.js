@@ -1,12 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import EmpresaCRUD from './componentsDash/CRUDs/EmpresaCRUD';
 import ImovelCRUD from './componentsDash/CRUDs/ImovelCRUD';
-import { ItemContext } from '../../context/ItemContext'; // Adjust path if necessary
 import ProgressBar from '../../components/animations/ProgressBar';
+import Nav from './componentsDash/Nav';
+import { protectRoute } from '../api/utils/sessionProtection';
+import Router from 'next/router';
+import { showErrorToast } from '../../components/animations/toastService';
 
-const Registrar = ({ setShowRegistrar }) => {
-    const { itemToEdit, setItemToEdit } = useContext(ItemContext) || {}; // Access itemToEdit from context
-    const [currentCRUD, setCurrentCRUD] = useState('Empresa'); // Default to 'Empresa'
+const Registrar = () => {
+    const router = useRouter();
+    const { id } = router.query;
+    const [itemToEdit, setItemToEdit] = useState(null);
+    const [currentCRUD, setCurrentCRUD] = useState('Empresa');
     const [loading, setLoading] = useState(false);
 
     const fetchItem = async (id) => {
@@ -14,58 +20,62 @@ const Registrar = ({ setShowRegistrar }) => {
             setLoading(true);
             const response = await fetch(`/api/empresasImoveis?id=${id}`);
             if (!response.ok) {
-                throw new Error('Failed to fetch item');
+                throw new Error('Falha ao buscar item.');
             }
             const data = await response.json();
             setItemToEdit(data);
             setCurrentCRUD(data.tipo);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching item:', error);
+            console.error('Erro buscando item:', error);
+            showErrorToast('Erro buscando item.');
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (itemToEdit && itemToEdit.id) {
-            // Fetch item details only in edit mode
-            fetchItem(itemToEdit.id);
+        if (id) {
+            fetchItem(id);
         }
-    }, [itemToEdit]);
+    }, [id]);
 
     const handleTipoChange = (tipo) => {
         setCurrentCRUD(tipo);
     };
 
     const onSubmitSuccess = () => {
-        // Callback function to set showRegistrar to true in AdminDashboardPage
-        setShowRegistrar(false);
+        Router.push('/admin/Dashboard');
     };
 
     return (
-        <div className="h-fit min-h-svh w-svw">
-            <ProgressBar loading={loading}/>
-            <div className="p-5 md:p-8 flex flex-col gap-8">
-                <div className="flex items-center justify-start shadow-lg rounded-lg flex-col md:flex-row">
-                    <h1 className="text-3xl font-bold p-5">Registrar</h1>
-                    <div className="md:ml-10">
-                        <button onClick={() => handleTipoChange('Empresa')} className={`p-2 m-4 ${currentCRUD === 'Empresa' ? 'bg-red-800' : 'bg-red-700'} hover:bg-red-800 rounded-xl text-xl font-bold text-gray-200 shadow-xl`}>
-                            Empresa
-                        </button>
-                        <button onClick={() => handleTipoChange('Imovel')} className={`p-2 m-4 ${currentCRUD === 'Imovel' ? 'bg-red-800' : 'bg-red-700'} hover:bg-red-800 rounded-xl text-xl font-bold text-gray-200 shadow-xl`}>
-                            Imóvel
-                        </button>
+        <div className="flex flex-col lg:flex-row min-h-screen overflow-auto">
+            <Nav className="flex-shrink-0 lg:flex-grow-0" />
+            <div className="flex-grow h-full">
+                <ProgressBar loading={loading} />
+                <div className="p-5 md:p-8 flex flex-col gap-8">
+                    <div className="flex items-center justify-start shadow-lg rounded-lg flex-col md:flex-row">
+                        <h1 className="text-3xl font-bold p-5">Registrar</h1>
+                        <div className="md:ml-10">
+                            <button onClick={() => handleTipoChange('Empresa')} className={`p-2 m-4 ${currentCRUD === 'Empresa' ? 'bg-red-800' : 'bg-red-700'} hover:bg-red-800 rounded-xl text-xl font-bold text-gray-200 shadow-xl`}>
+                                Empresa
+                            </button>
+                            <button onClick={() => handleTipoChange('Imovel')} className={`p-2 m-4 ${currentCRUD === 'Imovel' ? 'bg-red-800' : 'bg-red-700'} hover:bg-red-800 rounded-xl text-xl font-bold text-gray-200 shadow-xl`}>
+                                Imóvel
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {currentCRUD === 'Empresa' ? (
-                    <EmpresaCRUD item={itemToEdit && itemToEdit.tipo === 'Empresa' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
-                ) : (
-                    <ImovelCRUD item={itemToEdit && itemToEdit.tipo === 'Imovel' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
-                )}
+                    {currentCRUD === 'Empresa' ? (
+                        <EmpresaCRUD item={itemToEdit && itemToEdit.tipo === 'Empresa' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
+                    ) : (
+                        <ImovelCRUD item={itemToEdit && itemToEdit.tipo === 'Imovel' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
+                    )}
+                </div>
             </div>
         </div>
     );
 };
+
+export const getServerSideProps = protectRoute;
 
 export default Registrar;
