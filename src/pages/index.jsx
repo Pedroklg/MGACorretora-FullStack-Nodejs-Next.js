@@ -16,7 +16,7 @@ export default function Home() {
             <EncontrarEmpresa />
           </div>
         </div>
-        <div className="xl:w-10/12 xl:mt-8 w-full">
+        <div className="xl:w-10/12 w-full">
           <Cards tipoMostrado="ambos" />
         </div>
       </div>
