@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { name, email, subject, message } = req.body;
+    const { name, email, subject,phone, message } = req.body;
 
     try {
       // Create a transporter
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       });
 
       // Construct email body text
-      const emailBody = `Email enviado pelo site.\nEmail enviado: ${email}\nMensagem:\n\n ${message}`;
+      const emailBody = `Email enviado pelo site.\nEmail enviado: ${email}\nTelefone: ${phone}\nMensagem:\n\n ${message}`;
 
       // Send mail with defined transport object
       let info = await transporter.sendMail({

@@ -18,7 +18,7 @@ const EmpresasCRUD = ({ item }) => {
         valor_pretendido: '',
         condicoes: '',
         sobre_o_imovel: '',
-        endereco: '',
+        bairro: '',
         aceita_permuta: false,
         tem_divida: false,
         imagem: null,
@@ -220,10 +220,10 @@ const EmpresasCRUD = ({ item }) => {
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
-                        name="endereco"
-                        value={empresaData.endereco}
+                        name="bairro"
+                        value={empresaData.bairro}
                         onChange={handleChange}
-                        placeholder="Endereço"
+                        placeholder="Bairro"
                     />
                     <input
                         className="p-1 rounded-lg shadow-lg"

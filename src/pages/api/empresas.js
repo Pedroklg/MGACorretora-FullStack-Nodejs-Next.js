@@ -33,7 +33,7 @@ apiRoute.post(async (req, res) => {
     try {
         const {
             titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
-            condicoes, sobre_o_imovel, endereco, aceita_permuta, tem_divida,
+            condicoes, sobre_o_imovel, bairro, aceita_permuta, tem_divida,
             estado, cidade, categoria
         } = req.body;
 
@@ -47,10 +47,10 @@ apiRoute.post(async (req, res) => {
 
         // Insert data into the database
         const result = await db.query(
-            'INSERT INTO empresas (titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, endereco, aceita_permuta, tem_divida, imagem, estado, cidade, categoria) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
+            'INSERT INTO empresas (titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, bairro, aceita_permuta, tem_divida, imagem, estado, cidade, categoria) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
             [
                 titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
-                condicoes, sobre_o_imovel, endereco, aceita_permuta, tem_divida,
+                condicoes, sobre_o_imovel, bairro, aceita_permuta, tem_divida,
                 imageUrl, estado, cidade, categoria
             ]
         );
@@ -67,7 +67,7 @@ apiRoute.put(async (req, res) => {
         const { id } = req.query;
         const {
             titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
-            condicoes, sobre_o_imovel, endereco, aceita_permuta, tem_divida,
+            condicoes, sobre_o_imovel, bairro, aceita_permuta, tem_divida,
             estado, cidade, categoria
         } = req.body;
 
@@ -80,10 +80,10 @@ apiRoute.put(async (req, res) => {
 
         // Update data in the database
         const result = await db.query(
-            'UPDATE empresas SET titulo = $1, tempo_de_mercado = $2, funcionarios = $3, motivo_da_venda = $4, valor_pretendido = $5, condicoes = $6, sobre_o_imovel = $7, endereco = $8, aceita_permuta = $9, tem_divida = $10, imagem = $11, estado = $12, cidade = $13, categoria = $14 WHERE id = $15 RETURNING *',
+            'UPDATE empresas SET titulo = $1, tempo_de_mercado = $2, funcionarios = $3, motivo_da_venda = $4, valor_pretendido = $5, condicoes = $6, sobre_o_imovel = $7, bairro = $8, aceita_permuta = $9, tem_divida = $10, imagem = $11, estado = $12, cidade = $13, categoria = $14 WHERE id = $15 RETURNING *',
             [
                 titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
-                condicoes, sobre_o_imovel, endereco, aceita_permuta, tem_divida,
+                condicoes, sobre_o_imovel, bairro, aceita_permuta, tem_divida,
                 imageUrl, estado, cidade, categoria, id
             ]
         );

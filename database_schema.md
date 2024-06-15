@@ -24,7 +24,7 @@
 - `motivo_da_venda`: TEXT - Reason for selling the empresa.
 - `condicoes`: TEXT - Conditions of the empresa.
 - `sobre_o_imovel`: TEXT - Description about the empresa.
-- `endereco`: VARCHAR - Address of the empresa.
+- `bairro`: VARCHAR - Address of the empresa.
 
 ## Table: Imoveis
 
@@ -38,7 +38,7 @@
 - `valor_pretendido`: NUMERIC - The imóvel's desired value.
 - `aluguel`: BOOLEAN - Indicates if the imóvel is for rent.
 - `motivo_da_venda`: TEXT - Reason for selling the imóvel.
-- `endereco`: VARCHAR - Address of the imóvel.
+- `bairro`: VARCHAR - Address of the imóvel.
 - `titulo`: VARCHAR - Title of the imóvel.
 - `imagem`: VARCHAR - Path to the imóvel's image.
 - `condicoes`: TEXT - Conditions of the imóvel.

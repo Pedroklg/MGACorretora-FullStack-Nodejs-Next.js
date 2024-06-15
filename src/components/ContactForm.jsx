@@ -7,6 +7,7 @@ export default function ContactForm() {
         name: '',
         email: '',
         subject: '',
+        phone: '',
         message: '',
     });
     const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -35,8 +36,8 @@ export default function ContactForm() {
     };
 
     const handleSubmit = async (e) => {
-        if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-            showErrorToast('Por favor, preencha todos os campos.');
+        if (!formData.name || (!formData.email && !formData.phone) || !formData.subject || !formData.message) {
+            showErrorToast('Por favor, preencha os campos.');
             return;
         }
         e.preventDefault();
@@ -55,7 +56,7 @@ export default function ContactForm() {
 
             if (result.success) {
                 showSuccessToast('Email enviado com sucesso!');
-                setFormData({ name: '', email: '', subject: '', message: '' });
+                setFormData({ name: '', email: '', subject: '',phone:'', message: '' });
             } else {
                 showErrorToast('Falha ao enviar o email.');
             }
@@ -72,9 +73,9 @@ export default function ContactForm() {
         <div className="col-span-12 shadow-md p-2 rounded-md">
             <LoadingSpinner isLoading={isLoading} />
             <h2 className='text-xl text-red-900 ml-3 font-semibold'>Entre em contato por E-mail</h2>
-            <form className='w-full flex flex-col p-2 rounded-md items-stretch' 
+            <form className='w-full grid grid-cols-12 p-2 rounded-md items-stretch' 
                 onSubmit={handleSubmit}>
-                <div className='col-span-12 p-1 md:p-2 text-lg'>
+                <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
                     <label>Nome:</label>
                     <input
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
@@ -85,7 +86,7 @@ export default function ContactForm() {
                         required
                     />
                 </div>
-                <div className='col-span-12 p-1 md:p-2 text-lg'>
+                <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
                     <label>Email para contato:</label>
                     <input
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
@@ -96,13 +97,24 @@ export default function ContactForm() {
                         required
                     />
                 </div>
-                <div className='col-span-12 p-1 md:p-2 text-lg'>
+                <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
                     <label>Assunto:</label>
                     <input
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="subject"
                         value={formData.subject}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
+                    <label>Telefone:</label>
+                    <input
+                        className='shadow-md p-1 md:p-2 rounded-md w-full'
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
                         onChange={handleChange}
                         required
                     />

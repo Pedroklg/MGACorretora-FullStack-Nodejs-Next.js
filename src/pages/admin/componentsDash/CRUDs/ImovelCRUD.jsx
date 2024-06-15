@@ -23,7 +23,7 @@ const ImoveisCRUD = ({ item }) => {
         sobre_o_imovel: '',
         estado: '',
         cidade: '',
-        endereco: '',
+        bairro: '',
         aluguel: false,
     };
 
@@ -175,7 +175,7 @@ const ImoveisCRUD = ({ item }) => {
                     <input className="p-1 rounded-lg shadow-lg"
                         type="text" name="cidade" value={imovelData.cidade} onChange={handleChange} placeholder="Cidade" required />
                     <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="endereco" value={imovelData.endereco} onChange={handleChange} placeholder="Endereço" />
+                        type="text" name="bairro" value={imovelData.bairro} onChange={handleChange} placeholder="Bairro" />
                     <div className='flex p-3 gap-10 text-lg'>
                         <label>
                             <input className="p-1 rounded-lg shadow-lg"

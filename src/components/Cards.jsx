@@ -149,6 +149,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
                 <span className='flex items-center text-green-700 mb-0.5'>{IconMapPin}</span>
                 {card.cidade} - {card.estado}
               </div>
+              <p className="text-green-700 text-sm ml-4">{card.bairro}</p>
               <p className="text-yellow-600 text-xl font-semibold">{toBrMoney(card.valor_pretendido)}</p>
             </div>
           </div>

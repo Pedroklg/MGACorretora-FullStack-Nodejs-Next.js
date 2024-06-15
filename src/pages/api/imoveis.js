@@ -33,7 +33,7 @@ apiRoute.post(async (req, res) => {
     try {
         const {
             titulo, area_construida, area_util, aceita_permuta, tem_divida,
-            motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, endereco, aluguel
+            motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, bairro, aluguel
         } = req.body;
 
         let imageUrl = null;
@@ -46,10 +46,10 @@ apiRoute.post(async (req, res) => {
 
         // Insert data into the database
         const result = await db.query(
-            'INSERT INTO imoveis (titulo, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, endereco, aluguel) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
+            'INSERT INTO imoveis (titulo, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, bairro, aluguel) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
             [
                 titulo, imageUrl, area_construida, area_util, aceita_permuta, tem_divida,
-                motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, endereco, aluguel
+                motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, bairro, aluguel
             ]
         );
 
@@ -66,7 +66,7 @@ apiRoute.put(async (req, res) => {
         const {
             titulo, area_construida, area_util, aceita_permuta, tem_divida,
             motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel,
-            estado, cidade, endereco, aluguel
+            estado, cidade, bairro, aluguel
         } = req.body;
 
         let imageUrl = req.body.imagem; // Default to existing image URL
@@ -79,10 +79,10 @@ apiRoute.put(async (req, res) => {
 
         // Update data in the database
         const result = await db.query(
-            'UPDATE imoveis SET titulo = $1, imagem = $2, area_construida = $3, area_util = $4, aceita_permuta = $5, tem_divida = $6, motivo_da_venda = $7, valor_pretendido = $8, condicoes = $9, sobre_o_imovel = $10, estado = $11, cidade = $12, endereco = $13, aluguel = $14 WHERE id = $15 RETURNING *',
+            'UPDATE imoveis SET titulo = $1, imagem = $2, area_construida = $3, area_util = $4, aceita_permuta = $5, tem_divida = $6, motivo_da_venda = $7, valor_pretendido = $8, condicoes = $9, sobre_o_imovel = $10, estado = $11, cidade = $12, bairro = $13, aluguel = $14 WHERE id = $15 RETURNING *',
             [
                 titulo, imageUrl, area_construida, area_util, aceita_permuta, tem_divida,
-                motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, endereco, aluguel, id
+                motivo_da_venda, valor_pretendido, condicoes, sobre_o_imovel, estado, cidade, bairro, aluguel, id
             ]
         );
 

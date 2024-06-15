@@ -17,7 +17,7 @@ const FilteredData = (dataToShow, searchTerm) => {
           item.condicoes?.toLowerCase().includes(lowerSearchTerm) ||
           item.estado?.toLowerCase().includes(lowerSearchTerm) ||
           item.cidade?.toLowerCase().includes(lowerSearchTerm) ||
-          (item.endereco && item.endereco.toLowerCase().includes(lowerSearchTerm))
+          (item.bairro && item.bairro.toLowerCase().includes(lowerSearchTerm))
       );
   });
 
