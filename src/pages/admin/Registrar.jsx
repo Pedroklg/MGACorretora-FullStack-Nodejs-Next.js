@@ -5,7 +5,6 @@ import ImovelCRUD from './componentsDash/CRUDs/ImovelCRUD';
 import ProgressBar from '../../components/animations/ProgressBar';
 import Nav from './componentsDash/Nav';
 import { protectRoute } from '../api/utils/sessionProtection';
-import Router from 'next/router';
 import { showErrorToast } from '../../components/animations/toastService';
 
 const Registrar = () => {
@@ -43,10 +42,6 @@ const Registrar = () => {
         setCurrentCRUD(tipo);
     };
 
-    const onSubmitSuccess = () => {
-        Router.push('/admin/Dashboard');
-    };
-
     return (
         <div className="flex flex-col lg:flex-row min-h-screen overflow-auto">
             <Nav className="flex-shrink-0 lg:flex-grow-0" />
@@ -66,9 +61,9 @@ const Registrar = () => {
                     </div>
 
                     {currentCRUD === 'Empresa' ? (
-                        <EmpresaCRUD item={itemToEdit && itemToEdit.tipo === 'Empresa' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
+                        <EmpresaCRUD item={itemToEdit && itemToEdit.tipo === 'Empresa' ? itemToEdit.item : null} />
                     ) : (
-                        <ImovelCRUD item={itemToEdit && itemToEdit.tipo === 'Imovel' ? itemToEdit.item : null} onSubmitSuccess={onSubmitSuccess} />
+                        <ImovelCRUD item={itemToEdit && itemToEdit.tipo === 'Imovel' ? itemToEdit.item : null} />
                     )}
                 </div>
             </div>

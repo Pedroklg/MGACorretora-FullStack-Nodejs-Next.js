@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 import { NumericFormat } from 'react-number-format';
 import { showErrorToast, showSuccessToast } from '../../../../components/animations/toastService';
+import { useRouter } from 'next/router';
 
-const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
+const EmpresasCRUD = ({ item }) => {
     const [loading, setLoading] = useState(false);
     const [unsavedChanges, setUnsavedChanges] = useState(false);
+    const [savedOrUpdated, setSavedOrUpdated] = useState(false);
+    const router = useRouter();
     const initialEmpresaData = {
         titulo: '',
         tempo_de_mercado: '',
@@ -26,7 +29,6 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
 
     const [empresaData, setEmpresaData] = useState(initialEmpresaData);
 
-    // Set initial state based on the provided item when component mounts
     useEffect(() => {
         if (item) {
             setLoading(true);
@@ -38,33 +40,45 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
         }
     }, [item]);
 
-    // Check if any field is filled to trigger unsaved changes alert
     useEffect(() => {
-        if (unsavedChanges) {
-            window.addEventListener('beforeunload', handleBeforeUnload);
-        } else {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        }
-        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [empresaData]);
+        const handleBeforeUnload = (event) => {
+            if (unsavedChanges) {
+                const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';
+                event.returnValue = message; // Standard for most browsers
+                return message; // For older browsers
+            }
+        };
 
-    const handleBeforeUnload = (event) => {
-        const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';
-        event.preventDefault();
-        event.returnValue = message;
-        return message;
-    };
+        const handleRouteChange = (url) => {
+            if (!savedOrUpdated && unsavedChanges && !window.confirm('Você tem mudanças não salvas. Tem certeza que deseja sair?')) {
+                router.events.emit('routeChangeError');
+                throw 'routeChange aborted.';
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        router.events.on('routeChangeStart', handleRouteChange);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            router.events.off('routeChangeStart', handleRouteChange);
+        };
+    }, [unsavedChanges, savedOrUpdated, router]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEmpresaData(prevData => ({ ...prevData, [name]: value }));
-        setUnsavedChanges(true);
+        if (!loading) {
+            setUnsavedChanges(true);
+        }
     };
 
     const handleCheckboxChange = (e) => {
         const { name, checked } = e.target;
         setEmpresaData(prevData => ({ ...prevData, [name]: checked }));
-        setUnsavedChanges(true);
+        if (!loading) {
+            setUnsavedChanges(true);
+        }
     };
 
     const handleImageChange = (e) => {
@@ -94,27 +108,33 @@ const EmpresasCRUD = ({ item, onSubmitSuccess }) => {
                 throw new Error(errorData.error || `Erro ao ${item ? 'atualizar' : 'criar'} empresa`);
             }
 
-            setLoading(false);
-            setEmpresaData(initialEmpresaData);
             setUnsavedChanges(false);
+            setSavedOrUpdated(true);
+            setEmpresaData(initialEmpresaData);
             showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
-
-            onSubmitSuccess();
         } catch (error) {
             console.error(`Erro ao ${item ? 'atualizar' : 'criar'} empresa:`, error.message);
             showErrorToast(`Erro ao ${item ? 'atualizar' : 'criar'} empresa`);
+        } finally {
             setLoading(false);
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (validateForm()) {
-            createOrUpdateEmpresa();
+            await createOrUpdateEmpresa();
         } else {
             showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado, Categoria e Imagem');
         }
     };
+
+    useEffect(() => {
+        if (savedOrUpdated) {
+            router.push('/admin/Dashboard');
+        }
+    }, [savedOrUpdated]);
 
     const validateForm = () => {
         return (

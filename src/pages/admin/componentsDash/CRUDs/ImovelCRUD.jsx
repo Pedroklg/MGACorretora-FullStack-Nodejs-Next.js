@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 import { NumericFormat } from 'react-number-format';
 import { showErrorToast, showSuccessToast } from '../../../../components/animations/toastService';
+import { useRouter } from 'next/router';
 
-const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
+const ImoveisCRUD = ({ item }) => {
     const [loading, setLoading] = useState(false);
     const [unsavedChanges, setUnsavedChanges] = useState(false);
+    const [savedOrUpdated, setSavedOrUpdated] = useState(false);
+    const router = useRouter();
     const initialImovelData = {
         titulo: '',
         imagem: null,
@@ -29,26 +32,39 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
     // Set initial state based on the provided item when component mounts
     useEffect(() => {
         if (item) {
-            setImovelData(item);
+            setLoading(true);
+            // Simulate asynchronous data loading
+            setTimeout(() => {
+                setImovelData(item);
+                setLoading(false);
+            }, 500); // Adjust timeout as per your API response time or loading requirements
         }
     }, [item]);
 
-    // Check if any field is filled to trigger unsaved changes alert
     useEffect(() => {
-        if (unsavedChanges) {
-            window.addEventListener('beforeunload', handleBeforeUnload);
-        } else {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        }
-        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [imovelData]);
+        const handleBeforeUnload = (event) => {
+            if (unsavedChanges) {
+                const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';
+                event.returnValue = message; // Standard for most browsers
+                return message; // For older browsers
+            }
+        };
 
-    const handleBeforeUnload = (event) => {
-        const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';
-        event.preventDefault();
-        event.returnValue = message;
-        return message;
-    };
+        const handleRouteChange = (url) => {
+            if (!savedOrUpdated && unsavedChanges && !window.confirm('Você tem mudanças não salvas. Tem certeza que deseja sair?')) {
+                router.events.emit('routeChangeError');
+                throw 'routeChange aborted.';
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        router.events.on('routeChangeStart', handleRouteChange);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            router.events.off('routeChangeStart', handleRouteChange);
+        };
+    }, [unsavedChanges, savedOrUpdated, router]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -84,27 +100,32 @@ const ImoveisCRUD = ({ item, onSubmitSuccess }) => {
                 throw new Error(errorData.error || `Falha ao ${item ? 'atualizar' : 'criar'} imovel`);
             }
 
-            setLoading(false);
-            setImovelData(initialImovelData);
             setUnsavedChanges(false);
+            setSavedOrUpdated(true);
+            setImovelData(initialImovelData);
             showSuccessToast(`Imovel ${item ? 'atualizado' : 'criado'} com sucesso!`);
-
-            onSubmitSuccess();
         } catch (error) {
             console.error(`Falha ao ${item ? 'atualizar' : 'criar'} imovel`, error.message);
-            setLoading(false);
             showErrorToast(`Falha ao ${item ? 'atualizar' : 'criar'} imovel`);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            createOrUpdateImovel();
+            await createOrUpdateImovel();
         } else {
-            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado e Imagem');
+            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado, Categoria e Imagem');
         }
     };
+
+    useEffect(() => {
+        if (savedOrUpdated) {
+            router.push('/admin/Dashboard');
+        }
+    }, [savedOrUpdated]);
 
     const validateForm = () => {
         return imovelData.titulo &&
