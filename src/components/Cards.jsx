@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import toBrMoney from '../pages/api/utils/toBrMoney';
 import Image from 'next/image';
 import SkeletonLoader from './animations/SkeletonLoader';
-import { IconMapPin } from './Icones';
+import { IconDown, IconMapPin, IconUp } from './Icones';
 
 const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [currentData, setcurrentData] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'ascending' });
   const cardsPerPage = 12;
   const router = useRouter();
 
@@ -42,7 +43,6 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   // Calculate indexes for slicing data based on pagination
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = currentData.slice(indexOfFirstCard, indexOfLastCard);
 
   // Function to handle pagination
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -51,6 +51,40 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const handleCardClick = (id) => {
     router.push(`/product/${id}`);
   };
+
+  // Function to handle sorting
+  const handleSort = (key) => {
+    if (sortConfig.key === key) {
+      setSortConfig({
+        ...sortConfig,
+        direction: sortConfig.direction === 'ascending' ? 'descending' : 'ascending',
+      });
+    } else {
+      setSortConfig({
+        key,
+        direction: 'ascending',
+      });
+    }
+  };
+
+  // Memoized sorted data
+  const sortedData = useMemo(() => {
+    if (sortConfig.key) {
+      const sortableData = [...currentData];
+      sortableData.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+      return sortableData;
+    } else {
+      return currentData; // Return unsorted data if no sort key is set
+    }
+  }, [currentData, sortConfig]);
 
   // Determine title based on tipoMostrado
   let titulo;
@@ -79,6 +113,15 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
           {titulo}
         </h1>
         <div className="flex-grow h-px bg-red-700 ml-4 p-0.5 rounded-md"></div>
+        <button className="text-lg text-gray-100 p-1 m-2 rounded-md shadow-md bg-red-800" onClick={() => handleSort('valor_pretendido')}>
+          <span className='flex items-center justify-center gap-1'>
+            <span className='hidden sm:flex'>Ordenar por</span> Preço {sortConfig.key === 'valor_pretendido' && (
+              <span>
+                {sortConfig.direction === 'ascending' ? IconUp : IconDown}
+              </span>
+            )}
+          </span>
+        </button>
       </div>
       {currentData.length === 0 ?
         <div className='text-center text-3xl font-semibold text-black flex justify-center'>
@@ -87,7 +130,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         :
         ""}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {currentCards.map((card, index) => (
+        {sortedData.slice(indexOfFirstCard, indexOfLastCard).map((card, index) => (
           <div
             key={index}
             className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out"
@@ -113,7 +156,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
       </div>
       <div className="flex justify-center mt-4">
         <nav className="inline-flex">
-          {[...Array(Math.ceil(currentData.length / cardsPerPage)).keys()].map((number) => (
+          {[...Array(Math.ceil(sortedData.length / cardsPerPage)).keys()].map((number) => (
             <button
               key={number}
               onClick={() => paginate(number + 1)}
