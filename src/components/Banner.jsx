@@ -21,10 +21,12 @@ export default function Banner() {
                         className="rounded-sm"
                         src="/Banner_1.png"
                         alt="banner"
-                        width={1000}
-                        height={500}
+                        width={1170}
+                        height={440}
+                        quality={100}
                         style={{ width: '100%', height: 'auto' }}
                         priority
+
                     />
                 </div>
                 <div className="w-full flex justify-center items-center">
@@ -32,8 +34,9 @@ export default function Banner() {
                         className="rounded-sm"
                         src="/Banner_2.png"
                         alt="banner"
-                        width={1000}
-                        height={500}
+                        width={1170}
+                        height={440}
+                        quality={100}
                         style={{ width: '100%', height: 'auto' }}
                     />
                 </div>
