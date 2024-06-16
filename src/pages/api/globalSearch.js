@@ -18,6 +18,7 @@ export default async function handler(req, res) {
          OR titulo ILIKE $1
          OR categoria ILIKE $1
          OR CAST(id AS TEXT) ILIKE $1
+         OR bairro ILIKE $1
       UNION ALL
       SELECT id, titulo, sobre_o_imovel, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, estado, cidade, bairro
       FROM imoveis
@@ -25,6 +26,7 @@ export default async function handler(req, res) {
          OR cidade ILIKE $2
          OR titulo ILIKE $2
          OR CAST(id AS TEXT) ILIKE $2
+         OR bairro ILIKE $2
     `;
     queryParams.push(searchTerm, searchTerm);
 

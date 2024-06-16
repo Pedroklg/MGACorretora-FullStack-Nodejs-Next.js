@@ -1,19 +1,26 @@
 import db from './utils/db';
 
 export default async function handler(req, res) {
-    const { cidade, estado, bairro, categoria, minPrice, maxPrice, searchMode } = req.query;
+    const { cidade, estado, bairro, categoria, finalidade, minPrice, maxPrice, searchMode } = req.query;
+    let aluguel = null;
+    if (finalidade === 'venda') {
+        aluguel = false;
+    }else if (finalidade === 'locacao') {
+        aluguel = true;
+    }
+    console.log(aluguel);
 
     // Initialize search queries
     let searchQueryEmpresas = `
         SELECT id, titulo, sobre_o_imovel, imagem, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta,
-        NULL AS tem_divida, NULL AS motivo_da_venda, valor_pretendido, NULL AS condicoes, estado, cidade, bairro, categoria
+        NULL AS tem_divida, NULL AS motivo_da_venda, valor_pretendido, NULL AS condicoes, estado, cidade, bairro, categoria, NULL AS aluguel
         FROM empresas
         WHERE 1=1
     `;
 
     let searchQueryImoveis = `
         SELECT id, titulo, sobre_o_imovel, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda,
-        valor_pretendido, condicoes, estado, cidade, bairro, NULL AS categoria
+        valor_pretendido, condicoes, estado, cidade, bairro, aluguel, NULL AS categoria
         FROM imoveis
         WHERE 1=1
     `; 
@@ -34,6 +41,9 @@ export default async function handler(req, res) {
     if (categoria) {
         searchQueryEmpresas += ` AND LOWER(categoria) LIKE LOWER('%${categoria}%')`;
     }
+    if (aluguel !== null){
+        searchQueryImoveis += ` AND aluguel = ${aluguel}`;
+    }
     if (minPrice) {
         searchQueryEmpresas += ` AND valor_pretendido >= ${minPrice}`;
         searchQueryImoveis += ` AND valor_pretendido >= ${minPrice}`;
@@ -50,9 +60,9 @@ export default async function handler(req, res) {
 
         // Combine results based on searchMode
         let combinedResults = [];
-        if (searchMode === 'both') {
+        if (searchMode === 'both' && !categoria) {
             combinedResults = [...empresas, ...imoveis];
-        } else if (searchMode === 'empresas') {
+        } else if (searchMode === 'empresas' || categoria) {
             combinedResults = empresas;
         } else if (searchMode === 'imoveis') {
             combinedResults = imoveis;

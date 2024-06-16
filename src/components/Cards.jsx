@@ -117,7 +117,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
           <span className='flex items-center justify-center gap-1'>
             <span className='hidden sm:flex'>Ordenar por</span> Preço {sortConfig.key === 'valor_pretendido' && (
               <span>
-                {sortConfig.direction === 'ascending' ? IconUp(3) : IconDown(3)}
+                {sortConfig.direction === 'ascending' ? IconUp : IconDown}
               </span>
             )}
           </span>

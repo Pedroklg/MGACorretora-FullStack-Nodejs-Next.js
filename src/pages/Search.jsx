@@ -7,7 +7,7 @@ import SkeletonLoader from '../components/animations/SkeletonLoader';
 
 const Search = () => {
     const router = useRouter();
-    const { q, cidade, estado, bairro, categoria, minPrice, maxPrice, searchMode } = router.query;
+    const { q, cidade, estado, bairro, categoria, finalidade, minPrice, maxPrice, searchMode } = router.query;
     const [loading, setLoading] = useState(true);
     const [dataToShow, setDataToShow] = useState([]);
 
@@ -20,12 +20,13 @@ const Search = () => {
                 // Handle search by query term (q)
                 queryParams = { query: q };
                 url = `/api/globalSearch?${new URLSearchParams(queryParams).toString()}`;
-            } else if (estado || cidade || bairro || categoria || minPrice || maxPrice) {
+            } else if (estado || cidade || bairro || categoria || finalidade || minPrice || maxPrice) {
                 // Handle search by various parameters
                 if (estado) queryParams.estado = estado;
                 if (cidade) queryParams.cidade = cidade;
                 if (bairro) queryParams.bairro = bairro;
                 if (categoria) queryParams.categoria = categoria;
+                if (finalidade) queryParams.finalidade = finalidade;
                 if (minPrice) queryParams.minPrice = minPrice;
                 if (maxPrice) queryParams.maxPrice = maxPrice;
                 if (searchMode) queryParams.searchMode = searchMode;

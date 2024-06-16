@@ -10,7 +10,7 @@ export default function Home() {
       <Header />
       <title>MGA Corretora</title>
       <div className="w-full flex flex-col items-center">
-        <div className="flex flex-col xl:relative w-full">
+        <div className="flex flex-col xl:relative w-full m-0 p-0">
           <Banner />
           <div className="flex xl:absolute xl:bottom-0 xl:left-1/2 xl:transform xl:-translate-x-1/2 xl:z-10 xl:mb-4 xl:w-10/12 xl:opacity-90">
             <EncontrarEmpresa />

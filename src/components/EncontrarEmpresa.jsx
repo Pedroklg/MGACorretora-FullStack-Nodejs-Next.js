@@ -12,6 +12,7 @@ export default function EncontrarEmpresa() {
   const [bairros, setBairros] = useState([]);
   const [currentBairros, setCurrentBairros] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [finalidade, setFinalidade] = useState('');
   const [estado, setEstado] = useState('');
   const [cidade, setCidade] = useState('');
   const [bairro, setBairro] = useState('');
@@ -135,6 +136,11 @@ export default function EncontrarEmpresa() {
     setCategoria(selectedCategoria);
   };
 
+  const handlefinalidadeChange = e => {
+    const selectedfinalidade = e.target.value;
+    setFinalidade(selectedfinalidade);
+  };
+
   const handleMinPriceChange = values => {
     setMinPrice(values.floatValue);
   };
@@ -144,7 +150,7 @@ export default function EncontrarEmpresa() {
   };
 
   const handleSearch = () => {
-    if (!estado && !cidade && !bairro && !categoria && !minPrice && !maxPrice) {
+    if (!estado && !cidade && !bairro && !categoria && !finalidade && !minPrice && !maxPrice) {
       return;
     }
     const queryParams = {
@@ -152,6 +158,7 @@ export default function EncontrarEmpresa() {
       cidade,
       bairro,
       categoria,
+      finalidade,
       minPrice,
       maxPrice,
       searchMode,
@@ -192,7 +199,7 @@ export default function EncontrarEmpresa() {
             Imóveis
           </button>
         </div>
-        <div className="bg-gray-100 shadow-md rounded-md p-5 w-full">
+        <div className="bg-gray-100 shadow-md rounded-sm p-4 w-full">
           {isMobile && (
             <button
               onClick={toggleMenu}
@@ -209,7 +216,7 @@ export default function EncontrarEmpresa() {
           )}
 
           {(!isMobile) &&
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-1">
               {IconSearch}
               <h1 className="text-3xl text-red-900 ml-3">
                 Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
@@ -290,7 +297,7 @@ export default function EncontrarEmpresa() {
                   )}
                 </select>
               </div>
-              {(searchMode === 'both' || searchMode === 'empresas') && (
+              {(searchMode === 'both' || searchMode === 'empresas') ? (
                 <div>
                   <label
                     htmlFor="categoria"
@@ -313,13 +320,32 @@ export default function EncontrarEmpresa() {
                     ))}
                   </select>
                 </div>
+              ) : (<div>
+                <label
+                  htmlFor="categoria"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Venda ou Locação:
+                </label>
+                <select
+                  id="finalidade"
+                  name="finalidade"
+                  value={finalidade}
+                  onChange={handlefinalidadeChange}
+                  className="form-select w-full rounded-md shadow-md"
+                >
+                  <option value="">Venda e Locação</option>
+                  <option value="venda">Venda</option>
+                  <option value="locacao">Locação</option>
+                </select>
+              </div>
               )}
               <div>
                 <label
                   htmlFor="minPrice"
                   className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
-                  Preço Mínimo (R$)
+                  Valor Mínimo (R$):
                 </label>
                 <NumericFormat
                   id="minPrice"
@@ -338,7 +364,7 @@ export default function EncontrarEmpresa() {
                   htmlFor="maxPrice"
                   className="block text-sm font-medium text-gray-700 mb-0.5"
                 >
-                  Preço Máximo (R$)
+                  Valor Máximo (R$):
                 </label>
                 <NumericFormat
                   id="maxPrice"
