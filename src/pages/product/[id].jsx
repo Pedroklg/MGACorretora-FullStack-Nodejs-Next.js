@@ -15,7 +15,7 @@ const ProductPage = () => {
 
     useEffect(() => {
         if (id) {
-            fetch(`/api/empresasImoveis?id=${id}`)
+            fetch(`/api/idSearch?id=${id}`)
                 .then(response => response.json())
                 .then(data => setProduct(data))
                 .catch(error => console.error('Error fetching product:', error));
@@ -59,7 +59,7 @@ const ProductPage = () => {
 
                                 <div className='flex flex-col p-5 shadow-lg rounded-lg mt-4'>
                                     <h1 className='text-xl font-semibold'>Descrição {product.tipo === 'Empresa' ? <span>da Empresa</span> : <span>do Imóvel</span>}:</h1>
-                                    <p>{product.item.sobre_o_imovel}</p>
+                                    <p>{product.item.descricao}</p>
                                 </div>
                             </div>
                         </div>

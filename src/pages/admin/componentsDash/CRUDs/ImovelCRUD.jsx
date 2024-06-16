@@ -10,6 +10,7 @@ const ImoveisCRUD = ({ item }) => {
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [savedOrUpdated, setSavedOrUpdated] = useState(false);
     const router = useRouter();
+
     const initialImovelData = {
         titulo: '',
         imagem: null,
@@ -20,24 +21,25 @@ const ImoveisCRUD = ({ item }) => {
         motivo_da_venda: '',
         valor_pretendido: '',
         condicoes: '',
-        sobre_o_imovel: '',
+        descricao: '',
         estado: '',
         cidade: '',
         bairro: '',
         aluguel: false,
+        details_images: [],
     };
 
     const [imovelData, setImovelData] = useState(initialImovelData);
 
-    // Set initial state based on the provided item when component mounts
     useEffect(() => {
         if (item) {
             setLoading(true);
-            // Simulate asynchronous data loading
-            setTimeout(() => {
-                setImovelData(item);
-                setLoading(false);
-            }, 500); // Adjust timeout as per your API response time or loading requirements
+            setImovelData({
+                ...item,
+                details_images: item.details_images || Array(6).fill(null),
+                imagem: item.imagem || null,
+            });
+            setLoading(false);
         }
     }, [item]);
 
@@ -45,8 +47,8 @@ const ImoveisCRUD = ({ item }) => {
         const handleBeforeUnload = (event) => {
             if (unsavedChanges) {
                 const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';
-                event.returnValue = message; // Standard for most browsers
-                return message; // For older browsers
+                event.returnValue = message;
+                return message;
             }
         };
 
@@ -74,8 +76,22 @@ const ImoveisCRUD = ({ item }) => {
     };
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0]; // Get the first selected file
+        const file = e.target.files[0];
         setImovelData(prevData => ({ ...prevData, imagem: file }));
+        setUnsavedChanges(true);
+    };
+
+    const updateDetailsImage = (index, file) => {
+        const updatedImages = [...imovelData.details_images];
+        updatedImages[index] = file;
+        setImovelData(prevData => ({ ...prevData, details_images: updatedImages }));
+        setUnsavedChanges(true);
+    };
+
+    const handleRemoveDetailsImage = (index) => {
+        const updatedImages = [...imovelData.details_images];
+        updatedImages[index] = null;
+        setImovelData(prevData => ({ ...prevData, details_images: updatedImages }));
         setUnsavedChanges(true);
     };
 
@@ -84,7 +100,17 @@ const ImoveisCRUD = ({ item }) => {
             setLoading(true);
             const formData = new FormData();
             Object.entries(imovelData).forEach(([key, value]) => {
-                formData.append(key, value);
+                if (key === 'details_images') {
+                    value.forEach((file, i) => {
+                        if (file) {
+                            formData.append(`details_images`, file);
+                        }
+                    });
+                } else if (key === 'imagem' && value) {
+                    formData.append('imagem', value);
+                } else {
+                    formData.append(key, value);
+                }
             });
 
             const endpoint = item ? `/api/imoveis?id=${item.id}` : '/api/imoveis';
@@ -117,68 +143,123 @@ const ImoveisCRUD = ({ item }) => {
         if (validateForm()) {
             await createOrUpdateImovel();
         } else {
-            showErrorToast('Preencha todos os campos obrigatórios: Título, Valor Pretendido, Cidade, Estado, Categoria e Imagem');
+            showErrorToast(`Preencha os campos: ${!imovelData.titulo ? 'Título, ' : ''}${!imovelData.valor_pretendido ? 'Valor' : ''},
+                ${!imovelData.cidade ? 'Cidade, ' : ''}${!imovelData.estado ? 'Estado, ' : ''}${!imovelData.imagem ? 'Imagem' : ''}`);
         }
     };
 
     useEffect(() => {
         if (savedOrUpdated) {
-            router.push('/admin/Dashboard');
+            router.push('/admin/dashboard');
         }
     }, [savedOrUpdated]);
 
     const validateForm = () => {
-        return imovelData.titulo &&
+        return (
+            imovelData.titulo &&
             imovelData.valor_pretendido &&
             imovelData.cidade &&
             imovelData.estado &&
-            imovelData.imagem;
+            imovelData.imagem
+        );
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <LoadingSpinner isLoading={loading} />
-            <div className="conteiner flex flex-col justify-center items-center md:w-5/6">
+            <div className="container flex flex-col justify-center items-center xl:w-5/6">
                 <div className="flex flex-col gap-4 self-start w-full">
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="titulo" value={imovelData.titulo} onChange={handleChange} placeholder="Titulo" required />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="number" name="area_construida" value={imovelData.area_construida} onChange={handleChange} placeholder="Área Construída" />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="number" name="area_util" value={imovelData.area_util} onChange={handleChange} placeholder="Área Útil" />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="motivo_da_venda" value={imovelData.motivo_da_venda} onChange={handleChange} placeholder="Motivo da Venda" />
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="titulo"
+                        value={imovelData.titulo}
+                        onChange={handleChange}
+                        placeholder="Título"
+                    />
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="number"
+                        name="area_construida"
+                        value={imovelData.area_construida}
+                        onChange={handleChange}
+                        placeholder="Área Construída"
+                    />
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="number"
+                        name="area_util"
+                        value={imovelData.area_util}
+                        onChange={handleChange}
+                        placeholder="Área Útil"
+                    />
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="motivo_da_venda"
+                        value={imovelData.motivo_da_venda}
+                        onChange={handleChange}
+                        placeholder="Motivo da Venda"
+                    />
                     <NumericFormat
                         className="p-1 rounded-lg shadow-lg"
                         name="valor_pretendido"
                         value={imovelData.valor_pretendido}
-                        onValueChange={(values) => handleChange({ target: { name: 'valor_pretendido', value: values.floatValue } })}
+                        onValueChange={(values) =>
+                            handleChange({
+                                target: { name: 'valor_pretendido', value: values.floatValue },
+                            })
+                        }
                         placeholder="Valor Pretendido"
                         thousandSeparator="."
                         decimalSeparator=","
                         prefix="R$ "
                         isnumericstring="true"
-                        required
                     />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="condicoes" value={imovelData.condicoes} onChange={handleChange} placeholder="Condições" />
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="condicoes"
+                        value={imovelData.condicoes}
+                        onChange={handleChange}
+                        placeholder="Condições"
+                    />
                     <textarea
                         className="p-1 rounded-lg shadow-lg"
-                        name="sobre_o_imovel"
-                        value={imovelData.sobre_o_imovel}
+                        name="descricao"
+                        value={imovelData.descricao}
                         onChange={handleChange}
-                        placeholder="Sobre o Imóvel"
+                        placeholder="Descrição"
                         rows={4}
                     />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="estado" value={imovelData.estado} onChange={handleChange} placeholder="Estado" required />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="cidade" value={imovelData.cidade} onChange={handleChange} placeholder="Cidade" required />
-                    <input className="p-1 rounded-lg shadow-lg"
-                        type="text" name="bairro" value={imovelData.bairro} onChange={handleChange} placeholder="Bairro" />
-                    <div className='flex p-3 gap-10 text-lg'>
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="estado"
+                        value={imovelData.estado}
+                        onChange={handleChange}
+                        placeholder="Estado"
+                    />
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="cidade"
+                        value={imovelData.cidade}
+                        onChange={handleChange}
+                        placeholder="Cidade"
+                    />
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="bairro"
+                        value={imovelData.bairro}
+                        onChange={handleChange}
+                        placeholder="Bairro"
+                    />
+                    <div className="flex p-3 gap-10 text-lg">
                         <label>
-                            <input className="p-1 rounded-lg shadow-lg"
+                            <input
+                                className="p-1 rounded-lg shadow-lg"
                                 type="checkbox"
                                 name="aceita_permuta"
                                 checked={imovelData.aceita_permuta}
@@ -187,7 +268,8 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Aceita Permuta</span>
                         </label>
                         <label>
-                            <input className="p-1 rounded-lg shadow-lg"
+                            <input
+                                className="p-1 rounded-lg shadow-lg"
                                 type="checkbox"
                                 name="tem_divida"
                                 checked={imovelData.tem_divida}
@@ -196,7 +278,8 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Tem Dívida</span>
                         </label>
                         <label>
-                            <input className="p-1 rounded-lg shadow-lg"
+                            <input
+                                className="p-1 rounded-lg shadow-lg"
                                 type="checkbox"
                                 name="aluguel"
                                 checked={imovelData.aluguel}
@@ -205,20 +288,53 @@ const ImoveisCRUD = ({ item }) => {
                             <span className="p-2">Aluguel</span>
                         </label>
                     </div>
-                    {imovelData.imagem ?
-                        <Image src={imovelData.imagem} alt="Selected Image" width={400} height={200} />
-                        :
-                        <span>Selecione uma imagem:</span>}
-                    <input className="p-1 rounded-lg"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                    />
+                    <div>
+                        <p className='text-xl text-red-800'>Imagem Principal:</p>
+                        <input type="file" accept="image/*" onChange={handleImageChange} />
+                        {imovelData.imagem && (
+                            <Image src={typeof imovelData.imagem === 'string' ? imovelData.imagem : URL.createObjectURL(imovelData.imagem)} alt="Imagem Principal" width={200} height={200} />
+                        )}
+                    </div>
+                    <div className='grid-cols-12 grid w-full'>
+                        <p className='text-xl text-red-800 col-span-12'>Imagens Adicionais:</p>
+                        {[...Array(6)].map((_, index) => (
+                            <div key={index} className='p-1 xl:col-span-4 lg:col-span-6 col-span-12'>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => updateDetailsImage(index, e.target.files[0])}
+                                />
+                                {imovelData.details_images[index] && (
+                                    <div className='flex justify-center flex-col w-fit'>
+                                        <Image
+                                            src={typeof imovelData.details_images[index] === 'string' ? imovelData.details_images[index] : URL.createObjectURL(imovelData.details_images[index])}
+                                            alt={`Imagem ${index + 1}`}
+                                            width={200}
+                                            height={200}
+                                        />
+                                        <button type="button"
+                                            className="bg-red-700 rounded-lg w-2/4 self-center m-1 text-gray-200 hover:cursor-pointer hover:scale-105 hover:bg-red-800"
+                                            onClick={() => handleRemoveDetailsImage(index)}>
+                                            Remover
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <button className="p-2 m-5 bg-green-600 hover:bg-green-700 rounded-xl text-xl font-bold text-gray-200 shadow-xl" type="submit">Salvar</button>
             </div>
-        </form>
+            <div className="flex justify-center mt-4">
+                <button
+                    type="submit"
+                    className="bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg hover:bg-green-700"
+                    disabled={loading}
+                >
+                    {item ? 'Atualizar' : 'Criar'} Imóvel
+                </button>
+            </div>
+        </form >
     );
-}
+};
 
 export default ImoveisCRUD;

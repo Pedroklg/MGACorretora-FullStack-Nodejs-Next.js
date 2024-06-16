@@ -23,7 +23,7 @@
 - `titulo`: VARCHAR - Title of the empresa.
 - `motivo_da_venda`: TEXT - Reason for selling the empresa.
 - `condicoes`: TEXT - Conditions of the empresa.
-- `sobre_o_imovel`: TEXT - Description about the empresa.
+- `descricao`: TEXT - Description about the empresa.
 - `bairro`: VARCHAR - Address of the empresa.
 
 ## Table: Imoveis
@@ -42,7 +42,7 @@
 - `titulo`: VARCHAR - Title of the imóvel.
 - `imagem`: VARCHAR - Path to the imóvel's image.
 - `condicoes`: TEXT - Conditions of the imóvel.
-- `sobre_o_imovel`: TEXT - Description about the imóvel.
+- `descricao`: TEXT - Description about the imóvel.
 - `estado`: VARCHAR - Estado where the imóvel is located.
 - `cidade`: VARCHAR - City where the imóvel is located.
 

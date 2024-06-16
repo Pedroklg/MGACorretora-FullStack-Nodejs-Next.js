@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   let queryParams = [];
 
     searchQuery = `
-      SELECT id, titulo, sobre_o_imovel, imagem, NULL AS area_construida, NULL AS area_util, NULL AS aceita_permuta, NULL AS tem_divida, NULL AS motivo_da_venda, valor_pretendido, NULL AS condicoes, estado, cidade, bairro
+      SELECT id, titulo, imagem, valor_pretendido, estado, cidade, bairro
       FROM empresas
       WHERE estado ILIKE $1
          OR cidade ILIKE $1
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
          OR CAST(id AS TEXT) ILIKE $1
          OR bairro ILIKE $1
       UNION ALL
-      SELECT id, titulo, sobre_o_imovel, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, estado, cidade, bairro
+      SELECT id, titulo, imagem, valor_pretendido, estado, cidade, bairro
       FROM imoveis
       WHERE estado ILIKE $2
          OR cidade ILIKE $2

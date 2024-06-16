@@ -44,7 +44,7 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     const handleDetails = async (id) => {
         try {
             setLoading(true);
-            const response = await fetch(`/api/empresasImoveis?id=${id}`);
+            const response = await fetch(`/api/idSearch?id=${id}`);
             const data = await response.json();
             setLoading(false);
             if (!response.ok) {
@@ -63,7 +63,7 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     const handleDelete = async (id) => {
         try {
             setLoading(true);
-            const response = await fetch(`/api/empresasImoveis?id=${id}`, {
+            const response = await fetch(`/api/idSearch?id=${id}`, {
                 method: 'DELETE'
             });
             setLoading(false);
@@ -135,7 +135,7 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
                                 <th className="col-span-1 xl:px-4 xl:py-3 text-left">ID</th>
                                 <th className="col-span-4 xl:col-span-2 xl:px-4 xl:py-3 text-left">Título</th>
                                 <th className="col-span-4 xl:col-span-2 xl:px-4 xl:py-3 text-left">Valor Pretendido</th>
-                                <th className="hidden xl:col-span-4 xl:px-4 xl:py-3 xl:block text-left">Sobre o Imovel</th>
+                                <th className="hidden xl:col-span-4 xl:px-4 xl:py-3 xl:block text-left">Descrição</th>
                                 <th className="col-span-1 xl:px-4 xl:py-3 hidden xl:block text-left">Detalhes</th>
                                 <th className="col-span-1 xl:px-4 xl:py-3 hidden xl:block text-left">Editar</th>
                                 <th className="col-span-1 xl:px-4 xl:py-3 hidden xl:block text-left">Excluir</th>
@@ -148,9 +148,9 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
                                     <td className="col-span-4 xl:col-span-2 xl:px-4 xl:py-3 text-left">{item.titulo}</td>
                                     <td className="col-span-4 xl:col-span-2 xl:px-4 xl:py-3 text-left">{toBrMoney(item.valor_pretendido)}</td>
                                     <td className="hidden xl:col-span-4 px-4 xl:py-3 xl:block text-left">
-                                        {item.sobre_o_imovel.length > 50
-                                            ? `${item.sobre_o_imovel.slice(0, 50)}...`
-                                            : item.sobre_o_imovel
+                                        {item.descricao.length > 50
+                                            ? `${item.descricao.slice(0, 50)}...`
+                                            : item.descricao
                                         }
                                     </td>
                                     <td className="col-span-1 xl:px-4 py-3 text-left">

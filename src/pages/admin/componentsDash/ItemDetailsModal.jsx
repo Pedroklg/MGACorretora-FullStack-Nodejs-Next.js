@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LoadingSpinner from './../../../components/animations/LoadingSpinner'; // Assuming this is where your LoadingSpinner component is defined
-import toBrMoney  from './../../api/utils/toBrMoney'; // Assuming this is where your toBrMoney function is defined
+import toBrMoney from './../../api/utils/toBrMoney'; // Assuming this is where your toBrMoney function is defined
+import Image from 'next/image';
 
 const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
     const [itemDetails, setItemDetails] = useState(null);
@@ -9,7 +10,7 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
     useEffect(() => {
         if (isOpen && itemId) {
             setLoading(true);
-            fetch(`/api/empresasImoveis?id=${itemId}`)
+            fetch(`/api/idSearch?id=${itemId}`)
                 .then(response => response.json())
                 .then(data => {
                     setItemDetails(data);
@@ -59,8 +60,8 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                                 <td className="break-words md:w-3/4">{itemDetails.item.cidade}</td>
                             </tr>
                             <tr>
-                                <td className="font-semibold break-words md:w-1/4">Sobre {itemDetails.tipo === "Empresa" ? <span>a Empresa</span> : <span>o Imóvel</span>}</td>
-                                <td className="break-words md:w-3/4 max-w-full">{itemDetails.item.sobre_o_imovel}</td>
+                                <td className="font-semibold break-words md:w-1/4">Descrição</td>
+                                <td className="break-words md:w-3/4 max-w-full">{itemDetails.item.descricao}</td>
                             </tr>
                             <tr className="bg-gray-200">
                                 <td className="font-semibold break-words md:w-1/4">Motivo da Venda:</td>
@@ -78,6 +79,10 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                                 <td className="font-semibold break-words md:w-1/4">Tem Dívida:</td>
                                 <td className="break-words md:w-3/4">{itemDetails.item.tem_divida ? 'Sim' : 'Não'}</td>
                             </tr>
+                            <tr>
+                                <td className="font-semibold break-words md:w-1/4">Data de Registro:</td>
+                                <td className="break-words md:w-3/4">{itemDetails.item.data_registro}</td>
+                            </tr>
                             {itemDetails.tipo === 'Empresa' ?
                                 <>
                                     <tr className="bg-gray-200">
@@ -91,6 +96,14 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                                     <tr className="bg-gray-200">
                                         <td className="font-semibold break-words md:w-1/4">Funcionários:</td>
                                         <td className="break-words md:w-3/4">{itemDetails.item.funcionarios}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="font-semibold break-words md:w-1/4">Faturamento Mensal:</td>
+                                        <td className="break-words md:w-3/4">{itemDetails.item.faturamento_mensal}</td>
+                                    </tr>
+                                    <tr className="bg-gray-200">
+                                        <td className="font-semibold break-words md:w-1/4">Lucro Mensal:</td>
+                                        <td className="break-words md:w-3/4">{itemDetails.item.lucro_mensal}</td>
                                     </tr>
                                 </>
                                 :
@@ -110,8 +123,15 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                                 </>
                             }
                             <tr>
-                                <td className="font-semibold break-words md:w-1/4">Imagem:</td>
-                                <td className="break-words md:w-3/4 max-w-full overflow-hidden">{itemDetails.item.imagem}</td>
+                                <td className="font-semibold md:w-1/4 h-fit">Imagens:</td>
+                                <td className="md:w-3/4">
+                                    <div className='flex flex-row flex-wrap gap-1'>
+                                        <Image src={itemDetails.item.imagem} alt={itemDetails.item.titulo} width={100} height={100} />
+                                        {itemDetails.item.details_images && itemDetails.item.details_images.map((image) => {
+                                            return <Image src={image} alt={itemDetails.item.titulo} width={100} height={100} />;
+                                        })}
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

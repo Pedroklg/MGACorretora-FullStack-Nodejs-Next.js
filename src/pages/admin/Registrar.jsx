@@ -17,7 +17,7 @@ const Registrar = () => {
     const fetchItem = async (id) => {
         try {
             setLoading(true);
-            const response = await fetch(`/api/empresasImoveis?id=${id}`);
+            const response = await fetch(`/api/idSearch?id=${id}`);
             if (!response.ok) {
                 throw new Error('Falha ao buscar item.');
             }
