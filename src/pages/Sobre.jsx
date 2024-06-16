@@ -1,7 +1,7 @@
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 
-function sobre() {
+function Sobre() {
     return (
         <div>
             <title>Sobre</title>
@@ -37,4 +37,4 @@ function sobre() {
     )
 }
 
-export default sobre
+export default Sobre

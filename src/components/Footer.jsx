@@ -1,16 +1,54 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { IconEmail, IconWhatsapp } from './Icons'
+import Link from 'next/link';
+import Image from 'next/image';
+import { IconEmail, IconWhatsapp } from './Icons';
 
 export default function Footer() {
     return (
-        <footer className="h-fit pb-5" style={{ backgroundImage: "url(/footer-bg.png)" }}>
-            <div className='flex justify-center text-xl font-bold gap-24'>
+        <footer className="h-fit md:pb-5" style={{ backgroundImage: "url(/footer-bg.png)" }}>
+            <div className='flex flex-col md:flex-row text-xl font-bold md:gap-24 justify-center items-center h-fit'>
                 <Link href="/" passHref legacyBehavior>
-                    <div className="hidden md:flex hover:scale-105 duration-150 hover:cursor-pointer">
-                        <Image src="/logo.png" alt="MGA Corretora" width={200} height={200} />
+                    <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 cursor-pointer">
+                        <div>
+                            <div className='hidden sm:block'>
+                                <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} />
+                            </div>
+                            <div className='block sm:hidden'>
+                                <Image src="/logo_mobile.png" alt='MGA Corretora' width={300} height={200} />
+                            </div>
+                        </div>
+                        <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden md:flex">CRECI J5087</span>
                     </div>
                 </Link>
+                <div className="md:mx-8 self-start pl-5">
+                    <h4 className="p-2 text-2xl text-red-800">A MGA</h4>
+                    <ul>
+                        <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
+                            <Link href="/QueroVender" passHref>
+                                <span>Quero Vender</span>
+                            </Link>
+                        </li>
+                        <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
+                            <Link href="/SejaParceiro" passHref>
+                                <span>Seja Parceiro</span>
+                            </Link>
+                        </li>
+                        <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
+                            <Link href="/Sobre" passHref>
+                                <span>Sobre</span>
+                            </Link>
+                        </li>
+                        <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
+                            <Link href="/Contato" passHref>
+                                <span>Fale Conosco</span>
+                            </Link>
+                        </li>
+                        <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
+                            <Link href="/PoliticasDePrivacidade" passHref>
+                                <span>Políticas de Privacidade</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
                 <div className="flex ml-4 flex-col md:flex-row">
                     <div className="md:mx-16 md:flex-col">
                         <h4 className="p-2 text-2xl text-red-800">ONDE ESTAMOS?</h4>
@@ -32,21 +70,6 @@ export default function Footer() {
                                 contato@mgacorretora.com.br
                             </a>
                         </p>
-                    </div>
-                    <div className="md:mx-8">
-                        <h4 className="p-2 text-2xl text-red-800">A MGA</h4>
-                        <ul>
-                            <li className="p-1 hover:text-red-800 hover:scale-105 duration-150">
-                                <Link href="/Sobre" passHref>
-                                    <span>Sobre</span>
-                                </Link>
-                            </li>
-                            <li className="p-1 hover:text-red-800 hover:scale-105 duration-150">
-                                <Link href="/Contato" passHref>
-                                    <span>Fale Conosco</span>
-                                </Link>
-                            </li>
-                        </ul>
                     </div>
                     <p className='text-xl text-red-900 font-medium mt-2 subpixel-antialiased self-center flex md:hidden'>CRECI J5087</p>
                 </div>

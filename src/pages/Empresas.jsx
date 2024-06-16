@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Cards from "../components/Cards";
 import SkeletonLoader from "../components/animations/SkeletonLoader"; // Import the SkeletonLoader component
 import EncontrarEmpresa from "../components/EncontrarEmpresa";
-import { IconBars } from "../components/Icons";
+import { IconBars, IconClose } from "../components/Icons";
 
 function Empresas() {
     const [categorias, setCategorias] = useState([]);
@@ -87,9 +87,11 @@ function Empresas() {
             </div>
             <div className="flex flex-col sm:flex-row justify-center flex-grow items-center md:items-start">
                 <nav className="w-11/12 md:w-fit p-4 sm:m-12 sm:mt-16 mt-4 shadow-md rounded-md items-start flex flex-row flex-wrap sm:flex-col h-full">
-                    <button className="text-3xl font-bold sm:mb-8 text-red-800 w-full flex justify-center items-center self-start" onClick={handleMenuClick}>
-                        Categorias
-                        {isMobile && IconBars}
+                    <button className="text-3xl font-bold sm:mb-8 text-red-800 w-full flex items-center self-start md:cursor-default justify-evenly md:justify-center" 
+                        onClick={handleMenuClick}>
+                            Categorias
+                            {(isMobile && menuOpen) && IconClose}
+                            {(isMobile && !menuOpen) && IconBars}
                     </button>
                     <div className={`${isMobile && !menuOpen ? 'hidden' : 'flex flex-wrap md:flex-col'}`}>
                         {categorias.map((categoria) => (

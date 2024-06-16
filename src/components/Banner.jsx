@@ -25,7 +25,7 @@ export default function Banner() {
     };
 
     return (
-        <div className="flex h-auto w-full justify-center items-center content-center shadow-xl overflow-hidden mb-2">
+        <div className="flex h-auto w-full justify-center items-center content-center overflow-hidden">
             <Slider {...settings} className="w-full">
                 <div className="w-full flex justify-center items-center">
                     <div className="w-full">

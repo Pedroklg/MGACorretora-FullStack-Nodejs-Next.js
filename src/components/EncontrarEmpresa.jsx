@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NumericFormat } from 'react-number-format';
-import { IconBars, IconSearch } from './Icons';
+import { IconBars, IconClose, IconSearch } from './Icons';
 
 export default function EncontrarEmpresa() {
   const router = useRouter();
@@ -210,7 +210,7 @@ export default function EncontrarEmpresa() {
                 <h1 className="text-3xl text-red-900 ml-3">
                   Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
                 </h1>
-                {IconBars}
+                {menuOpen ? IconClose : IconBars}
               </div>
             </button>
           )}
