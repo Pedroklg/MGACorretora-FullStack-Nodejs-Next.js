@@ -5,7 +5,7 @@ import { IconEmail, IconWhatsapp } from './Icons';
 export default function Footer() {
     return (
         <footer className="h-fit md:pb-5" style={{ backgroundImage: "url(/footer-bg.png)" }}>
-            <div className='flex flex-col md:flex-row text-xl font-bold md:gap-24 justify-center items-center h-fit'>
+            <div className='flex flex-col md:flex-row text-xl font-bold xl:gap-24 justify-center items-center h-fit'>
                 <Link href="/" passHref legacyBehavior>
                     <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 cursor-pointer">
                         <div>
@@ -16,10 +16,10 @@ export default function Footer() {
                                 <Image src="/logo_mobile.png" alt='MGA Corretora' width={300} height={200} />
                             </div>
                         </div>
-                        <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden md:flex">CRECI J5087</span>
+                        <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden lg:flex">CRECI J5087</span>
                     </div>
                 </Link>
-                <div className="md:mx-8 self-start pl-5">
+                <div className="md:mx-8 pl-5 flex flex-col items-center sm:items-start">
                     <h4 className="p-2 text-2xl text-red-800">A MGA</h4>
                     <ul>
                         <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
@@ -49,8 +49,8 @@ export default function Footer() {
                         </li>
                     </ul>
                 </div>
-                <div className="flex ml-4 flex-col md:flex-row">
-                    <div className="md:mx-16 md:flex-col">
+                <div className="flex ml-4 flex-col lg:flex-row">
+                    <div className="xl:mx-16 flex flex-col items-center sm:items-start">
                         <h4 className="p-2 text-2xl text-red-800">ONDE ESTAMOS?</h4>
 
                         <a href="tel:+5541995400788" className="p-1 hover:text-red-800 flex flex-wrap gap-2 justify-start items-center hover:scale-105 duration-150">
@@ -71,7 +71,7 @@ export default function Footer() {
                             </a>
                         </p>
                     </div>
-                    <p className='text-xl text-red-900 font-medium mt-2 subpixel-antialiased self-center flex md:hidden'>CRECI J5087</p>
+                    <p className='text-xl text-red-900 font-medium mt-2 subpixel-antialiased self-center flex lg:hidden'>CRECI J5087</p>
                 </div>
             </div>
         </footer>

@@ -6,14 +6,14 @@ import { useRouter } from 'next/router';
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState(''); // State to store search term
-  const [isMobile, setIsMobile] = useState(false); // State to manage mobile view
-  const [menuOpen, setMenuOpen] = useState(false); // State to manage mobile menu
+  const [isOtherMenusetIsOtherMenu, setIsOtherMenu] = useState(false); // State to manage OtherMenusetIsOtherMenu view
+  const [menuOpen, setMenuOpen] = useState(false); // State to manage OtherMenusetIsOtherMenu menu
   const router = useRouter();
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768); // Set initial isMobile state based on window width
+    setIsOtherMenu(window.innerWidth < 1270); // Set initial isOtherMenusetIsOtherMenu state based on window width
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768); // Update isMobile state on window resize
+      setIsOtherMenu(window.innerWidth < 1270); // Update isOtherMenusetIsOtherMenu state on window resize
     };
 
     window.addEventListener('resize', handleResize); // Add event listener for window resize
@@ -37,13 +37,13 @@ const Header = () => {
     }
   };
 
-  // Function to toggle mobile menu
+  // Function to toggle OtherMenusetIsOtherMenu menu
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
   return (
-    <header className="flex flex-col md:flex-row justify-evenly items-center px-1 md:px-10 bg-red-900 text-black shadow-lg">
+    <header className="flex flex-col lg:flex-row justify-evenly items-center px-1 lg:px-10 bg-red-900 text-black shadow-lg">
       <Link href="/" passHref>
         <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 bg-slate-100 cursor-pointer">
           <div className='hidden sm:block'>
@@ -52,7 +52,7 @@ const Header = () => {
           <div className='block sm:hidden'>
             <Image src="/logo_mobile.png" alt='MGA Corretora' width={300} height={200} />
           </div>
-          <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden md:flex">CRECI J5087</span>
+          <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden lg:flex">CRECI J5087</span>
         </div>
       </Link>
 
@@ -76,7 +76,7 @@ const Header = () => {
             <span className="ml-2">Contato</span>
           </div>
         </Link>
-        {!isMobile && (
+        {!isOtherMenusetIsOtherMenu && (
           <>
             <Link href="/Sobre" passHref>
               <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
@@ -97,7 +97,7 @@ const Header = () => {
         )}
       </nav>
 
-      {/* Mobile menu */}
+      {/* OtherMenusetIsOtherMenu menu */}
       <div className="flex items-center justify-center ml-3 mb-4 md:mb-0">
         <input
           type="text"
@@ -113,8 +113,8 @@ const Header = () => {
         >
           {IconSearchSmall}
         </button>
-        {/* Mobile menu toggle button */}
-        {isMobile && (
+        {/* OtherMenusetIsOtherMenu menu toggle button */}
+        {isOtherMenusetIsOtherMenu && (
           <div className="flex items-center justify-center ml-8">
             <button onClick={toggleMenu} className="text-gray-100 text-3xl">
               {menuOpen ? IconClose : IconBars}
@@ -124,7 +124,7 @@ const Header = () => {
       </div>
 
       {
-        isMobile && menuOpen && (
+        isOtherMenusetIsOtherMenu && menuOpen && (
           <aside className="w-full bg-red-900 text-gray-100 flex flex-col items-center shadow-lg">
             <Link href="/Sobre" passHref>
               <div className="w-full p-4 text-center hover:text-gray-400 duration-150 cursor-pointer" onClick={toggleMenu}>
