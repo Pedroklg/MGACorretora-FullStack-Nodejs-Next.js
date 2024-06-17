@@ -45,7 +45,7 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                 <h1 className="text-xl font-bold md:mb-4">
                     Detalhes {itemDetails.tipo === "Empresa" ? <span>da Empresa</span> : <span>do Imóvel</span>}
                 </h1>
-                <div className="overflow-y-auto max-h-full">
+                <div className="overflow-y-auto max-h-full w-full">
                     <table className="w-full">
                         <tbody className='p-2'>
                             {Object.entries(itemDetails.item).map(([key, value], index) => {
