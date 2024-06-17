@@ -61,6 +61,7 @@ const Search = () => {
 
         fetchData();
     }, [q, estado, cidade, bairro, categoria, minPrice, maxPrice, finalidade, searchMode]);
+    const tipoMostrado = searchMode ? (searchMode === 'empresas' ? 'Empresas' : searchMode === 'imoveis' ? 'Imoveis' : 'ambos') : 'ambos';
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -75,7 +76,7 @@ const Search = () => {
                 {loading ? (
                     <SkeletonLoader /> // Show skeleton loader while loading
                 ) : (
-                    <Cards dataToShow={dataToShow} />
+                    <Cards dataToShow={dataToShow} tipoMostrado={tipoMostrado}/>
                 )}
             </main>
             <Footer />
