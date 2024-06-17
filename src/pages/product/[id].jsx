@@ -212,14 +212,14 @@ const ProductPage = () => {
                 <div className="w-full grid grid-cols-12">
                     <div className="w-full grid grid-cols-12 md:my-4 col-span-12 md:col-start-3 md:col-end-11">
                         <div className='col-span-12 md:col-span-6'>
-                            <div className="text-4xl font-bold mb-6 col-span-12 text-red-800">
+                            <div className="text-4xl font-bold mb-6 col-span-12 text-red-800 ml-6 flex flex-wrap">
                                 <h1>{product.item.titulo}</h1>
                             </div>
 
                             <div className='col-span-12'>
                                 <div className='h-auto min-h-80 mb-5 p-2'>
                                     <div className='mb-5 w-full'>
-                                        <Image src={selectedImage} alt="Imagem" width={800} height={600} />
+                                        <Image src={selectedImage} alt="Imagem" width={800} height={600} priority />
                                     </div>
                                     {product.item.details_images && product.item.details_images.length > 0 &&
                                         <div className="slider-container">
@@ -242,7 +242,7 @@ const ProductPage = () => {
                         </div>
 
                         <div className='col-span-0 md:col-span-1'></div>
-                        <div className='col-span-12 md:col-span-5 flex flex-col gap-4 shadow-lg p-3 rounded-lg mt-5 md:mt-0 h-fit'>
+                        <div className='col-span-12 md:col-span-5 flex flex-col gap-4 shadow-lg p-3 rounded-lg mt-5 md:mt-10 lg:mt-15 xl:mt-20 h-fit'>
                             <div className='flex justify-between p-1 flex-col md:flex-row'>
                                 <h1 className="font-semibold text-2xl text-red-800">Valor Pretendido:</h1>
                                 <p className="text-xl text-yellow-600">{toBrMoney(product.item.valor_pretendido)}</p>

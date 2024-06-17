@@ -160,6 +160,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
               width={400}
               height={300}
               className="w-full h-48 object-cover"
+              priority
             />
             <div className="p-6 flex flex-col">
               <h2 className="text-xl font-bold mb-2">{card.titulo}</h2>

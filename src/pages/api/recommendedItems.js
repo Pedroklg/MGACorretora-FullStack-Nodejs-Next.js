@@ -28,10 +28,15 @@ async function getRecommendedEmpresas(id) {
               AND (categoria = (SELECT categoria FROM empresas WHERE id = $1) OR
                    bairro = (SELECT bairro FROM empresas WHERE id = $1) OR
                    cidade = (SELECT cidade FROM empresas WHERE id = $1) OR
-                   estado = (SELECT estado FROM empresas WHERE id = $1) OR
-                   valor_pretendido BETWEEN (SELECT valor_pretendido FROM empresas WHERE id = $1) - 100000
-                                         AND (SELECT valor_pretendido FROM empresas WHERE id = $1) + 100000)
-            ORDER BY RANDOM()
+                   estado = (SELECT estado FROM empresas WHERE id = $1))
+            ORDER BY
+                CASE
+                WHEN categoria = (SELECT categoria FROM empresas WHERE id = $1) THEN 1
+                    WHEN bairro = (SELECT bairro FROM empresas WHERE id = $1) THEN 2
+                    WHEN cidade = (SELECT cidade FROM empresas WHERE id = $1) THEN 3
+                    WHEN estado = (SELECT estado FROM empresas WHERE id = $1) THEN 4
+                    ELSE 5
+                END
             LIMIT 4;
         `;
 
@@ -54,10 +59,15 @@ async function getRecommendedImoveis(id) {
               AND (bairro = (SELECT bairro FROM imoveis WHERE id = $1) OR
                    cidade = (SELECT cidade FROM imoveis WHERE id = $1) OR
                    estado = (SELECT estado FROM imoveis WHERE id = $1) OR
-                   valor_pretendido BETWEEN (SELECT valor_pretendido FROM imoveis WHERE id = $1) - 100000
-                                         AND (SELECT valor_pretendido FROM imoveis WHERE id = $1) + 100000
-                   AND aluguel = (SELECT aluguel FROM imoveis WHERE id = $1))
-            ORDER BY RANDOM()
+                   aluguel = (SELECT aluguel FROM imoveis WHERE id = $1))
+            ORDER BY
+                CASE
+                    WHEN bairro = (SELECT bairro FROM imoveis WHERE id = $1) THEN 1
+                    WHEN cidade = (SELECT cidade FROM imoveis WHERE id = $1) THEN 2
+                    WHEN estado = (SELECT estado FROM imoveis WHERE id = $1) THEN 3
+                    WHEN aluguel = (SELECT aluguel FROM imoveis WHERE id = $1) THEN 4
+                    ELSE 5
+                END
             LIMIT 4;
         `;
 

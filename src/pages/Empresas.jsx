@@ -77,7 +77,7 @@ function Empresas() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen w-full">
             <title>Empresas</title>
             <Header />
             <div className="flex w-full justify-center">
@@ -85,7 +85,7 @@ function Empresas() {
                     <EncontrarEmpresa />
                 </div>
             </div>
-            <div className="flex flex-col sm:flex-row justify-center flex-grow items-center md:items-start">
+            <div className="flex flex-col sm:flex-row justify-center flex-grow items-center md:items-start w-full">
                 <nav className="w-11/12 md:w-fit p-4 sm:m-12 sm:mt-16 mt-4 shadow-md rounded-md items-start flex flex-row flex-wrap sm:flex-col h-full">
                     <button className="text-3xl font-bold sm:mb-8 text-red-800 w-full flex items-center self-start md:cursor-default justify-evenly md:justify-center" 
                         onClick={handleMenuClick}>
@@ -95,7 +95,7 @@ function Empresas() {
                     </button>
                     <div className={`${isMobile && !menuOpen ? 'hidden' : 'flex flex-wrap md:flex-col'}`}>
                         {categorias.map((categoria) => (
-                            <div key={categoria.id} className="mb-2">
+                            <div key={categoria.categoria} className="mb-2">
                                 <button
                                     onClick={() => handleCategoriaClick(categoria.categoria)}
                                     className={`p-2 m-1 rounded-sm shadow-md ${categoriaSelecionada === categoria.categoria ? 'bg-red-800 text-white' : 'bg-gray-200'}`}
@@ -106,8 +106,8 @@ function Empresas() {
                         ))}
                     </div>
                 </nav>
-                <div className="flex flex-grow">
-                    <div className="sm:w-11/12 w-full p-4">
+                <div className="flex flex-grow w-full">
+                    <div className="sm:w-11/12 w-full md:p-4">
                         {loading ? (
                             <SkeletonLoader /> // Show skeleton loader while loading
                         ) : (
