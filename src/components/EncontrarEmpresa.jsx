@@ -134,11 +134,13 @@ export default function EncontrarEmpresa() {
   const handleCategoriaChange = e => {
     const selectedCategoria = e.target.value;
     setCategoria(selectedCategoria);
+    setFinalidade(''); // Reset finalidade when categoria changes
   };
 
   const handlefinalidadeChange = e => {
     const selectedfinalidade = e.target.value;
     setFinalidade(selectedfinalidade);
+    setCategoria(''); // Reset categoria when finalidade changes
   };
 
   const handleMinPriceChange = values => {
@@ -147,6 +149,15 @@ export default function EncontrarEmpresa() {
 
   const handleMaxPriceChange = values => {
     setMaxPrice(values.floatValue);
+  };
+
+  const handleSearchModeChange = values => {
+    setBairro('');
+    setCidade('');
+    setEstado('');
+    setCategoria('');
+    setFinalidade('');
+    setSearchMode(values);
   };
 
   const handleSearch = () => {
@@ -175,31 +186,31 @@ export default function EncontrarEmpresa() {
 
   return (
     <div className="flex justify-center w-full">
-      <div className="flex flex-col items-center justify-center w-full mt-2 md:mt-6 mb-2">
+      <div className="flex flex-col items-center justify-center w-full lg:mt-4 mt-2 mb-2">
         <div className={`flex justify-start self-start ${isMobile && !menuOpen ? 'hidden' : ''}`}>
           <button
-            onClick={() => setSearchMode('both')}
+            onClick={() => handleSearchModeChange('both')}
             className={`px-4 py-2 ${searchMode === 'both' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
               }  hover:bg-red-900 hover:text-gray-100 duration-150 hover:scale-105`}
           >
             Tudo
           </button>
           <button
-            onClick={() => setSearchMode('empresas')}
+            onClick={() => handleSearchModeChange('empresas')}
             className={`px-4 py-2 ${searchMode === 'empresas' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
               }  hover:bg-red-900 hover:text-gray-100 duration-150 hover:scale-105`}
           >
             Empresas
           </button>
           <button
-            onClick={() => setSearchMode('imoveis')}
+            onClick={() => handleSearchModeChange('imoveis')}
             className={`px-4 py-2 ${searchMode === 'imoveis' ? 'bg-red-800 text-white' : 'bg-gray-200 text-red-800'
               }  hover:bg-red-900 hover:text-gray-100 duration-150 hover:scale-105`}
           >
             Imóveis
           </button>
         </div>
-        <div className="bg-gray-100 shadow-md rounded-sm p-4 w-full">
+        <div className="bg-gray-100 shadow-md rounded-sm px-4 py-1 w-full">
           {isMobile && (
             <button
               onClick={toggleMenu}
@@ -207,7 +218,7 @@ export default function EncontrarEmpresa() {
             >
               <div className="flex items-center">
                 {IconSearch}
-                <h1 className="text-3xl text-red-900 ml-3">
+                <h1 className="text-2xl md:text-xl lg:text-3xl text-red-900 ml-3">
                   Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
                 </h1>
                 {menuOpen ? IconClose : IconBars}
