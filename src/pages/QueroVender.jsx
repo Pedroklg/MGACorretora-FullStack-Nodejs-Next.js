@@ -6,6 +6,7 @@ import RegisterForm from '../components/RegisterForm';
 function SejaParceiro() {
     return (
         <div className="flex flex-col min-h-screen">
+            <title>Quero Vender</title>
             <Header />
             <main className="flex-grow flex flex-col items-center justify-center">
                 <div className='md:w-8/12 w-full pt-5 md:pt-10 lg:pt-15'>

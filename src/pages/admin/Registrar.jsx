@@ -44,6 +44,7 @@ const Registrar = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen overflow-auto">
+            <title>Registrar</title>
             <Nav className="flex-shrink-0 lg:flex-grow-0" />
             <div className="flex-grow h-full">
                 <ProgressBar loading={loading} />

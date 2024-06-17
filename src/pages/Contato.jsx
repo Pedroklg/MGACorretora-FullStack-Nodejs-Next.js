@@ -6,6 +6,7 @@ import ContactForm from '../components/ContactForm';
 function Contato() {
     return (
         <div className="flex flex-col min-h-screen">
+            <title>Contato</title>
             <Header/>
             <main className="flex-grow flex flex-col items-center justify-center">
                 <div className="flex justify-center items-center p-5 sm:flex-row flex-col">

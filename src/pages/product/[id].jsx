@@ -60,7 +60,9 @@ const ProductPage = () => {
             <div className="flex flex-col min-h-screen">
                 <Header />
                 <div className="flex-grow">
-                    <p className="text-center text-red-800 text-xl mt-8">Produto não encontrado.</p>
+                    <div className='text-center text-3xl font-semibold text-black flex justify-center'>
+                        <span className=''>Produto não encontrado</span>
+                    </div>
                 </div>
                 <Footer />
             </div>
