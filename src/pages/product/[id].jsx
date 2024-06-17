@@ -1,28 +1,49 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import toBrMoney from '../api/utils/toBrMoney';
-import Image from 'next/image';
 import LoadingSpinner from '../../components/animations/LoadingSpinner';
 import ContactForm from '../../components/ContactForm';
+import Image from 'next/image';
 import EncontrarEmpresa from '../../components/EncontrarEmpresa';
+import toBrMoney from '../api/utils/toBrMoney';
+import { useRouter } from 'next/router';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
 
 const ProductPage = () => {
     const router = useRouter();
     const { id } = router.query;
     const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [selectedImage, setSelectedImage] = useState('');
 
     useEffect(() => {
-        if (id) {
-            fetch(`/api/idSearch?id=${id}`)
-                .then(response => response.json())
-                .then(data => setProduct(data))
-                .catch(error => console.error('Error fetching product:', error));
-        }
+        const fetchProduct = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(`/api/idSearch?id=${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch product');
+                }
+                const data = await response.json();
+                setProduct(data);
+                setSelectedImage(data.item.imagem);
+            } catch (error) {
+                console.error('Error fetching product:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProduct();
     }, [id]);
 
-    if (!product) {
+    const handleImageClick = (image) => {
+        setSelectedImage(image);
+    };
+
+    if (loading) {
         return (
             <div className="flex flex-col min-h-screen">
                 <Header />
@@ -33,6 +54,139 @@ const ProductPage = () => {
             </div>
         );
     }
+
+    if (!product && !loading) {
+        return (
+            <div className="flex flex-col min-h-screen">
+                <Header />
+                <div className="flex-grow">
+                    <p className="text-center text-red-800 text-xl mt-8">Produto não encontrado.</p>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
+
+    const mapKeyToLabel = (key) => {
+        switch (key) {
+            case 'titulo':
+                return null;
+            case 'tempo_de_mercado':
+                return 'Tempo de Mercado:';
+            case 'funcionarios':
+                return 'Funcionários:';
+            case 'motivo_da_venda':
+                return 'Motivo da Venda:';
+            case 'valor_pretendido':
+                return null;
+            case 'condicoes':
+                return 'Condições:';
+            case 'descricao':
+                return 'Descrição:';
+            case 'funcionamento':
+                return 'Funcionamento:';
+            case 'sobre_imovel':
+                return 'Sobre o Imóvel:';
+            case 'bairro':
+                return 'Bairro:';
+            case 'aceita_permuta':
+                return 'Aceita Permuta:';
+            case 'tem_divida':
+                return 'Tem Dívida:';
+            case 'estado':
+                return 'Estado:';
+            case 'cidade':
+                return 'Cidade:';
+            case 'categoria':
+                return 'Categoria:';
+            case 'imagem':
+                return 'Imagem:';
+            case 'details_images':
+                return 'Imagens Detalhadas:';
+            case 'area_construida':
+                return 'Área Construída:';
+            case 'area_util':
+                return 'Área Útil:';
+            case 'aluguel':
+                return 'Finalidade:';
+            case 'data_registro':
+                return null;
+            default:
+                return key;
+        }
+    };
+
+    const mapValueToComponent = (key, value) => {
+        switch (key) {
+            case 'valor_pretendido':
+                return toBrMoney(value);
+            case 'aceita_permuta':
+            case 'tem_divida':
+                return value ? 'Sim' : 'Não';
+            case 'aluguel':
+                return value ? 'Aluguel' : 'Venda';
+            case 'details_images':
+                return null;
+            case 'imagem':
+                return null;
+            case 'descricao':
+                return null;
+            case 'data_registro':
+                return null;
+            case 'valor_pretendido':
+                return null;
+            case 'titulo':
+                return null
+            default:
+                return (value === null || value === undefined || value === 'null') ? 'Não informado' : value;
+        }
+    };
+
+    const empresaKeys = [
+        'titulo',
+        'estado',
+        'cidade',
+        'bairro',
+        'categoria',
+        'tempo_de_mercado',
+        'funcionarios',
+        'motivo_da_venda',
+        'condicoes',
+        'funcionamento',
+        'sobre_imovel',
+        'aceita_permuta',
+        'tem_divida',
+        'descricao'
+    ];
+
+    const imovelKeys = [
+        'titulo',
+        'estado',
+        'cidade',
+        'bairro',
+        'aluguel',
+        'area_construida',
+        'area_util',
+        'motivo_da_venda',
+        'condicoes',
+        'aceita_permuta',
+        'tem_divida',
+        'descricao'
+    ];
+
+    const isImovel = product && 'area_construida' in product.item;
+
+    const orderedKeys = isImovel ? imovelKeys : empresaKeys;
+
+    const settings = {
+        dots: false,
+        infinite: true,
+        speed: 500,
+        slidesToShow: product.item.details_images ? product.item.details_images.length + 1 : 1,
+        slidesToScroll: 1,
+        initialSlide: 0,
+        arrows: false,
+    };
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -46,19 +200,31 @@ const ProductPage = () => {
             <div className="flex-grow flex m-4">
                 <div className="w-full grid grid-cols-12">
                     <div className="w-full grid grid-cols-12 md:my-4 col-span-12 md:col-start-3 md:col-end-11">
-
                         <div className='col-span-12 md:col-span-6'>
                             <div className="text-4xl font-bold mb-6 col-span-12 text-red-800">
                                 <h1>{product.item.titulo}</h1>
                             </div>
 
                             <div className='col-span-12'>
-                                <div className='h-auto min-h-80 mb-5'>
-                                    <Image src={product.item.imagem} alt={product.item.titulo} className="w-full" width={400} height={200} />
+                                <div className='h-auto min-h-80 mb-5 p-2'>
+                                    <div className='mb-5 w-full'>
+                                        <Image src={selectedImage} alt="Imagem" width={800} height={600} />
+                                    </div>
+                                    {product.item.details_images && product.item.details_images.length > 0 &&
+                                        <div className="slider-container">
+                                            <Slider {...settings}>
+                                                {[product.item.imagem, ...product.item.details_images].map((image, index) => (
+                                                    <div key={index} className="thumbnail" onClick={() => handleImageClick(image)}>
+                                                        <Image src={image} alt={`Imagem ${index + 1}`} width={160} height={120} />
+                                                    </div>
+                                                ))}
+                                            </Slider>
+                                        </div>
+                                    }
                                 </div>
 
                                 <div className='flex flex-col p-5 shadow-lg rounded-lg mt-4'>
-                                    <h1 className='text-xl font-semibold'>Descrição {product.tipo === 'Empresa' ? <span>da Empresa</span> : <span>do Imóvel</span>}:</h1>
+                                    <h1 className='text-xl font-semibold'>Descrição:</h1>
                                     <p>{product.item.descricao}</p>
                                 </div>
                             </div>
@@ -66,91 +232,43 @@ const ProductPage = () => {
 
                         <div className='col-span-0 md:col-span-1'></div>
                         <div className='col-span-12 md:col-span-5 flex flex-col gap-4 shadow-lg p-3 rounded-lg mt-5 md:mt-0 h-fit'>
-
                             <div className='flex justify-between p-1 flex-col md:flex-row'>
-                                <h1 className="font-semibold text-2xl text-red-800">Valor:</h1>
-                                <p className="text-xl">{toBrMoney(product.item.valor_pretendido)}</p>
+                                <h1 className="font-semibold text-2xl text-red-800">Valor Pretendido:</h1>
+                                <p className="text-xl text-yellow-600">{toBrMoney(product.item.valor_pretendido)}</p>
                             </div>
+                            {orderedKeys.map((key, index) => {
+                                const value = product.item[key];
+                                const label = mapKeyToLabel(key);
+                                const component = mapValueToComponent(key, value);
 
-                            <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                <h1 className="font-semibold text-xl">Estado:</h1>
-                                <p className="text-lg">{product.item.estado}</p>
-                            </div>
+                                // Skip rendering if component is null or undefined
+                                if (component == null) {
+                                    return null;
+                                }
 
-                            <div className='flex justify-between p-1'>
-                                <h1 className="font-semibold text-xl">Cidade:</h1>
-                                <p className="text-lg">{product.item.cidade}</p>
-                            </div>
-
-                            {product.tipo === 'Empresa' ?
-                                <>
-                                    <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                        <h1 className="font-semibold text-xl">Categoria: </h1>
-                                        <p className="text-lg">{product.item.categoria}</p>
+                                return (
+                                    <div key={key} className={index % 2 === 0 ? 'bg-gray-200' : ''}>
+                                        <div className='flex justify-between p-1'>
+                                            <h1 className="font-semibold text-xl">{label}</h1>
+                                            <p className="text-lg">{component}</p>
+                                        </div>
                                     </div>
-                                    <div className='flex justify-between p-1 w-full'>
-                                        <h1 className="font-semibold">Tempo de Mercado:</h1>
-                                        <p>{product.item.tempo_de_mercado} {product.item.tempo_de_mercado === 1 ? <span>ano</span> : <span>anos</span>}</p>
-                                    </div>
-                                    <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                        <h1 className="font-semibold">Funcionários:</h1>
-                                        <p>{product.item.funcionarios}</p>
-                                    </div>
-                                </>
-
-                                :
-
-                                <>
-                                    <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                        <h1 className="font-semibold">Área Construida:</h1>
-                                        <p>{product.item.area_construida} m²</p>
-                                    </div>
-                                    <div className='flex justify-between p-1 w-full'>
-                                        <h1 className="font-semibold">Área Útil:</h1>
-                                        <p>{product.item.area_util} m²</p>
-                                    </div>
-                                    <div className='flex justify-between bg-gray-200 p-1 w-full'>
-                                        <h1 className="font-semibold">Finalidade:</h1>
-                                        <p>{product.item.aluguel ? <span>Aluguel</span> : <span>Venda</span>}</p>
-                                    </div>
-                                </>
-
-                            }
-
-                            <div className='flex justify-between p-1 w-full'>
-                                <h1 className="font-semibold">Motivo da Venda:</h1>
-                                <p>{product.item.motivo_da_venda}</p>
-                            </div>
-
-                            <div className='flex justify-between bg-gray-200 p-1'>
-                                <h1 className="font-semibold">Condições:</h1>
-                                <p>{product.item.condicoes}</p>
-                            </div>
-
-                            <div className='flex justify-between p-1 w-full'>
-                                <h1 className="font-semibold">Aceita Permuta:</h1>
-                                <p>{product.item.aceita_permuta ? <span>Sim</span> : <span>Não</span>}</p>
-                            </div>
-
-                            <div className='flex justify-between bg-gray-200 p-1'>
-                                <h1 className="font-semibold">Tem Dívida:</h1>
-                                <p>{product.item.tem_divida ? <span>Sim</span> : <span>Não</span>}</p>
-                            </div>
-
-                            <div className='flex justify-between p-1 w-full'>
-                                <h1 className="font-semibold">Código:</h1>
-                                <p>{product.item.id}</p>
-                            </div>
+                                );
+                            })}
                         </div>
+
                         <div className='col-span-12 p-8'>
                             <p className='text-xs'>
                                 *  Maiores detalhes, agendamento de visitas, através de nossos agentes de negócios nos telefones indicados. * Os valores financeiros foram descritos de acordo com informações fornecidas pelos proprietários da empresa, a MGA CORRETORA não realizou até o momento qualquer tipo de consultoria, auditoria ou diligência. Os compradores poderão realizar a etapa de diligência durante o período de compromisso de intenção de compra e venda.
                             </p>
                         </div>
+
                         <div className='col-span-12 flex justify-center items-center'>
-                            <h1 className='text-lg'>Se interessou {product.tipo === 'Empresa' ? <span>pela empresa</span> : <span>pelo imóvel</span>}? Entre em Contato:</h1>
+                            <h1 className='text-lg'>Se interessou? Entre em Contato:</h1>
                         </div>
+
                         <ContactForm />
+
                         <div className="col-span-3 md:col-start-10"></div>
                     </div>
                 </div>

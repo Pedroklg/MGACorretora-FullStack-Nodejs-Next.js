@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import LoadingSpinner from './../../../components/animations/LoadingSpinner'; // Assuming this is where your LoadingSpinner component is defined
-import toBrMoney from './../../api/utils/toBrMoney'; // Assuming this is where your toBrMoney function is defined
+import LoadingSpinner from './../../../components/animations/LoadingSpinner';
+import toBrMoney from './../../api/utils/toBrMoney';
 import Image from 'next/image';
 
 const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
@@ -8,22 +8,24 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (isOpen && itemId) {
-            setLoading(true);
-            fetch(`/api/idSearch?id=${itemId}`)
-                .then(response => response.json())
-                .then(data => {
+        const fetchItemDetails = async () => {
+            if (isOpen && itemId) {
+                setLoading(true);
+                try {
+                    const response = await fetch(`/api/idSearch?id=${itemId}`);
+                    const data = await response.json();
                     setItemDetails(data);
                     setLoading(false);
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error('Error fetching item details:', error);
                     setLoading(false);
-                });
-        } else {
-            // Reset itemDetails when modal is closed
-            setItemDetails(null);
-        }
+                }
+            } else {
+                setItemDetails(null);
+            }
+        };
+
+        fetchItemDetails();
     }, [isOpen, itemId]);
 
     if (!isOpen || loading) {
@@ -37,105 +39,29 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
     if (!itemDetails) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-auto">
-            <div className="rounded-lg m-5 md:p-8 md:max-w-4xl w-full md:w-3/4 flex flex-col items-center bg-white">
-                <>
-                    <h1 className="text-xl font-bold mb-4">Detalhes {itemDetails.tipo === "Empresa" ? <span>da Empresa</span> : <span>do Imóvel</span>}</h1>
-                    <table className="w-full table-fixed">
-                        <tbody>
-                            <tr>
-                                <td className="font-semibold break-words md:w-1/4">Titulo:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.titulo}</td>
-                            </tr>
-                            <tr className="bg-gray-200">
-                                <td className="font-semibold break-words md:w-1/4">Valor:</td>
-                                <td className="break-words md:w-3/4">{toBrMoney(itemDetails.item.valor_pretendido)}</td>
-                            </tr>
-                            <tr>
-                                <td className="font-semibold break-words md:w-1/4">Estado:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.estado}</td>
-                            </tr>
-                            <tr className="bg-gray-200">
-                                <td className="font-semibold break-words md:w-1/4">Cidade:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.cidade}</td>
-                            </tr>
-                            <tr>
-                                <td className="font-semibold break-words md:w-1/4">Descrição</td>
-                                <td className="break-words md:w-3/4 max-w-full">{itemDetails.item.descricao}</td>
-                            </tr>
-                            <tr className="bg-gray-200">
-                                <td className="font-semibold break-words md:w-1/4">Motivo da Venda:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.motivo_da_venda}</td>
-                            </tr>
-                            <tr>
-                                <td className="font-semibold break-words md:w-1/4">Condições:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.condicoes}</td>
-                            </tr>
-                            <tr className="bg-gray-200">
-                                <td className="font-semibold break-words md:w-1/4">Aceita Permuta:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.aceita_permuta ? 'Sim' : 'Não'}</td>
-                            </tr>
-                            <tr>
-                                <td className="font-semibold break-words md:w-1/4">Tem Dívida:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.tem_divida ? 'Sim' : 'Não'}</td>
-                            </tr>
-                            <tr>
-                                <td className="font-semibold break-words md:w-1/4">Data de Registro:</td>
-                                <td className="break-words md:w-3/4">{itemDetails.item.data_registro}</td>
-                            </tr>
-                            {itemDetails.tipo === 'Empresa' ?
-                                <>
-                                    <tr className="bg-gray-200">
-                                        <td className="font-semibold break-words md:w-1/4">Categoria:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.categoria}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold break-words md:w-1/4">Tempo de Mercado:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.tempo_de_mercado} {itemDetails.item.tempo_de_mercado === 1 ? 'ano' : 'anos'}</td>
-                                    </tr>
-                                    <tr className="bg-gray-200">
-                                        <td className="font-semibold break-words md:w-1/4">Funcionários:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.funcionarios}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold break-words md:w-1/4">Faturamento Mensal:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.faturamento_mensal}</td>
-                                    </tr>
-                                    <tr className="bg-gray-200">
-                                        <td className="font-semibold break-words md:w-1/4">Lucro Mensal:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.lucro_mensal}</td>
-                                    </tr>
-                                </>
-                                :
-                                <>
-                                    <tr className="bg-gray-200">
-                                        <td className="font-semibold break-words md:w-1/4">Área Construida:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.area_construida} m²</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold break-words md:w-1/4">Área Útil:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.area_util} m²</td>
-                                    </tr>
-                                    <tr className="bg-gray-200">
-                                        <td className="font-semibold break-words md:w-1/4">Finalidade:</td>
-                                        <td className="break-words md:w-3/4">{itemDetails.item.aluguel ? 'Aluguel' : 'Venda'}</td>
-                                    </tr>
-                                </>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-scroll">
+            <div className="rounded-lg m-3 p-3 md:p-8 md:max-w-4xl w-full md:w-3/4 flex flex-col items-center bg-white">
+                <h1 className="text-xl font-bold md:mb-4">Detalhes {itemDetails.tipo === "Empresa" ? <span>da Empresa</span> : <span>do Imóvel</span>}</h1>
+                <table className="w-full">
+                    <tbody className='p-2'>
+                        {Object.entries(itemDetails.item).map(([key, value], index) => {
+                            const label = mapKeyToLabel(key);
+                            const component = mapValueToComponent(key, value);
+
+                            // Skip rendering if component is null or undefined
+                            if (component == null) {
+                                return null;
                             }
-                            <tr>
-                                <td className="font-semibold md:w-1/4 h-fit">Imagens:</td>
-                                <td className="md:w-3/4">
-                                    <div className='flex flex-row flex-wrap gap-1'>
-                                        <Image src={itemDetails.item.imagem} alt={itemDetails.item.titulo} width={100} height={100} />
-                                        {itemDetails.item.details_images && itemDetails.item.details_images.map((image) => {
-                                            return <Image src={image} alt={itemDetails.item.titulo} width={100} height={100} />;
-                                        })}
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </>
+
+                            return (
+                                <tr key={key} className={index % 2 === 0 ? 'bg-gray-200' : ''}>
+                                    <td className="font-semibold break-words md:w-1/4">{label}</td>
+                                    <td className="break-words md:w-3/4">{component}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
                 <button
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded inline-flex mt-4"
                     onClick={onRequestClose}
@@ -145,6 +71,78 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
             </div>
         </div>
     );
+};
+
+// Helper function to map database keys to display labels
+const mapKeyToLabel = (key) => {
+    switch (key) {
+        case 'titulo':
+            return 'Título:';
+        case 'valor_pretendido':
+            return 'Valor:';
+        case 'estado':
+            return 'Estado:';
+        case 'cidade':
+            return 'Cidade:';
+        case 'bairro':
+            return 'Bairro:';
+        case 'descricao':
+            return 'Descrição:';
+        case 'motivo_da_venda':
+            return 'Motivo da Venda:';
+        case 'condicoes':
+            return 'Condições:';
+        case 'aceita_permuta':
+            return 'Aceita Permuta:';
+        case 'tem_divida':
+            return 'Tem Dívida:';
+        case 'data_registro':
+            return 'Data de Registro:';
+        case 'categoria':
+            return 'Categoria:';
+        case 'tempo_de_mercado':
+            return 'Tempo de Mercado:';
+        case 'funcionarios':
+            return 'Funcionários:';
+        case 'faturamento_mensal':
+            return 'Faturamento Mensal:';
+        case 'lucro_mensal':
+            return 'Lucro Mensal:';
+        case 'area_construida':
+            return 'Área Construída:';
+        case 'area_util':
+            return 'Área Útil:';
+        case 'aluguel':
+            return 'Finalidade:';
+        default:
+            return key;
+    }
+};
+
+// Helper function to render values based on key
+const mapValueToComponent = (key, value) => {
+    switch (key) {
+        case 'valor_pretendido':
+            return toBrMoney(value);
+        case 'aceita_permuta':
+        case 'tem_divida':
+            return value ? 'Sim' : 'Não';
+        case 'aluguel':
+            return value ? 'Aluguel' : 'Venda';
+        case 'imagem':
+            return <Image src={value} alt="Imagem" width={100} height={100} />;
+        case 'details_images':
+            if (!value || value.length === 0) return ('Sem imagens')
+            return (
+                <div className='flex flex-row flex-wrap gap-1'>
+                    {value.map((image, index) => (
+                        <Image key={index} src={image} alt={`Imagem ${index + 1}`} width={100} height={100} />
+                    ))}
+                </div>
+            );
+        default:
+            return value;
+    }
 };
 
 export default ItemDetailsModal;

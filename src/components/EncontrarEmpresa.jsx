@@ -40,14 +40,14 @@ export default function EncontrarEmpresa() {
   useEffect(() => {
     const fetchEstadosAndCidades = async () => {
       try {
-        const estadosResponse = await fetch(`api/estados?searchMode=${searchMode}`);
+        const estadosResponse = await fetch(`/api/estados?searchMode=${searchMode}`);
         if (!estadosResponse.ok) {
           throw new Error('Failed to fetch estados');
         }
         const estadosData = await estadosResponse.json();
         setEstados(estadosData);
 
-        const cidadesResponse = await fetch(`api/cidades?searchMode=${searchMode}`);
+        const cidadesResponse = await fetch(`/api/cidades?searchMode=${searchMode}`);
         if (!cidadesResponse.ok) {
           throw new Error('Failed to fetch cidades');
         }
@@ -74,7 +74,7 @@ export default function EncontrarEmpresa() {
 
     const fetchBairros = async () => {
       try {
-        const response = await fetch(`api/bairros?searchMode=${searchMode}`);
+        const response = await fetch(`/api/bairros?searchMode=${searchMode}`);
         if (!response.ok) {
           throw new Error('Failed to fetch bairros');
         }
