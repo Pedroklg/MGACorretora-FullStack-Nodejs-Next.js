@@ -28,6 +28,7 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
         fetchItemDetails();
     }, [isOpen, itemId]);
 
+    // Ensure modal content is not rendered if closed or loading
     if (!isOpen || loading) {
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -39,29 +40,33 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
     if (!itemDetails) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-scroll">
-            <div className="rounded-lg m-3 p-3 md:p-8 md:max-w-4xl w-full md:w-3/4 flex flex-col items-center bg-white">
-                <h1 className="text-xl font-bold md:mb-4">Detalhes {itemDetails.tipo === "Empresa" ? <span>da Empresa</span> : <span>do Imóvel</span>}</h1>
-                <table className="w-full">
-                    <tbody className='p-2'>
-                        {Object.entries(itemDetails.item).map(([key, value], index) => {
-                            const label = mapKeyToLabel(key);
-                            const component = mapValueToComponent(key, value);
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-auto">
+            <div className="rounded-lg m-3 p-3 md:p-8 md:max-w-4xl w-full md:w-3/4 flex flex-col items-center bg-white overflow-y-auto max-h-full">
+                <h1 className="text-xl font-bold md:mb-4">
+                    Detalhes {itemDetails.tipo === "Empresa" ? <span>da Empresa</span> : <span>do Imóvel</span>}
+                </h1>
+                <div className="overflow-y-auto max-h-full">
+                    <table className="w-full">
+                        <tbody className='p-2'>
+                            {Object.entries(itemDetails.item).map(([key, value], index) => {
+                                const label = mapKeyToLabel(key);
+                                const component = mapValueToComponent(key, value);
 
-                            // Skip rendering if component is null or undefined
-                            if (component == null) {
-                                return null;
-                            }
+                                // Skip rendering if component is null or undefined
+                                if (component == null) {
+                                    return null;
+                                }
 
-                            return (
-                                <tr key={key} className={index % 2 === 0 ? 'bg-gray-200' : ''}>
-                                    <td className="font-semibold break-words md:w-1/4">{label}</td>
-                                    <td className="break-words md:w-3/4">{component}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                                return (
+                                    <tr key={key} className={index % 2 === 0 ? 'bg-gray-200' : ''}>
+                                        <td className="font-semibold break-words md:w-1/4">{label}</td>
+                                        <td className="break-words md:w-3/4">{component}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
                 <button
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded inline-flex mt-4"
                     onClick={onRequestClose}
@@ -104,16 +109,20 @@ const mapKeyToLabel = (key) => {
             return 'Tempo de Mercado:';
         case 'funcionarios':
             return 'Funcionários:';
-        case 'faturamento_mensal':
-            return 'Faturamento Mensal:';
-        case 'lucro_mensal':
-            return 'Lucro Mensal:';
         case 'area_construida':
             return 'Área Construída:';
         case 'area_util':
             return 'Área Útil:';
         case 'aluguel':
             return 'Finalidade:';
+        case 'funcionamento':
+            return 'Funcionamento:';
+        case 'sobre_imovel':
+            return 'Sobre o Imóvel:';
+        case 'imagem':
+            return 'Imagem Principal:';
+        case 'details_images':
+            return 'Imagens Adicionais:';
         default:
             return key;
     }

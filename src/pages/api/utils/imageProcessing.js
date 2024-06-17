@@ -6,7 +6,7 @@ export default async function processAndStoreImage(file, folder) {
         // Resize and compress the image
         const resizedImageBuffer = await sharp(file.buffer)
             .resize({ width: 800, height: 600 }) // Resize to 800x600 pixels
-            .jpeg({ quality: 100 }) // Compress to JPEG format with 80% quality
+            .jpeg({ quality: 90 }) // Compress to JPEG format with 80% quality
             .toBuffer(); // Convert to buffer
 
         // Convert buffer to base64

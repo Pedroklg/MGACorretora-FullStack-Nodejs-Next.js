@@ -110,7 +110,7 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     }
 
     return (
-        <div className="min-h-svh h-fit p-0 w-svw">
+        <div className="min-h-svh h-full p-0 w-svw">
             <ProgressBar loading={loading} />
             <div className="xl:p-5 grid xl:gap-8">
                 <div className="flex flex-col xl:flex-row items-center justify-items-center shadow-lg rounded-lg p-5">

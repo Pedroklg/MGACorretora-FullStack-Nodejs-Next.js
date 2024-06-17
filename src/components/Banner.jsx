@@ -33,8 +33,8 @@ export default function Banner() {
                             src="/Banner_1.png"
                             alt="banner 1"
                             layout="responsive"
-                            width={1170}
-                            height={440}
+                            width={2000}
+                            height={750}
                             quality={100}
                         />
                     </div>
@@ -45,8 +45,8 @@ export default function Banner() {
                             src="/Banner_2.png"
                             alt="banner 2"
                             layout="responsive"
-                            width={1170}
-                            height={440}
+                            width={2000}
+                            height={750}
                             quality={100}
                         />
                     </div>

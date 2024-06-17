@@ -111,7 +111,7 @@ apiRoute.put(async (req, res) => {
         }
 
         // Process and store additional images (details_images)
-        const details_images = req.files.details_images || [];
+        const details_images = req.files.details_images || oldDetailsImageUrls;
         const detailsImageUrls = await Promise.all(details_images.map(async (file, index) => {
             if (file) {
                 return await processAndStoreImage(file, 'uploads/empresas');

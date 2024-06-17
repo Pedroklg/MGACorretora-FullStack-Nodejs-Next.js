@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
+import { showErrorToast } from '../../components/animations/toastService';
+import RecommendedItems from '../../components/RecommendedItems';
 
 const ProductPage = () => {
     const router = useRouter();
@@ -31,12 +33,15 @@ const ProductPage = () => {
                 setSelectedImage(data.item.imagem);
             } catch (error) {
                 console.error('Error fetching product:', error);
+                showErrorToast('Erro ao buscar produto');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchProduct();
+        if (id) {
+            fetchProduct();
+        }
     }, [id]);
 
     const handleImageClick = (image) => {
@@ -275,6 +280,16 @@ const ProductPage = () => {
 
                         <ContactForm />
 
+                        <div className="col-span-12">
+                            <div className="flex items-center m-6">
+                                <div className="flex-grow h-px bg-red-900 mr-4 rounded-md"></div>
+                                <h1 className="text-3xl font-bold text-red-800 p-3">
+                                    Relacionados
+                                </h1>
+                                <div className="flex-grow h-px bg-red-900 mr-4 rounded-md"></div>
+                            </div>
+                            <RecommendedItems tipo={product.tipo} id={id} />
+                        </div>
                         <div className="col-span-3 md:col-start-10"></div>
                     </div>
                 </div>

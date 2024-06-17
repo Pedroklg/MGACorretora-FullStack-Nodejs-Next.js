@@ -184,7 +184,8 @@ const EmpresasCRUD = ({ item }) => {
         <form onSubmit={handleSubmit}>
             <LoadingSpinner isLoading={loading} />
             <div className="container flex flex-col justify-center items-center w-full md:w-5/6">
-                <div className="flex flex-col gap-4 self-start w-full">
+                <div className="flex flex-col self-start w-full">
+                    <label className="pt-5 p-1 text-red-900">Titulo</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -193,6 +194,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Título"
                     />
+                    <label className="pt-5 p-1 text-red-900">Tempo de Mercado</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="number"
@@ -201,6 +203,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Tempo de Mercado"
                     />
+                    <label className="pt-5 p-1 text-red-900">Funcionários</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="number"
@@ -209,6 +212,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Funcionários"
                     />
+                    <label className="pt-5 p-1 text-red-900">Motivo da Venda</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -217,6 +221,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Motivo da Venda"
                     />
+                    <label className="pt-5 p-1 text-red-900">Valor Pretendido</label>
                     <NumericFormat
                         className="p-1 rounded-lg shadow-lg"
                         name="valor_pretendido"
@@ -232,6 +237,7 @@ const EmpresasCRUD = ({ item }) => {
                         prefix="R$ "
                         isnumericstring="true"
                     />
+                    <label className="pt-5 p-1 text-red-900">Condições</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -240,6 +246,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Condições"
                     />
+                    <label className="pt-5 p-1 text-red-900">Horário de Funcionamento</label>
                     <textarea
                         className="p-1 rounded-lg shadow-lg"
                         name="funcionamento"
@@ -248,6 +255,7 @@ const EmpresasCRUD = ({ item }) => {
                         placeholder="Horário de Funcionamento"
                         rows={3}
                     />
+                    <label className="pt-5 p-1 text-red-900">Sobre o Imóvel</label>
                     <textarea
                         className="p-1 rounded-lg shadow-lg"
                         name="sobre_imovel"
@@ -256,6 +264,7 @@ const EmpresasCRUD = ({ item }) => {
                         placeholder="Sobre o Imóvel"
                         rows={3}
                     />
+                    <label className="pt-5 p-1 text-red-900">Descrição</label>
                     <textarea
                         className="p-1 rounded-lg shadow-lg"
                         name="descricao"
@@ -264,6 +273,7 @@ const EmpresasCRUD = ({ item }) => {
                         placeholder="Descrição"
                         rows={4}
                     />
+                    <label className="pt-5 p-1 text-red-900">Bairro</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -272,6 +282,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Bairro"
                     />
+                    <label className="pt-5 p-1 text-red-900">Estado</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -280,6 +291,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Estado"
                     />
+                    <label className="pt-5 p-1 text-red-900">Cidade</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -288,6 +300,7 @@ const EmpresasCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Cidade"
                     />
+                    <label className="pt-5 p-1 text-red-900">Categoria</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -319,14 +332,14 @@ const EmpresasCRUD = ({ item }) => {
                         </label>
                     </div>
                     <div>
-                        <p className='text-xl text-red-800'>Imagem Principal:</p>
+                        <p className='text-lg text-red-800'>Imagem Principal(800x600px):</p>
                         <input type="file" accept="image/*" onChange={handleImageChange} />
                         {empresaData.imagem && (
                             <Image src={typeof empresaData.imagem === 'string' ? empresaData.imagem : URL.createObjectURL(empresaData.imagem)} alt="Imagem Principal" width={200} height={200} />
                         )}
                     </div>
                     <div className='grid-cols-12 grid w-full'>
-                        <p className='text-xl text-red-800 col-span-12'>Imagens Adicionais:</p>
+                        <p className='text-lg text-red-800 col-span-12'>Imagens Adicionais(800x600px):</p>
                         {[...Array(6)].map((_, index) => (
                             <div key={index} className='p-1 xl:col-span-4 lg:col-span-6 col-span-12'>
                                 <input

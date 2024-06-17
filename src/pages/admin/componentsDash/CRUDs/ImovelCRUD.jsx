@@ -178,7 +178,8 @@ const ImoveisCRUD = ({ item }) => {
         <form onSubmit={handleSubmit}>
             <LoadingSpinner isLoading={loading} />
             <div className="container flex flex-col justify-center items-center xl:w-5/6">
-                <div className="flex flex-col gap-4 self-start w-full">
+                <div className="flex flex-col self-start w-full">
+                <label className="pt-5 p-1 text-red-900">Título</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -187,6 +188,7 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Título"
                     />
+                    <label className="pt-5 p-1 text-red-900">Área Construida</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="number"
@@ -195,6 +197,7 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Área Construída"
                     />
+                    <label className="pt-5 p-1 text-red-900">Área Útil</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="number"
@@ -203,6 +206,7 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Área Útil"
                     />
+                    <label className="pt-5 p-1 text-red-900">Motivo da venda</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -226,6 +230,7 @@ const ImoveisCRUD = ({ item }) => {
                         prefix="R$ "
                         isnumericstring="true"
                     />
+                    <label className="pt-5 p-1 text-red-900">Condições</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -234,6 +239,7 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Condições"
                     />
+                    <label className="pt-5 p-1 text-red-900">Descrição</label>
                     <textarea
                         className="p-1 rounded-lg shadow-lg"
                         name="descricao"
@@ -242,6 +248,7 @@ const ImoveisCRUD = ({ item }) => {
                         placeholder="Descrição"
                         rows={4}
                     />
+                    <label className="pt-5 p-1 text-red-900">Estado</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -250,6 +257,7 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Estado"
                     />
+                    <label className="pt-5 p-1 text-red-900">Cidade</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -258,6 +266,7 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Cidade"
                     />
+                    <label className="pt-5 p-1 text-red-900">Bairro</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
