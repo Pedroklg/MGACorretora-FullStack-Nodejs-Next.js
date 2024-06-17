@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
 import FilteredData from '../../../pages/api/utils/FilteredData';
 import { IconEye, IconEdit, IconTrash, IconSearchSmall } from '../../../components/Icons';
@@ -16,7 +16,7 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     const [loading, setLoading] = useState(false); // State to manage loading state
 
     // Function to fetch data based on tipoMostrado
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(`/api/tipoSearch?tipoMostrado=${tipoMostrado}`);
@@ -28,11 +28,11 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [tipoMostrado]);
 
     useEffect(() => {
         fetchData(); // Initial fetch when tipoMostrado changes
-    }, [tipoMostrado]);
+    }, [tipoMostrado, fetchData]);
 
     // Function to handle search term change
     const handleSearchChange = (e) => {

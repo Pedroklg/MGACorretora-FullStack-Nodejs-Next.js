@@ -127,6 +127,10 @@ const ProductPage = () => {
                 return value ? 'Sim' : 'Não';
             case 'aluguel':
                 return value ? 'Aluguel' : 'Venda';
+            case 'area_construida':
+                return `${value} m²`;
+            case 'area_util':
+                return `${value} m²`;
             case 'details_images':
                 return null;
             case 'imagem':

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import LoadingSpinner from '../../../../components/animations/LoadingSpinner';
 import { NumericFormat } from 'react-number-format';
 import { showErrorToast, showSuccessToast } from '../../../../components/animations/toastService';
@@ -10,6 +10,7 @@ const EmpresasCRUD = ({ item }) => {
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [savedOrUpdated, setSavedOrUpdated] = useState(false);
     const router = useRouter();
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
     const initialEmpresaData = {
         titulo: '',
@@ -32,6 +33,12 @@ const EmpresasCRUD = ({ item }) => {
     };
 
     const [empresaData, setEmpresaData] = useState(initialEmpresaData);
+
+    useEffect(() => {
+        if (savedOrUpdated && !loading) {
+            router.push('/admin/Dashboard');
+        }
+    }, [savedOrUpdated, loading, router]);
 
     useEffect(() => {
         if (item) {
@@ -81,11 +88,20 @@ const EmpresasCRUD = ({ item }) => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
+        if (file && file.size > MAX_FILE_SIZE) {
+            showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
+            e.target.value = ''; // Clear the input
+            return;
+        }
         setEmpresaData(prevData => ({ ...prevData, imagem: file }));
         setUnsavedChanges(true);
     };
 
     const updateDetailsImage = (index, file) => {
+        if (file && file.size > MAX_FILE_SIZE) {
+            showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
+            return;
+        }
         const updatedImages = [...empresaData.details_images];
         updatedImages[index] = file;
         setEmpresaData(prevData => ({ ...prevData, details_images: updatedImages }));
@@ -131,8 +147,8 @@ const EmpresasCRUD = ({ item }) => {
             }
 
             setUnsavedChanges(false);
-            setSavedOrUpdated(true);
             setEmpresaData(initialEmpresaData);
+            setSavedOrUpdated(true);
             showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
         } catch (error) {
             console.error(`Erro ao ${item ? 'atualizar' : 'criar'} empresa:`, error.message);

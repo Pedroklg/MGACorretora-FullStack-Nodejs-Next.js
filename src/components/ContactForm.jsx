@@ -20,7 +20,7 @@ export default function ContactForm() {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         }
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [formData]);
+    }, [formData, unsavedChanges]);
 
     const handleBeforeUnload = (event) => {
         const message = 'Você tem mudanças não salvas. Tem certeza que deseja sair?';

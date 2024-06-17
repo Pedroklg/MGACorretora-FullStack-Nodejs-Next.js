@@ -20,7 +20,7 @@ const ProgressBar = ({ loading }) => {
         return () => {
             clearInterval(timer);
         };
-    }, [loading]);
+    }, [loading, progress]);
 
     if (!loading) return null;
 

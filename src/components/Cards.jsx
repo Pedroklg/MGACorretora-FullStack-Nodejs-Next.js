@@ -32,6 +32,24 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   };
 
   useEffect(() => {
+    // Function to fetch data based on tipoMostrado
+    const fetchData = async () => {
+      try {
+        setLoading(true); // Start loading
+        let url = `/api/tipoSearch?tipoMostrado=${tipoMostrado}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        setcurrentData(data); // Set fetched data
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
+
     if (dataToShow) {
       setcurrentData(dataToShow); // Update currentData with filtered dataToShow
       setLoading(false); // Stop loading once dataToShow is set
@@ -140,7 +158,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
               src={card.imagem}
               alt={card.titulo}
               width={400}
-              height={200}
+              height={300}
               className="w-full h-48 object-cover"
             />
             <div className="p-6 flex flex-col">

@@ -10,6 +10,7 @@ const ImoveisCRUD = ({ item }) => {
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [savedOrUpdated, setSavedOrUpdated] = useState(false);
     const router = useRouter();
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
     const initialImovelData = {
         titulo: '',
@@ -30,6 +31,12 @@ const ImoveisCRUD = ({ item }) => {
     };
 
     const [imovelData, setImovelData] = useState(initialImovelData);
+
+    useEffect(() => {
+        if (savedOrUpdated && !loading) {
+            router.push('/admin/Dashboard');
+        }
+    }, [savedOrUpdated, loading, router]);
 
     useEffect(() => {
         if (item) {
@@ -77,14 +84,23 @@ const ImoveisCRUD = ({ item }) => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setImovelData(prevData => ({ ...prevData, imagem: file }));
+        if (file && file.size > MAX_FILE_SIZE) {
+            showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
+            e.target.value = ''; // Clear the input
+            return;
+        }
+        setEmpresaData(prevData => ({ ...prevData, imagem: file }));
         setUnsavedChanges(true);
     };
 
     const updateDetailsImage = (index, file) => {
-        const updatedImages = [...imovelData.details_images];
+        if (file && file.size > MAX_FILE_SIZE) {
+            showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
+            return;
+        }
+        const updatedImages = [...empresaData.details_images];
         updatedImages[index] = file;
-        setImovelData(prevData => ({ ...prevData, details_images: updatedImages }));
+        setEmpresaData(prevData => ({ ...prevData, details_images: updatedImages }));
         setUnsavedChanges(true);
     };
 
@@ -127,8 +143,8 @@ const ImoveisCRUD = ({ item }) => {
             }
 
             setUnsavedChanges(false);
-            setSavedOrUpdated(true);
             setImovelData(initialImovelData);
+            setSavedOrUpdated(true);
             showSuccessToast(`Imovel ${item ? 'atualizado' : 'criado'} com sucesso!`);
         } catch (error) {
             console.error(`Falha ao ${item ? 'atualizar' : 'criar'} imovel`, error.message);
@@ -147,12 +163,6 @@ const ImoveisCRUD = ({ item }) => {
                 ${!imovelData.cidade ? 'Cidade, ' : ''}${!imovelData.estado ? 'Estado, ' : ''}${!imovelData.imagem ? 'Imagem' : ''}`);
         }
     };
-
-    useEffect(() => {
-        if (savedOrUpdated) {
-            router.push('/admin/dashboard');
-        }
-    }, [savedOrUpdated]);
 
     const validateForm = () => {
         return (

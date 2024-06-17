@@ -130,13 +130,13 @@ const mapValueToComponent = (key, value) => {
         case 'aluguel':
             return value ? 'Aluguel' : 'Venda';
         case 'imagem':
-            return <Image src={value} alt="Imagem" width={100} height={100} />;
+            return <Image src={value} alt="Imagem" width={115} height={85} />;
         case 'details_images':
             if (!value || value.length === 0) return ('Sem imagens')
             return (
                 <div className='flex flex-row flex-wrap gap-1'>
                     {value.map((image, index) => (
-                        <Image key={index} src={image} alt={`Imagem ${index + 1}`} width={100} height={100} />
+                        <Image key={index} src={image} alt={`Imagem ${index + 1}`} width={115} height={85} />
                     ))}
                 </div>
             );

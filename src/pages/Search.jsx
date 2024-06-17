@@ -4,6 +4,7 @@ import Cards from '../components/Cards';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SkeletonLoader from '../components/animations/SkeletonLoader';
+import EncontrarEmpresa from '../components/EncontrarEmpresa';
 
 const Search = () => {
     const router = useRouter();
@@ -59,12 +60,17 @@ const Search = () => {
         };
 
         fetchData();
-    }, [q, estado, cidade,bairro, categoria, minPrice, maxPrice]);
+    }, [q, estado, cidade, bairro, categoria, minPrice, maxPrice, finalidade, searchMode]);
 
     return (
         <div className="flex flex-col min-h-screen">
             <title>Resultado da Busca</title>
             <Header />
+            <div className='w-full flex items-center justify-center'>
+                <div className='lg:w-10/12 w-full'>
+                    <EncontrarEmpresa />
+                </div>
+            </div>
             <main className="flex-grow">
                 {loading ? (
                     <SkeletonLoader /> // Show skeleton loader while loading

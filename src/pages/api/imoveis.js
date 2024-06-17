@@ -2,7 +2,8 @@ import nextConnect from 'next-connect';
 import multer from 'multer';
 import db from './utils/db';
 import processAndStoreImage from './utils/imageProcessing';
-import getCurrentDateBr from './utils/getCurrentDateBr';
+import getCurrentDate from './utils/getCurrentDate';
+import { deleteImageFromCloudinary } from './utils/deleteImage';
 
 // Configure multer storage
 const storage = multer.memoryStorage(); // Store images in memory for processing
@@ -65,7 +66,7 @@ apiRoute.post(async (req, res) => {
         }));
 
         // Get current date
-        const data_registro = getCurrentDateBr();
+        const data_registro = getCurrentDate();
 
         // Insert data into the database
         const result = await db.query(
@@ -93,7 +94,15 @@ apiRoute.put(async (req, res) => {
             estado, cidade, bairro, aluguel
         } = req.body;
 
-        let imageUrl = req.body.imagem; // Default to existing image URL
+        // Default to existing image URL
+        let imageUrl = req.body.imagem;
+        let oldImageUrl, oldDetailsImageUrls = [];
+
+        const result = await db.query('SELECT imagem, details_images FROM imoveis WHERE id = $1', [id]);
+        if (result.rows.length > 0) {
+            oldImageUrl = result.rows[0].imagem;
+            oldDetailsImageUrls = result.rows[0].details_images || [];
+        }
 
         if (req.files.imagem && req.files.imagem[0]) {
             // Process and store the new image
@@ -102,12 +111,15 @@ apiRoute.put(async (req, res) => {
 
         // Process and store additional images (details_images)
         const details_images = req.files.details_images || [];
-        const detailsImageUrls = await Promise.all(details_images.map(async (file) => {
-            return await processAndStoreImage(file, 'uploads/imoveis');
+        const detailsImageUrls = await Promise.all(details_images.map(async (file, index) => {
+            if (file) {
+                return await processAndStoreImage(file, 'uploads/imoveis');
+            }
+            return oldDetailsImageUrls[index];  // Maintain the old image if no new image is uploaded
         }));
 
         // Update data in the database
-        const result = await db.query(
+        const updateResult = await db.query(
             'UPDATE imoveis SET titulo = $1, imagem = $2, area_construida = $3, area_util = $4, aceita_permuta = $5, tem_divida = $6, motivo_da_venda = $7, valor_pretendido = $8, condicoes = $9, descricao = $10, estado = $11, cidade = $12, bairro = $13, aluguel = $14, details_images = $15 WHERE id = $16 RETURNING *',
             [
                 titulo, imageUrl, area_construida, area_util, aceita_permuta, tem_divida,
@@ -115,7 +127,19 @@ apiRoute.put(async (req, res) => {
             ]
         );
 
-        res.status(200).json(result.rows[0]);
+        // Delete the old image from Cloudinary if a new image was uploaded
+        if (oldImageUrl && oldImageUrl !== imageUrl) {
+            await deleteImageFromCloudinary(oldImageUrl);
+        }
+
+        // Delete the old detail images from Cloudinary if new images were uploaded
+        await Promise.all(oldDetailsImageUrls.map(async (oldUrl, index) => {
+            if (oldUrl && oldUrl !== detailsImageUrls[index]) {
+                await deleteImageFromCloudinary(oldUrl);
+            }
+        }));
+
+        res.status(200).json(updateResult.rows[0]);
     } catch (error) {
         console.error('Error in PUT /api/imoveis:', error.message);
         res.status(500).json({ error: 'Failed to update imóvel' });

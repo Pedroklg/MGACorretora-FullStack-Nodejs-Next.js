@@ -1,6 +1,6 @@
 import nextConnect from 'next-connect';
 import db from './utils/db';
-import cloudinary from './utils/cloudinaryConfig';
+import { deleteImagesFromCloudinary } from './utils/deleteImage';
 
 const apiRoute = nextConnect({
     onError: (err, req, res) => {
@@ -69,25 +69,8 @@ apiRoute.delete(async (req, res) => {
             if (details_images && details_images.length > 0) imageUrls = imageUrls.concat(details_images);
         }
 
-        // Function to extract public ID from Cloudinary URL
-        const extractPublicId = (url) => {
-            const parts = url.split('/');
-            const publicIdWithExtension = parts[parts.length - 1].split('.')[0];
-            return publicIdWithExtension;
-        };
-
-        // Function to delete image from Cloudinary
-        const deleteImageFromCloudinary = async (url) => {
-            if (url) {
-                const publicId = extractPublicId(url);
-                await cloudinary.uploader.destroy(publicId);
-            }
-        };
-
         // Delete all images associated with the item from Cloudinary
-        await Promise.all(imageUrls.map(async (imageUrl) => {
-            await deleteImageFromCloudinary(imageUrl);
-        }));
+        await deleteImagesFromCloudinary(imageUrls);
 
         // Delete the item from the appropriate table using the ID
         await db.query(`DELETE FROM ${tableName} WHERE id = $1`, [id]);
