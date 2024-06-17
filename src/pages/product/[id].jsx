@@ -210,7 +210,7 @@ const ProductPage = () => {
             </div>
             <div className="flex-grow flex m-4">
                 <div className="w-full grid grid-cols-12">
-                    <div className="w-full grid grid-cols-12 md:my-4 col-span-12 md:col-start-3 md:col-end-11">
+                    <div className="w-full grid grid-cols-12 md:my-4 col-span-12 xl:col-start-3 xl:col-end-11">
                         <div className='col-span-12 md:col-span-6'>
                             <div className="text-4xl font-bold mb-6 col-span-12 text-red-800 ml-6 flex flex-wrap">
                                 <h1>{product.item.titulo}</h1>
@@ -290,7 +290,7 @@ const ProductPage = () => {
                             </div>
                             <RecommendedItems tipo={product.tipo} id={id} />
                         </div>
-                        <div className="col-span-3 md:col-start-10"></div>
+                        <div className="col-span-3 lg:col-start-10"></div>
                     </div>
                 </div>
             </div>
