@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Recaptcha from 'react-recaptcha';
 
 const API_ENDPOINT = '/api/auth/login';
-const RECAPTCHA_SITE_KEY = '6LekYvspAAAAAC6_dN04Zw1Vksy_sNt56DIVhcWK'; // Replace with your reCAPTCHA site key
+const RECAPTCHA_SITE_KEY = '6LekYvspAAAAAC6_dN04Zw1Vksy_sNt56DIVhcWK'; // Substitua com sua própria chave do site
 
 const Login = () => {
   const router = useRouter();
@@ -48,7 +48,13 @@ const Login = () => {
   };
 
   const onRecaptchaVerify = (response) => {
-    setIsRecaptchaVerified(true);
+    if (response) {
+      setIsRecaptchaVerified(true);
+    }
+  };
+
+  const onRecaptchaLoad = () => {
+    console.log('reCAPTCHA loaded successfully');
   };
 
   return (
@@ -75,6 +81,7 @@ const Login = () => {
           sitekey={RECAPTCHA_SITE_KEY}
           render="explicit"
           verifyCallback={onRecaptchaVerify}
+          onloadCallback={onRecaptchaLoad}
         />
         <button
           onClick={handleLogin}

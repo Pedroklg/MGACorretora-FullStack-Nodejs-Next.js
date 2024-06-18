@@ -21,6 +21,7 @@ class MyDocument extends Document {
           
           {/* Manifest for Progressive Web App (optional) */}
           <link rel="manifest" href="/site.webmanifest" />
+          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         </Head>
         <body>
           <Main />
