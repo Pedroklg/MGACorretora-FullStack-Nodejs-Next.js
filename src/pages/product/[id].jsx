@@ -116,6 +116,8 @@ const ProductPage = () => {
                 return 'Área Útil:';
             case 'aluguel':
                 return 'Finalidade:';
+            case 'id':
+                return 'Código:'
             case 'data_registro':
                 return null;
             default:
@@ -167,6 +169,7 @@ const ProductPage = () => {
         'sobre_imovel',
         'aceita_permuta',
         'tem_divida',
+        'id',
         'descricao'
     ];
 
@@ -182,6 +185,7 @@ const ProductPage = () => {
         'condicoes',
         'aceita_permuta',
         'tem_divida',
+        'id',
         'descricao'
     ];
 
@@ -210,7 +214,7 @@ const ProductPage = () => {
             </div>
             <div className="flex-grow flex m-4">
                 <div className="w-full grid grid-cols-12">
-                    <div className="w-full grid grid-cols-12 md:my-4 col-span-12 xl:col-start-3 xl:col-end-11">
+                    <div className="w-full grid grid-cols-12 md:my-4 col-span-12 lg:col-start-2 lg:col-end-12 2xl:col-start-3 2xl:col-end-11">
                         <div className='col-span-12 md:col-span-6'>
                             <div className="text-4xl font-bold mb-6 col-span-12 text-red-800 ml-6 flex flex-wrap">
                                 <h1>{product.item.titulo}</h1>
@@ -242,10 +246,10 @@ const ProductPage = () => {
                         </div>
 
                         <div className='col-span-0 md:col-span-1'></div>
-                        <div className='col-span-12 md:col-span-5 flex flex-col gap-4 shadow-lg p-3 rounded-lg mt-5 md:mt-10 lg:mt-15 xl:mt-20 h-fit'>
+                        <div className='col-span-12 md:col-span-5 flex flex-col gap-4 p-3 mt-5 md:mt-8 lg:mt-10 xl:mt-15 h-fit'>
                             <div className='flex justify-between p-1 flex-col md:flex-row'>
                                 <h1 className="font-semibold text-2xl text-red-800">Valor Pretendido:</h1>
-                                <p className="text-xl text-yellow-600">{toBrMoney(product.item.valor_pretendido)}</p>
+                                <p className="text-3xl text-yellow-600">{toBrMoney(product.item.valor_pretendido)}</p>
                             </div>
                             {orderedKeys.map((key, index) => {
                                 const value = product.item[key];
@@ -258,7 +262,8 @@ const ProductPage = () => {
                                 }
 
                                 return (
-                                    <div key={key} className={index % 2 === 0 ? 'bg-gray-200' : ''}>
+                                    <div key={key}>
+                                        <div className='h-px bg-yellow-600'></div>
                                         <div className='flex justify-between p-1'>
                                             <h1 className="font-semibold text-xl">{label}</h1>
                                             <p className="text-lg">{component}</p>
@@ -269,9 +274,15 @@ const ProductPage = () => {
                         </div>
 
                         <div className='col-span-12 p-8'>
-                            <p className='text-xs'>
-                                *  Maiores detalhes, agendamento de visitas, através de nossos agentes de negócios nos telefones indicados. * Os valores financeiros foram descritos de acordo com informações fornecidas pelos proprietários da empresa, a MGA CORRETORA não realizou até o momento qualquer tipo de consultoria, auditoria ou diligência. Os compradores poderão realizar a etapa de diligência durante o período de compromisso de intenção de compra e venda.
-                            </p>
+                            {product.item == "Empresa" ?
+                                <p className='text-xs'>
+                                    *  Maiores detalhes, agendamento de visitas, através de nossos agentes de negócios nos telefones indicados. * Os valores financeiros foram descritos de acordo com informações fornecidas pelos proprietários da empresa, a MGA CORRETORA não realizou até o momento qualquer tipo de consultoria, auditoria ou diligência. Os compradores poderão realizar a etapa de diligência durante o período de compromisso de intenção de compra e venda.
+                                </p>
+                                :
+                                <p className='text-xs'>
+                                    *  Maiores detalhes, agendamento de visitas, através de nossos agentes de negócios nos telefones indicados.
+                                </p>
+                            }
                         </div>
 
                         <div className='col-span-12 flex justify-center items-center'>
@@ -290,7 +301,7 @@ const ProductPage = () => {
                             </div>
                             <RecommendedItems tipo={product.tipo} id={id} />
                         </div>
-                        <div className="col-span-3 lg:col-start-10"></div>
+                        <div className="col-span-3 2xl:col-start-10"></div>
                     </div>
                 </div>
             </div>
