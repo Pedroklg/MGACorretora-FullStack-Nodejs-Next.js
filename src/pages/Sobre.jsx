@@ -4,7 +4,6 @@ import Header from "../components/Header"
 function Sobre() {
     return (
         <div>
-            <title>Sobre</title>
             <Header />
             <div className="flex justify-center pb-8">
                 <div className="md:w-3/6 w-11/12 flex flex-col justify-center items-start p-4">

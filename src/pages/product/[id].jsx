@@ -205,7 +205,6 @@ const ProductPage = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <title>{product.item.titulo}</title>
             <Header />
             <div className="flex w-full justify-center">
                 <div className="sm:w-10/12 w-full">

@@ -32,7 +32,6 @@ export default function Banner() {
                         <Image
                             src="/Banner_1.png"
                             alt="banner 1"
-                            layout="responsive"
                             width={2000}
                             height={750}
                             quality={100}
@@ -44,7 +43,6 @@ export default function Banner() {
                         <Image
                             src="/Banner_2.png"
                             alt="banner 2"
-                            layout="responsive"
                             width={2000}
                             height={750}
                             quality={100}

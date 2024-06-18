@@ -65,7 +65,6 @@ const Search = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <title>Resultado da Busca</title>
             <Header />
             <div className='w-full flex items-center justify-center'>
                 <div className='lg:w-10/12 w-full'>

@@ -42,7 +42,6 @@ function Imoveis() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <title>Imoveis</title>
             <Header />
             <div className="flex w-full justify-center">
                 <div className="sm:w-10/12 w-full">

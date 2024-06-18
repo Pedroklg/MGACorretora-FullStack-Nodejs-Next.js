@@ -5,7 +5,6 @@ import { protectRoute } from '../api/utils/sessionProtection';
 const AdminDashboardPage = () => {
     return (
         <div className="flex flex-col lg:flex-row overflow-auto">
-            <title>Tabela Imoveis</title>
             <Nav />
             <Tabela
                 tipoMostrado={"Imoveis"}

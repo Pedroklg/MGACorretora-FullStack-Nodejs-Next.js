@@ -6,7 +6,6 @@ import ContactForm from '../components/ContactForm';
 function SejaParceiro() {
     return (
         <div className="flex flex-col min-h-screen">
-            <title>Seja Parceiro</title>
             <Header />
             <main className="flex-grow flex flex-col items-center justify-center">
                 <div className='md:w-8/12 w-full p-5 md:p-10 lg:p-15'>
