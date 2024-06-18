@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Recaptcha from 'react-recaptcha';
-import { withIronSession } from 'next-iron-session';
 
 const API_ENDPOINT = '/api/auth/login';
-const RECAPTCHA_SITE_KEY = 'your_recaptcha_site_key'; // Replace with your reCAPTCHA site key
+const RECAPTCHA_SITE_KEY = '6LekYvspAAAAAC6_dN04Zw1Vksy_sNt56DIVhcWK'; // Replace with your reCAPTCHA site key
 
 const Login = () => {
   const router = useRouter();
@@ -73,7 +72,7 @@ const Login = () => {
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
         />
         <Recaptcha
-          sitekey={'6LerYfspAAAAABC27ooZkZcxVq18ygcXijbfpwJN'}
+          sitekey={RECAPTCHA_SITE_KEY}
           render="explicit"
           verifyCallback={onRecaptchaVerify}
         />
