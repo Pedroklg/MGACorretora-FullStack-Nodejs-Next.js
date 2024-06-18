@@ -59,8 +59,6 @@ export default async function handler(req, res) {
         html: `<p>${emailBody.replace(/\n/g, '<br>')}</p>`,
       });
 
-      console.log('Message sent: %s', info.messageId);
-
       res.status(200).json({ success: true });
     } catch (error) {
       console.error(error);

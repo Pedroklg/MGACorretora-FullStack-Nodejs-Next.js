@@ -8,7 +8,6 @@ export default async function handler(req, res) {
     }else if (finalidade === 'locacao') {
         aluguel = true;
     }
-    console.log(aluguel);
 
     // Initialize search queries
     let searchQueryEmpresas = `

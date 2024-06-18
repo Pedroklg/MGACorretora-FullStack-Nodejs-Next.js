@@ -53,10 +53,6 @@ const Login = () => {
     }
   };
 
-  const onRecaptchaLoad = () => {
-    console.log('reCAPTCHA loaded successfully');
-  };
-
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-stone-900 to-red-900">
       <title>Login MGA</title>

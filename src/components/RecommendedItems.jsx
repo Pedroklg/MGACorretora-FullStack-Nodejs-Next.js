@@ -5,7 +5,6 @@ import toBrMoney from '../pages/api/utils/toBrMoney';
 import { IconMapPin } from '../components/Icons';
 
 const RecommendedItems = ({ tipo, id }) => {
-    console.log(tipo, id);
     const [recommendedItems, setRecommendedItems] = useState([]);
     const router = useRouter();
 
@@ -31,7 +30,6 @@ const RecommendedItems = ({ tipo, id }) => {
     const handleCardClick = (itemId) => {
         router.push(`/product/${itemId}`); // Adjust route as per your application
     };
-    console.log(recommendedItems);
 
     return (
         <div className="w-full">

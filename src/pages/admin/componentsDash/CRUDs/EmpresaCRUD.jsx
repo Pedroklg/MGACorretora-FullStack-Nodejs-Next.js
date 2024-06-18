@@ -138,7 +138,6 @@ const EmpresasCRUD = ({ item }) => {
             });
 
             // Append removed images for deletion
-            console.log('Removed images:', removedImages);
             formData.append('removed_images', JSON.stringify(removedImages));
 
             const endpoint = item ? `/api/empresas?id=${item.id}` : '/api/empresas';

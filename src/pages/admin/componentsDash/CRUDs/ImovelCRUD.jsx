@@ -133,7 +133,6 @@ const ImoveisCRUD = ({ item }) => {
                 }
             });
 
-            console.log('Removed images:', removedImages);
             formData.append('removed_images', JSON.stringify(removedImages));
 
             const endpoint = item ? `/api/imoveis?id=${item.id}` : '/api/imoveis';
