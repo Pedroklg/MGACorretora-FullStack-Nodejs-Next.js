@@ -77,7 +77,6 @@ const Login = () => {
           sitekey={RECAPTCHA_SITE_KEY}
           render="explicit"
           verifyCallback={onRecaptchaVerify}
-          onloadCallback={onRecaptchaLoad}
         />
         <button
           onClick={handleLogin}
