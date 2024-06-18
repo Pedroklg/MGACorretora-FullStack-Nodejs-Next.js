@@ -95,7 +95,6 @@ apiRoute.put(async (req, res) => {
             estado, cidade, categoria
         } = req.body;
 
-        // Default to existing image URL
         let imageUrl = req.body.imagem;
         let oldImageUrl, oldDetailsImageUrls = [];
 
@@ -106,40 +105,38 @@ apiRoute.put(async (req, res) => {
         }
 
         if (req.files.imagem && req.files.imagem[0]) {
-            // Process and store the new image
             imageUrl = await processAndStoreImage(req.files.imagem[0], 'uploads/empresas');
         }
 
-        // Process and store additional images (details_images)
-        const details_images = req.files.details_images || oldDetailsImageUrls;
-        const detailsImageUrls = await Promise.all(details_images.map(async (file, index) => {
-            if (file) {
-                return await processAndStoreImage(file, 'uploads/empresas');
-            }
-            return oldDetailsImageUrls[index];  // Maintain the old image if no new image is uploaded
+        const details_images = req.files.details_images || [];
+        const newDetailsImageUrls = await Promise.all(details_images.map(async (file) => {
+            return await processAndStoreImage(file, 'uploads/empresas');
         }));
 
-        // Update data in the database
+        // Combine old and new image URLs, filtering out removed ones
+        const removedImages = JSON.parse(req.body.removed_images || '[]');
+        const updatedDetailsImageUrls = oldDetailsImageUrls
+            .filter((url) => !removedImages.includes(url))
+            .concat(newDetailsImageUrls);
+
         const updateResult = await db.query(
             `UPDATE empresas SET titulo = $1, tempo_de_mercado = $2, funcionarios = $3, motivo_da_venda = $4, valor_pretendido = $5, condicoes = $6, descricao = $7, funcionamento = $8, sobre_imovel = $9, bairro = $10, aceita_permuta = $11, tem_divida = $12, imagem = $13, details_images = $14, estado = $15, cidade = $16, categoria = $17 WHERE id = $18 RETURNING *`,
             [
                 titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
                 condicoes, descricao, funcionamento, sobre_imovel, bairro, aceita_permuta, tem_divida,
-                imageUrl, detailsImageUrls, estado, cidade, categoria, id
+                imageUrl, updatedDetailsImageUrls, estado, cidade, categoria, id
             ]
         );
 
-        // Delete the old image from Cloudinary if a new image was uploaded
+        // Delete removed images from Cloudinary
+        await Promise.all(removedImages.map(async (image) => {
+            await deleteImageFromCloudinary(image);
+        }));
+
+        // Delete old main image if replaced
         if (oldImageUrl && oldImageUrl !== imageUrl) {
             await deleteImageFromCloudinary(oldImageUrl);
         }
-
-        // Delete the old detail images from Cloudinary if new images were uploaded
-        await Promise.all(oldDetailsImageUrls.map(async (oldUrl, index) => {
-            if (oldUrl && oldUrl !== detailsImageUrls[index]) {
-                await deleteImageFromCloudinary(oldUrl);
-            }
-        }));
 
         res.status(200).json(updateResult.rows[0]);
     } catch (error) {

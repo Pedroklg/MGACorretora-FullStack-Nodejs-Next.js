@@ -9,6 +9,7 @@ const ImoveisCRUD = ({ item }) => {
     const [loading, setLoading] = useState(false);
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [savedOrUpdated, setSavedOrUpdated] = useState(false);
+    const [removedImages, setRemovedImages] = useState([]);
     const router = useRouter();
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -89,23 +90,26 @@ const ImoveisCRUD = ({ item }) => {
             e.target.value = ''; // Clear the input
             return;
         }
-        setEmpresaData(prevData => ({ ...prevData, imagem: file }));
+        setImovelData(prevData => ({ ...prevData, imagem: file }));
         setUnsavedChanges(true);
     };
 
-    const updateDetailsImage = (index, file) => {
-        if (file && file.size > MAX_FILE_SIZE) {
-            showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
-            return;
-        }
-        const updatedImages = [...empresaData.details_images];
+    const handleUpdateDetailsImage = (index, file) => {
+        const updatedImages = [...imovelData.details_images];
         updatedImages[index] = file;
-        setEmpresaData(prevData => ({ ...prevData, details_images: updatedImages }));
+        setImovelData(prevData => ({ ...prevData, details_images: updatedImages }));
         setUnsavedChanges(true);
     };
 
     const handleRemoveDetailsImage = (index) => {
         const updatedImages = [...imovelData.details_images];
+        if (updatedImages[index]) {
+            const image = updatedImages[index];
+            const imageUrl = typeof image === 'string' ? image : (image instanceof Blob || image instanceof File) ? URL.createObjectURL(image) : null;
+            if (imageUrl) {
+                setRemovedImages(prev => [...prev, imageUrl]);
+            }
+        }
         updatedImages[index] = null;
         setImovelData(prevData => ({ ...prevData, details_images: updatedImages }));
         setUnsavedChanges(true);
@@ -129,6 +133,9 @@ const ImoveisCRUD = ({ item }) => {
                 }
             });
 
+            console.log('Removed images:', removedImages);
+            formData.append('removed_images', JSON.stringify(removedImages));
+
             const endpoint = item ? `/api/imoveis?id=${item.id}` : '/api/imoveis';
             const method = item ? 'PUT' : 'POST';
 
@@ -144,6 +151,7 @@ const ImoveisCRUD = ({ item }) => {
 
             setUnsavedChanges(false);
             setImovelData(initialImovelData);
+            setRemovedImages([]); // Clear removed images after successful operation
             setSavedOrUpdated(true);
             showSuccessToast(`Imovel ${item ? 'atualizado' : 'criado'} com sucesso!`);
         } catch (error) {
@@ -215,6 +223,7 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Motivo da Venda"
                     />
+                    <label className="pt-5 p-1 text-red-900">Valor Pretendido</label>
                     <NumericFormat
                         className="p-1 rounded-lg shadow-lg"
                         name="valor_pretendido"
@@ -321,7 +330,7 @@ const ImoveisCRUD = ({ item }) => {
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => updateDetailsImage(index, e.target.files[0])}
+                                    onChange={(e) => handleUpdateDetailsImage(index, e.target.files[0])}
                                 />
                                 {imovelData.details_images[index] && (
                                     <div className='flex justify-center flex-col w-fit'>

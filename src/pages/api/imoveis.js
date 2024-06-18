@@ -111,32 +111,33 @@ apiRoute.put(async (req, res) => {
 
         // Process and store additional images (details_images)
         const details_images = req.files.details_images || [];
-        const detailsImageUrls = await Promise.all(details_images.map(async (file, index) => {
-            if (file) {
-                return await processAndStoreImage(file, 'uploads/imoveis');
-            }
-            return oldDetailsImageUrls[index];  // Maintain the old image if no new image is uploaded
+        const newDetailsImageUrls = await Promise.all(details_images.map(async (file) => {
+            return await processAndStoreImage(file, 'uploads/imoveis');
         }));
+
+        // Combine old and new image URLs, filtering out removed ones
+        const removedImages = JSON.parse(req.body.removed_images || '[]');
+        const updatedDetailsImageUrls = oldDetailsImageUrls
+            .filter((url) => !removedImages.includes(url))
+            .concat(newDetailsImageUrls);
 
         // Update data in the database
         const updateResult = await db.query(
             'UPDATE imoveis SET titulo = $1, imagem = $2, area_construida = $3, area_util = $4, aceita_permuta = $5, tem_divida = $6, motivo_da_venda = $7, valor_pretendido = $8, condicoes = $9, descricao = $10, estado = $11, cidade = $12, bairro = $13, aluguel = $14, details_images = $15 WHERE id = $16 RETURNING *',
             [
                 titulo, imageUrl, area_construida, area_util, aceita_permuta, tem_divida,
-                motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, detailsImageUrls, id
+                motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, updatedDetailsImageUrls, id
             ]
         );
 
-        // Delete the old image from Cloudinary if a new image was uploaded
+        // Delete the old main image from Cloudinary if a new image was uploaded
         if (oldImageUrl && oldImageUrl !== imageUrl) {
             await deleteImageFromCloudinary(oldImageUrl);
         }
 
-        // Delete the old detail images from Cloudinary if new images were uploaded
-        await Promise.all(oldDetailsImageUrls.map(async (oldUrl, index) => {
-            if (oldUrl && oldUrl !== detailsImageUrls[index]) {
-                await deleteImageFromCloudinary(oldUrl);
-            }
+        // Delete the removed detail images from Cloudinary
+        await Promise.all(removedImages.map(async (image) => {
+            await deleteImageFromCloudinary(image);
         }));
 
         res.status(200).json(updateResult.rows[0]);

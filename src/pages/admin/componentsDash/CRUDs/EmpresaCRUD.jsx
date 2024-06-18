@@ -9,6 +9,7 @@ const EmpresasCRUD = ({ item }) => {
     const [loading, setLoading] = useState(false);
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [savedOrUpdated, setSavedOrUpdated] = useState(false);
+    const [removedImages, setRemovedImages] = useState([]);
     const router = useRouter();
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -97,11 +98,7 @@ const EmpresasCRUD = ({ item }) => {
         setUnsavedChanges(true);
     };
 
-    const updateDetailsImage = (index, file) => {
-        if (file && file.size > MAX_FILE_SIZE) {
-            showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
-            return;
-        }
+    const handleUpdateDetailsImage = (index, file) => {
         const updatedImages = [...empresaData.details_images];
         updatedImages[index] = file;
         setEmpresaData(prevData => ({ ...prevData, details_images: updatedImages }));
@@ -110,6 +107,13 @@ const EmpresasCRUD = ({ item }) => {
 
     const handleRemoveDetailsImage = (index) => {
         const updatedImages = [...empresaData.details_images];
+        if (updatedImages[index]) {
+            const image = updatedImages[index];
+            const imageUrl = typeof image === 'string' ? image : (image instanceof Blob || image instanceof File) ? URL.createObjectURL(image) : null;
+            if (imageUrl) {
+                setRemovedImages(prev => [...prev, imageUrl]);
+            }
+        }
         updatedImages[index] = null;
         setEmpresaData(prevData => ({ ...prevData, details_images: updatedImages }));
         setUnsavedChanges(true);
@@ -133,6 +137,10 @@ const EmpresasCRUD = ({ item }) => {
                 }
             });
 
+            // Append removed images for deletion
+            console.log('Removed images:', removedImages);
+            formData.append('removed_images', JSON.stringify(removedImages));
+
             const endpoint = item ? `/api/empresas?id=${item.id}` : '/api/empresas';
             const method = item ? 'PUT' : 'POST';
 
@@ -148,6 +156,7 @@ const EmpresasCRUD = ({ item }) => {
 
             setUnsavedChanges(false);
             setEmpresaData(initialEmpresaData);
+            setRemovedImages([]); // Clear removed images after successful operation
             setSavedOrUpdated(true);
             showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
         } catch (error) {
@@ -345,7 +354,7 @@ const EmpresasCRUD = ({ item }) => {
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => updateDetailsImage(index, e.target.files[0])}
+                                    onChange={(e) => handleUpdateDetailsImage(index, e.target.files[0])}
                                 />
                                 {empresaData.details_images[index] && (
                                     <div className='flex justify-center flex-col w-fit'>
