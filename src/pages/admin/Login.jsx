@@ -75,16 +75,15 @@ const Login = () => {
           onKeyUp={(e) => e.key === 'Enter' && handleLogin()}
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
         />
-        <Recaptcha
-          sitekey={RECAPTCHA_SITE_KEY}
-          render="explicit"
-          verifyCallback={onRecaptchaVerify}
-          className='px-2 pb-4 flex justify-center'
-        />
+          <Recaptcha
+            sitekey={RECAPTCHA_SITE_KEY}
+            render="explicit"
+            verifyCallback={onRecaptchaVerify}
+          />
         <button
           onClick={handleLogin}
           disabled={isLoading || !isRecaptchaVerified}
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          className="w-full mt-5 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
