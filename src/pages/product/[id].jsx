@@ -274,7 +274,7 @@ const ProductPage = () => {
                         </div>
 
                         <div className='col-span-12 p-8'>
-                            {product.item == "Empresa" ?
+                            {product.tipo == "Empresa" ?
                                 <p className='text-xs'>
                                     *  Maiores detalhes, agendamento de visitas, através de nossos agentes de negócios nos telefones indicados. * Os valores financeiros foram descritos de acordo com informações fornecidas pelos proprietários da empresa, a MGA CORRETORA não realizou até o momento qualquer tipo de consultoria, auditoria ou diligência. Os compradores poderão realizar a etapa de diligência durante o período de compromisso de intenção de compra e venda.
                                 </p>
