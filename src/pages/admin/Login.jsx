@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Recaptcha from 'react-recaptcha';
 
 const API_ENDPOINT = '/api/auth/login';
-const RECAPTCHA_SITE_KEY = '6LekYvspAAAAAC6_dN04Zw1Vksy_sNt56DIVhcWK'; // Substitua com sua própria chave do site
+const RECAPTCHA_SITE_KEY = '6LekYvspAAAAAC6_dN04Zw1Vksy_sNt56DIVhcWK'; // Replace with your own site key
 
 const Login = () => {
   const router = useRouter();
@@ -12,6 +12,23 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRecaptchaVerified, setIsRecaptchaVerified] = useState(false);
+
+  useEffect(() => {
+    // Check session here and redirect if already logged in
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/auth/check-session'); // Endpoint to check session status
+
+        if (response.ok) {
+          router.push('/admin/Dashboard'); // Redirect to Dashboard if session is active
+        }
+      } catch (error) {
+        console.error('Error checking session:', error);
+      }
+    };
+
+    checkSession();
+  }, []); // Empty dependency array ensures this effect runs only once on component mount
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -36,7 +53,7 @@ const Login = () => {
       });
 
       if (response.ok) {
-        router.push('/admin/Dashboard');
+        router.push('/admin/Dashboard'); // Redirect to Dashboard after successful login
       } else {
         setError('Invalid username or password');
       }
