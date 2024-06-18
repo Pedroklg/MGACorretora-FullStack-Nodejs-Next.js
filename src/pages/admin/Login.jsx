@@ -56,8 +56,9 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-stone-900 to-red-900">
       <title>Login MGA</title>
-      <div className="p-6 bg-gray-100 rounded-md shadow-md">
-        <h1 className="text-3xl font-semibold mb-4 text-red-800">MGA Corretora Admin</h1>
+      <div className="p-6 bg-gray-100 rounded-md shadow-md m-4">
+        <h1 className="text-3xl font-semibold mb-3 text-red-800">MGA Corretora Admin</h1>
+        <label className='text-lb font-semibold ml-2'>Usuário</label>
         <input
           type="text"
           placeholder="Username"
@@ -65,6 +66,7 @@ const Login = () => {
           onChange={(e) => setUsername(e.target.value)}
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
         />
+        <label className='text-lb font-semibold ml-2'>Senha</label>
         <input
           type="password"
           placeholder="Password"
@@ -77,6 +79,7 @@ const Login = () => {
           sitekey={RECAPTCHA_SITE_KEY}
           render="explicit"
           verifyCallback={onRecaptchaVerify}
+          className='px-2 pb-4 flex justify-center'
         />
         <button
           onClick={handleLogin}
