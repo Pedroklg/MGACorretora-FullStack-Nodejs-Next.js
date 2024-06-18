@@ -22,6 +22,10 @@ async function handler(req, res) {
 
     if (match) {
       req.session.set('adminLoggedIn', true);
+
+      // Store last login timestamp (optional)
+      req.session.set('lastLoginTimestamp', Date.now());
+
       await req.session.save();
       return res.status(200).json({ message: 'Login successful' });
     } else {

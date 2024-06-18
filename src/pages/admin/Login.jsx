@@ -1,7 +1,10 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Recaptcha from 'react-recaptcha';
+import { withIronSession } from 'next-iron-session';
 
 const API_ENDPOINT = '/api/auth/login';
+const RECAPTCHA_SITE_KEY = 'your_recaptcha_site_key'; // Replace with your reCAPTCHA site key
 
 const Login = () => {
   const router = useRouter();
@@ -9,10 +12,16 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRecaptchaVerified, setIsRecaptchaVerified] = useState(false);
 
   const handleLogin = async () => {
     if (!username || !password) {
       setError('Please enter a username and password');
+      return;
+    }
+
+    if (!isRecaptchaVerified) {
+      setError('Please complete the reCAPTCHA');
       return;
     }
 
@@ -39,11 +48,15 @@ const Login = () => {
     }
   };
 
+  const onRecaptchaVerify = (response) => {
+    setIsRecaptchaVerified(true);
+  };
+
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-stone-900 to-red-900">
       <title>Login MGA</title>
       <div className="p-6 bg-gray-100 rounded-md shadow-md">
-        <h1 className="text-3xl font-semibold mb-4 text-red-800">MGA Corretora Admin </h1>
+        <h1 className="text-3xl font-semibold mb-4 text-red-800">MGA Corretora Admin</h1>
         <input
           type="text"
           placeholder="Username"
@@ -59,9 +72,14 @@ const Login = () => {
           onKeyUp={(e) => e.key === 'Enter' && handleLogin()}
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
         />
+        <Recaptcha
+          sitekey={'6LerYfspAAAAABC27ooZkZcxVq18ygcXijbfpwJN'}
+          render="explicit"
+          verifyCallback={onRecaptchaVerify}
+        />
         <button
           onClick={handleLogin}
-          disabled={isLoading}
+          disabled={isLoading || !isRecaptchaVerified}
           className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
           {isLoading ? 'Logging in...' : 'Login'}
