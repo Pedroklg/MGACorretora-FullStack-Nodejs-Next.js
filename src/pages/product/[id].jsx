@@ -219,7 +219,7 @@ const ProductPage = () => {
                             <div className='col-span-12'>
                                 <div className='h-auto min-h-80 mb-5 p-2'>
                                     <div className='mb-5 w-full'>
-                                        <Image src={selectedImage} alt="Imagem" width={800} height={600} priority />
+                                        <Image src={selectedImage ? selectedImage : '/placeholder.png'} alt="Imagem" width={800} height={600} priority />
                                     </div>
                                     {product.item.details_images && product.item.details_images.length > 0 &&
                                         <div className="slider-container">

@@ -157,7 +157,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
             onClick={() => handleCardClick(card.id)} // Navigate to product page on click
           >
             <Image
-              src={card.imagem}
+              src={card.imagem ? card.imagem : '/placeholder.png'}
               alt={card.titulo}
               width={400}
               height={300}
