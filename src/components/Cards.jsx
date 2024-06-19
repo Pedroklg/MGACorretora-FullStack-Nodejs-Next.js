@@ -159,7 +159,7 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
                   priority
                 />
                 <div className="p-6 flex flex-col">
-                  <h2 className="text-xl font-bold mb-2">{card.titulo}</h2>
+                  <h2 className="xl:text-xl lg:text-lg md:text-base sm:text-xl font-bold mb-2">{card.titulo}</h2>
                   <div className="text-gray-700 flex items-center gap-1">
                     <span className='flex items-center text-green-700 mb-0.5'>{IconMapPin}</span>
                     {card.cidade} - {card.estado}
