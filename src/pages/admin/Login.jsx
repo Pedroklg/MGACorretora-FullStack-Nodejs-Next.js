@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import Head from 'next/head';
+import { validateRecaptcha } from '../api/utils/recaptcha';
 
-const API_ENDPOINT = '/api/auth/login'; // Replace with your API endpoint
+const API_ENDPOINT = '/api/auth/login';
 
 const Login = () => {
   const router = useRouter();
@@ -22,8 +23,22 @@ const Login = () => {
     try {
       setIsLoading(true);
 
+      if (!executeRecaptcha) {
+        setError('Execute reCAPTCHA function not available');
+        setIsLoading(false);
+        return;
+      }
+
       // Execute reCAPTCHA verification
       const token = await executeRecaptcha('login'); // 'login' is the action name for reCAPTCHA v3
+
+      // Validate reCAPTCHA token
+      const isRecaptchaValid = await validateRecaptcha(token);
+      if (!isRecaptchaValid) {
+        setError('reCAPTCHA verification failed');
+        setIsLoading(false);
+        return;
+      }
 
       // Make API call to authenticate user
       const response = await fetch(API_ENDPOINT, {
@@ -35,12 +50,14 @@ const Login = () => {
       });
 
       if (response.ok) {
-        router.push('/admin/Dashboard'); // Redirect to Dashboard after successful login
+        router.push('/admin/dashboard'); // Redirect to Dashboard after successful login
       } else {
-        setError('Invalid username or password');
+        const errorData = await response.json();
+        setError(errorData.message || 'Login failed');
       }
     } catch (error) {
       setError('An error occurred. Please try again.');
+      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }
