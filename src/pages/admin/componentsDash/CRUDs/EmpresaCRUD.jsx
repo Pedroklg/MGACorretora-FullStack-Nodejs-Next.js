@@ -205,7 +205,7 @@ const EmpresasCRUD = ({ item }) => {
                     <label className="pt-5 p-1 text-red-900">Tempo de Mercado</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
-                        type="number"
+                        type="text"
                         name="tempo_de_mercado"
                         value={empresaData.tempo_de_mercado}
                         onChange={handleChange}
@@ -214,7 +214,7 @@ const EmpresasCRUD = ({ item }) => {
                     <label className="pt-5 p-1 text-red-900">Funcionários</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
-                        type="number"
+                        type="text"
                         name="funcionarios"
                         value={empresaData.funcionarios}
                         onChange={handleChange}
