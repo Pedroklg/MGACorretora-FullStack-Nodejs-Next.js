@@ -10,8 +10,10 @@ const ImoveisCRUD = ({ item }) => {
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [savedOrUpdated, setSavedOrUpdated] = useState(false);
     const [removedImages, setRemovedImages] = useState([]);
+    const [comodoName, setComodoName] = useState('');
+    const [comodoQuantidade, setComodoQuantidade] = useState('');
     const router = useRouter();
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB 
 
     const initialImovelData = {
         titulo: '',
@@ -29,6 +31,7 @@ const ImoveisCRUD = ({ item }) => {
         bairro: '',
         aluguel: false,
         details_images: [],
+        comodos: [],
     };
 
     const [imovelData, setImovelData] = useState(initialImovelData);
@@ -46,6 +49,7 @@ const ImoveisCRUD = ({ item }) => {
                 ...item,
                 details_images: item.details_images || Array(6).fill(null),
                 imagem: item.imagem || null,
+                comodos: item.comodos || []
             });
             setLoading(false);
         }
@@ -115,6 +119,32 @@ const ImoveisCRUD = ({ item }) => {
         setUnsavedChanges(true);
     };
 
+    const handleAddComodo = () => {
+        if (comodoName && comodoQuantidade) {
+            const newComodo = { nome: comodoName, quantidade: comodoQuantidade };
+            setImovelData(prevData => ({ ...prevData, comodos: [...prevData.comodos, newComodo] }));
+            setComodoName('');
+            setComodoQuantidade('');
+            setUnsavedChanges(true);
+        } else {
+            showErrorToast('Preencha todos os campos do cômodo.');
+        }
+    };
+
+    const handleRemoveComodo = (index) => {
+        const updatedComodos = [...imovelData.comodos];
+        updatedComodos.splice(index, 1); // Remove comodo at index
+        setImovelData(prevData => ({ ...prevData, comodos: updatedComodos }));
+        setUnsavedChanges(true);
+    };
+
+    const handleEditComodo = (index, newName, newQuantidade) => {
+        const updatedComodos = [...imovelData.comodos];
+        updatedComodos[index] = { nome: newName, quantidade: newQuantidade };
+        setImovelData(prevData => ({ ...prevData, comodos: updatedComodos }));
+        setUnsavedChanges(true);
+    };
+
     const createOrUpdateImovel = async () => {
         try {
             setLoading(true);
@@ -128,6 +158,8 @@ const ImoveisCRUD = ({ item }) => {
                     });
                 } else if (key === 'imagem' && value) {
                     formData.append('imagem', value);
+                } else if (key === 'comodos') {
+                    formData.append('comodos', JSON.stringify(value));
                 } else {
                     formData.append(key, value);
                 }
@@ -186,7 +218,7 @@ const ImoveisCRUD = ({ item }) => {
             <LoadingSpinner isLoading={loading} />
             <div className="container flex flex-col justify-center items-center xl:w-5/6">
                 <div className="flex flex-col self-start w-full">
-                <label className="pt-5 p-1 text-red-900">Título</label>
+                    <label className="pt-5 p-1 text-red-900">Título</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
                         type="text"
@@ -195,24 +227,6 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Título"
                     />
-                    <label className="pt-5 p-1 text-red-900">Área Construida</label>
-                    <input
-                        className="p-1 rounded-lg shadow-lg"
-                        type="number"
-                        name="area_construida"
-                        value={imovelData.area_construida}
-                        onChange={handleChange}
-                        placeholder="Área Construída"
-                    />
-                    <label className="pt-5 p-1 text-red-900">Área Útil</label>
-                    <input
-                        className="p-1 rounded-lg shadow-lg"
-                        type="number"
-                        name="area_util"
-                        value={imovelData.area_util}
-                        onChange={handleChange}
-                        placeholder="Área Útil"
-                    />
                     <label className="pt-5 p-1 text-red-900">Motivo da venda</label>
                     <input
                         className="p-1 rounded-lg shadow-lg"
@@ -220,23 +234,43 @@ const ImoveisCRUD = ({ item }) => {
                         name="motivo_da_venda"
                         value={imovelData.motivo_da_venda}
                         onChange={handleChange}
-                        placeholder="Motivo da Venda"
+                        placeholder="Motivo da venda"
                     />
                     <label className="pt-5 p-1 text-red-900">Valor Pretendido</label>
                     <NumericFormat
                         className="p-1 rounded-lg shadow-lg"
                         name="valor_pretendido"
                         value={imovelData.valor_pretendido}
-                        onValueChange={(values) =>
-                            handleChange({
-                                target: { name: 'valor_pretendido', value: values.floatValue },
-                            })
-                        }
-                        placeholder="Valor Pretendido"
                         thousandSeparator="."
                         decimalSeparator=","
-                        prefix="R$ "
-                        isnumericstring="true"
+                        decimalScale={2}
+                        fixedDecimalScale={true}
+                        prefix={'R$ '}
+                        allowNegative={false}
+                        onValueChange={(values) => {
+                            const { value } = values;
+                            setImovelData(prevData => ({ ...prevData, valor_pretendido: value }));
+                            setUnsavedChanges(true);
+                        }}
+                        placeholder="Valor Pretendido"
+                    />
+                    <label className="pt-5 p-1 text-red-900">Área construída</label>
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="area_construida"
+                        value={imovelData.area_construida}
+                        onChange={handleChange}
+                        placeholder="Área construída"
+                    />
+                    <label className="pt-5 p-1 text-red-900">Área útil</label>
+                    <input
+                        className="p-1 rounded-lg shadow-lg"
+                        type="text"
+                        name="area_util"
+                        value={imovelData.area_util}
+                        onChange={handleChange}
+                        placeholder="Área útil"
                     />
                     <label className="pt-5 p-1 text-red-900">Condições</label>
                     <input
@@ -254,7 +288,6 @@ const ImoveisCRUD = ({ item }) => {
                         value={imovelData.descricao}
                         onChange={handleChange}
                         placeholder="Descrição"
-                        rows={4}
                     />
                     <label className="pt-5 p-1 text-red-900">Estado</label>
                     <input
@@ -283,47 +316,92 @@ const ImoveisCRUD = ({ item }) => {
                         onChange={handleChange}
                         placeholder="Bairro"
                     />
+                    <div className='pt-5 p-1'>
+                        <label className="text-red-900">Cômodos</label>
+                        {imovelData.comodos.map((comodo, index) => (
+                            <div key={index} className="p-2 border border-gray-300 rounded mb-2 flex justify-between items-center">
+                                <input
+                                    className="p-1 rounded-lg shadow-lg"
+                                    type="text"
+                                    value={comodo.nome}
+                                    onChange={(e) => handleEditComodo(index, e.target.value, comodo.quantidade)}
+                                    placeholder="Nome do Cômodo"
+                                />
+                                <input
+                                    className="p-1 rounded-lg shadow-lg ml-2"
+                                    type="text"
+                                    value={comodo.quantidade}
+                                    onChange={(e) => handleEditComodo(index, comodo.nome, e.target.value)}
+                                    placeholder="Quantidade de Cômodos"
+                                />
+                                <button type="button" className="p-1 text-red-500" onClick={() => handleRemoveComodo(index)}>
+                                    Remover
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex">
+                        <input
+                            className="p-1 rounded-lg shadow-lg"
+                            type="text"
+                            name="comodoName"
+                            value={comodoName}
+                            onChange={(e) => setComodoName(e.target.value)}
+                            placeholder="Nome do Cômodo"
+                        />
+                        <input
+                            className="p-1 rounded-lg shadow-lg ml-2"
+                            type="text"
+                            name="comodoQuantidade"
+                            value={comodoQuantidade}
+                            onChange={(e) => setComodoQuantidade(e.target.value)}
+                            placeholder="Quantidade de Cômodos"
+                        />
+                        <button type="button" className="bg-green-600 text-white py-1 px-1 rounded-lg shadow-lg hover:bg-green-700 ml-3" onClick={handleAddComodo}>
+                            Adicionar Cômodo
+                        </button>
+                    </div>
                     <div className="flex p-3 gap-10 text-lg">
-                        <label>
+                        <div className="py-4">
+                            <label className="p-1 text-red-900">Aluguel</label>
                             <input
-                                className="p-1 rounded-lg shadow-lg"
-                                type="checkbox"
-                                name="aceita_permuta"
-                                checked={imovelData.aceita_permuta}
-                                onChange={handleChange}
-                            />
-                            <span className="p-2">Aceita Permuta</span>
-                        </label>
-                        <label>
-                            <input
-                                className="p-1 rounded-lg shadow-lg"
-                                type="checkbox"
-                                name="tem_divida"
-                                checked={imovelData.tem_divida}
-                                onChange={handleChange}
-                            />
-                            <span className="p-2">Tem Dívida</span>
-                        </label>
-                        <label>
-                            <input
-                                className="p-1 rounded-lg shadow-lg"
+                                className="mx-2"
                                 type="checkbox"
                                 name="aluguel"
                                 checked={imovelData.aluguel}
                                 onChange={handleChange}
                             />
-                            <span className="p-2">Aluguel</span>
-                        </label>
+                        </div>
+                        <div className="py-4">
+                            <label className="p-1 text-red-900">Aceita Permuta</label>
+                            <input
+                                className="mx-2"
+                                type="checkbox"
+                                name="aceita_permuta"
+                                checked={imovelData.aceita_permuta}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="py-4">
+                            <label className="p-1 text-red-900">Tem Dívida</label>
+                            <input
+                                className="mx-2"
+                                type="checkbox"
+                                name="tem_divida"
+                                checked={imovelData.tem_divida}
+                                onChange={handleChange}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <p className='text-xl text-red-800'>Imagem Principal:</p>
-                        <input type="file" accept="image/*" onChange={handleImageChange} className='p-2'/>
+                    <label className='text-lg text-red-800 mt-4'>Imagem Principal(800x600px):</label>
+                    <div className='p-2'>
+                        <input type="file" accept="image/*" onChange={handleImageChange} className='p-2' />
                         {imovelData.imagem && (
                             <Image src={typeof imovelData.imagem === 'string' ? imovelData.imagem : URL.createObjectURL(imovelData.imagem)} alt="Imagem Principal" width={200} height={200} />
                         )}
                     </div>
                     <div className='grid-cols-12 grid w-full p-2'>
-                        <p className='text-xl text-red-800 col-span-12'>Imagens Adicionais:</p>
+                        <label className='text-lg text-red-800 col-span-12'>Imagens Adicionais(800x600px):</label>
                         {[...Array(6)].map((_, index) => (
                             <div key={index} className='p-2 xl:col-span-4 lg:col-span-6 col-span-12'>
                                 <input
@@ -357,7 +435,7 @@ const ImoveisCRUD = ({ item }) => {
                     className="bg-green-600 text-white py-2 px-4 rounded-lg shadow-lg hover:bg-green-700"
                     disabled={loading}
                 >
-                    {item ? 'Atualizar' : 'Criar'} Imóvel
+                    {item ? 'Atualizar' : 'Criar'} imovel
                 </button>
             </div>
         </form >

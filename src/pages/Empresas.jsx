@@ -87,7 +87,7 @@ function Empresas() {
             <Header />
             <div className="flex w-full justify-center">
                 <div className="sm:w-10/12 w-full">
-                    <EncontrarEmpresa />
+                    <EncontrarEmpresa tipoMostrado={"Empresas"}/>
                 </div>
             </div>
             <div className="flex flex-col sm:flex-row justify-center flex-grow items-center md:items-start w-full">

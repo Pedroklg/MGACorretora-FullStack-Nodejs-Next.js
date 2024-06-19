@@ -340,14 +340,14 @@ const EmpresasCRUD = ({ item }) => {
                         </label>
                     </div>
                     <div className='p-2'>
-                        <p className='text-lg text-red-800'>Imagem Principal(800x600px):</p>
+                        <label className='text-lg text-red-800'>Imagem Principal(800x600px):</label>
                         <input type="file" accept="image/*" onChange={handleImageChange} className='p-2'/>
                         {empresaData.imagem && (
                             <Image src={typeof empresaData.imagem === 'string' ? empresaData.imagem : URL.createObjectURL(empresaData.imagem)} alt="Imagem Principal" width={200} height={200} />
                         )}
                     </div>
                     <div className='grid-cols-12 grid w-full p-2'>
-                        <p className='text-lg text-red-800 col-span-12'>Imagens Adicionais(800x600px):</p>
+                        <label className='text-lg text-red-800 col-span-12'>Imagens Adicionais(800x600px):</label>
                         {[...Array(6)].map((_, index) => (
                             <div key={index} className='p-2 xl:col-span-4 lg:col-span-6 col-span-12'>
                                 <input

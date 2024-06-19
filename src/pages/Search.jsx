@@ -60,7 +60,9 @@ const Search = () => {
             }
         };
 
-        fetchData();
+        if (q || estado || cidade || bairro || categoria || finalidade || minPrice || maxPrice || searchMode) {
+            fetchData();
+        }
     }, [q, estado, cidade, bairro, categoria, minPrice, maxPrice, finalidade, searchMode]);
     const tipoMostrado = searchMode ? (searchMode === 'empresas' ? 'Empresas' : searchMode === 'imoveis' ? 'Imoveis' : 'ambos') : 'ambos';
 
@@ -74,7 +76,7 @@ const Search = () => {
             <Header />
             <div className='w-full flex items-center justify-center'>
                 <div className='lg:w-10/12 w-full'>
-                    <EncontrarEmpresa />
+                    <EncontrarEmpresa tipoMostrado={tipoMostrado}/>
                 </div>
             </div>
             <main className="flex-grow">

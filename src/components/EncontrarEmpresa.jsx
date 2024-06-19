@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { NumericFormat } from 'react-number-format';
 import { IconBars, IconClose, IconSearch } from './Icons';
 
-export default function EncontrarEmpresa() {
+export default function EncontrarEmpresa({ tipoMostrado }) {
   const router = useRouter();
 
   const [estados, setEstados] = useState([]);
@@ -19,7 +19,7 @@ export default function EncontrarEmpresa() {
   const [categoria, setCategoria] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const [searchMode, setSearchMode] = useState('both');
+  const [searchMode, setSearchMode] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -35,6 +35,16 @@ export default function EncontrarEmpresa() {
     // Clean up event listener on component unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (tipoMostrado === 'Empresas') {
+      setSearchMode('empresas');
+    } else if (tipoMostrado === 'Imoveis') {
+      setSearchMode('imoveis');
+    } else {
+      setSearchMode('both');
+    }
+  }, [tipoMostrado]);
 
   // Fetch estados, cidades, and categorias
   useEffect(() => {

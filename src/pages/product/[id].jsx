@@ -242,6 +242,21 @@ const ProductPage = () => {
                                     }
                                 </div>
 
+                                {product.item.comodos && product.item.comodos.length > 0 && (
+                                    <div className='col-span-12 md:col-span-6 flex flex-col gap-4 p-3 mt-5 md:mt-8 lg:mt-10 xl:mt-15 h-fit'>
+                                        <div className='grid-cols-2 grid'>
+                                            {product.item.comodos.map((comodo, index) => (
+                                                <div key={index} className='h-full flex col-span-1'>
+                                                    <div className='flex flex-grow'>
+                                                        <div className='bg-yellow-600 w-1 h-full mr-3'></div>
+                                                        <p className="text-lg flex">{comodo.quantidade} {comodo.nome}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className='flex flex-col p-5 shadow-lg rounded-lg mt-4'>
                                     <h1 className='text-xl font-semibold'>Descrição:</h1>
                                     <p>{product.item.descricao}</p>

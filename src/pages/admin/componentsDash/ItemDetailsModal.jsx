@@ -123,6 +123,8 @@ const mapKeyToLabel = (key) => {
             return 'Imagem Principal:';
         case 'details_images':
             return 'Imagens Adicionais:';
+        case 'comodos':
+            return 'Cômodos:';
         default:
             return key;
     }
@@ -148,6 +150,15 @@ const mapValueToComponent = (key, value) => {
                         <Image key={index} src={image} alt={`Imagem ${index + 1}`} width={115} height={85} />
                     ))}
                 </div>
+            );
+        case 'comodos':
+            if (!value || value.length === 0) return ('Sem cômodos');
+            return (
+                <ul>
+                    {value.map((comodo, index) => (
+                        <li key={index}>{comodo.nome}: {comodo.quantidade}</li>
+                    ))}
+                </ul>
             );
         default:
             return value;

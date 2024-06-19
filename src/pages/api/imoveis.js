@@ -49,7 +49,7 @@ apiRoute.post(async (req, res) => {
         const {
             titulo, area_construida, area_util, aceita_permuta, tem_divida,
             motivo_da_venda, valor_pretendido, condicoes, descricao,
-            estado, cidade, bairro, aluguel
+            estado, cidade, bairro, aluguel, comodos
         } = req.body;
 
         let imageUrl = null;
@@ -70,10 +70,10 @@ apiRoute.post(async (req, res) => {
 
         // Insert data into the database
         const result = await db.query(
-            'INSERT INTO imoveis (titulo, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, details_images, data_registro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *',
+            'INSERT INTO imoveis (titulo, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, details_images, comodos, data_registro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *',
             [
                 titulo, imageUrl, area_construida, area_util, aceita_permuta, tem_divida,
-                motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, detailsImageUrls, data_registro
+                motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, detailsImageUrls, comodos, data_registro
             ]
         );
 
@@ -91,7 +91,7 @@ apiRoute.put(async (req, res) => {
         const {
             titulo, area_construida, area_util, aceita_permuta, tem_divida,
             motivo_da_venda, valor_pretendido, condicoes, descricao,
-            estado, cidade, bairro, aluguel
+            estado, cidade, bairro, aluguel, comodos
         } = req.body;
 
         // Default to existing image URL
@@ -123,10 +123,10 @@ apiRoute.put(async (req, res) => {
 
         // Update data in the database
         const updateResult = await db.query(
-            'UPDATE imoveis SET titulo = $1, imagem = $2, area_construida = $3, area_util = $4, aceita_permuta = $5, tem_divida = $6, motivo_da_venda = $7, valor_pretendido = $8, condicoes = $9, descricao = $10, estado = $11, cidade = $12, bairro = $13, aluguel = $14, details_images = $15 WHERE id = $16 RETURNING *',
+            'UPDATE imoveis SET titulo = $1, imagem = $2, area_construida = $3, area_util = $4, aceita_permuta = $5, tem_divida = $6, motivo_da_venda = $7, valor_pretendido = $8, condicoes = $9, descricao = $10, estado = $11, cidade = $12, bairro = $13, aluguel = $14, details_images = $15, comodos = $16 WHERE id = $17 RETURNING *',
             [
                 titulo, imageUrl, area_construida, area_util, aceita_permuta, tem_divida,
-                motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, updatedDetailsImageUrls, id
+                motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, updatedDetailsImageUrls, comodos, id
             ]
         );
 

@@ -83,15 +83,16 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         direction: 'ascending',
       });
     }
-  }; 
+  };
 
   // Memoized sorted data
   const sortedData = useMemo(() => {
     if (sortConfig.key) {
       const sortableData = [...currentData];
       sortableData.sort((a, b) => {
-        const aValue = parseFloat(a[sortConfig.key].substring(0, 4));
-        const bValue = parseFloat(b[sortConfig.key].substring(0, 4));
+        const aValue = parseFloat(a[sortConfig.key].replace(/[^\d,-]/g, '').replace(',', '.'));
+        const bValue = parseFloat(b[sortConfig.key].replace(/[^\d,-]/g, '').replace(',', '.'));
+
         if (aValue < bValue) {
           return sortConfig.direction === 'ascending' ? -1 : 1;
         }
