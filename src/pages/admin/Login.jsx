@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import Head from 'next/head';
-import { validateRecaptcha } from '../api/utils/recaptcha';
 
 const API_ENDPOINT = '/api/auth/login';
+const RECAPTCHA_VERIFY_ENDPOINT = '/api/verify-recaptcha';
 
 const Login = () => {
   const router = useRouter();
@@ -32,9 +32,18 @@ const Login = () => {
       // Execute reCAPTCHA verification
       const token = await executeRecaptcha('login'); // 'login' is the action name for reCAPTCHA v3
 
-      // Validate reCAPTCHA token
-      const isRecaptchaValid = await validateRecaptcha(token);
-      if (!isRecaptchaValid) {
+      // Call our server-side API route to validate reCAPTCHA token
+      const recaptchaResponse = await fetch(RECAPTCHA_VERIFY_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      const recaptchaData = await recaptchaResponse.json();
+
+      if (!recaptchaData.success) {
         setError('reCAPTCHA verification failed');
         setIsLoading(false);
         return;
@@ -57,7 +66,6 @@ const Login = () => {
       }
     } catch (error) {
       setError('An error occurred. Please try again.');
-      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }

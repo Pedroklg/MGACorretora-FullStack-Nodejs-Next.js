@@ -22,4 +22,3 @@ async function validateRecaptcha(token) {
 }
 
 export { validateRecaptcha };
-
