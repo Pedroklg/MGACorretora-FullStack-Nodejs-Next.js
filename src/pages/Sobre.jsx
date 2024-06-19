@@ -1,9 +1,14 @@
 import Footer from "../components/Footer"
 import Header from "../components/Header"
+import Head from 'next/head'
 
 function Sobre() {
     return (
         <div>
+            <Head>
+                <title>Sobre Nós - MGA Corretora</title>
+                <meta name="description" content="Saiba mais sobre a MGA Corretora de empresas e imóveis. Conheça nossa história, missão e visão para o mercado." />
+            </Head>
             <Header />
             <div className="flex justify-center pb-8">
                 <div className="md:w-3/6 w-11/12 flex flex-col justify-center items-start p-4">

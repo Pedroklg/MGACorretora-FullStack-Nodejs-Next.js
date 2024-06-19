@@ -6,6 +6,7 @@ import ProgressBar from '../../components/animations/ProgressBar';
 import Nav from './componentsDash/Nav';
 import { protectRoute } from '../api/utils/sessionProtection';
 import { showErrorToast } from '../../components/animations/toastService';
+import Head from 'next/head';
 
 const Registrar = () => {
     const router = useRouter();
@@ -44,6 +45,11 @@ const Registrar = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen overflow-auto">
+            <Head>
+                <title>Registrar - MGA</title>
+                <meta name="description" content="Registre a empresa ou imóvel no banco de dados." />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <Nav className="flex-shrink-0 lg:flex-grow-0" />
             <div className="flex-grow h-full">
                 <ProgressBar loading={loading} />

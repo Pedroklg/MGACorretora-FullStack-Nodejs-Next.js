@@ -1,10 +1,16 @@
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Link from 'next/link';
+import Head from 'next/head';
 
 function PoliticasDePrivacidade() {
     return (
         <div>
+            <Head>
+                <title>Políticas de Privacidade - MGA</title>
+                <meta name="description" content="Políticas de privacidade do site da MGA Corretora" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <Header />
             <div className="flex justify-center pb-8">
                 <div className="md:w-3/6 w-11/12 flex flex-col justify-center items-start p-4">

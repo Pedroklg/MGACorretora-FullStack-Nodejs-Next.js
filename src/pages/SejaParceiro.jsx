@@ -2,10 +2,16 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { IconPhone, IconEmail } from '../components/Icons';
 import ContactForm from '../components/ContactForm';
+import Head from 'next/head';
 
 function SejaParceiro() {
     return (
         <div className="flex flex-col min-h-screen">
+            <Head>
+                <title>Seja Parceiro - MGA Corretora</title>
+                <meta name="description" content="Se torne um parceiro da MGA Corretora. Junte-se a nós para alcançar novas oportunidades no mercado de empresas e imóveis." />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <Header />
             <main className="flex-grow flex flex-col items-center justify-center">
                 <div className='md:w-8/12 w-full p-5 md:p-10 lg:p-15'>

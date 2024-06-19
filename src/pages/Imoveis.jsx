@@ -4,6 +4,7 @@ import Cards from "../components/Cards";
 import SkeletonLoader from "../components/animations/SkeletonLoader"; // Import the SkeletonLoader component
 import { useState, useEffect } from "react";
 import EncontrarEmpresa from "../components/EncontrarEmpresa";
+import Head from "next/head";
 
 function Imoveis() {
     const [modalidade, setModalidade] = useState('');
@@ -42,6 +43,11 @@ function Imoveis() {
 
     return (
         <div className="flex flex-col min-h-screen">
+            <Head>
+                <title>Imóveis - MGA Corretora</title>
+                <meta name="description" content="Descubra os imóveis comerciais e residenciais disponíveis na MGA Corretora. Encontre a propriedade perfeita para suas necessidades." />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <Header />
             <div className="flex w-full justify-center">
                 <div className="sm:w-10/12 w-full">

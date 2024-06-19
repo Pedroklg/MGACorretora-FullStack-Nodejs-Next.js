@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <Head>
         <title>MGA Corretora</title>
-        <meta name="description" content="Bem Vinda a MGA Corretora de empresas" />
+        <meta name="description" content="Descubra os serviços da MGA Corretora de empresas e imóveis. Oferecemos mediação profissional na compra e venda de empresas. Atendemos clientes em Paraná,Ponta-Grossa,Curitiba,Guarapuava e outrar regiões, proporcionando soluções personalizadas e suporte excepcional. Entre em contato conosco para começar sua jornada rumo ao sucesso empresarial e imobiliário hoje mesmo!"/>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Header />

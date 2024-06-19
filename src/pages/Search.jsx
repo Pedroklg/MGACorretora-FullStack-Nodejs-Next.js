@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SkeletonLoader from '../components/animations/SkeletonLoader';
 import EncontrarEmpresa from '../components/EncontrarEmpresa';
+import Head from 'next/head';
 
 const Search = () => {
     const router = useRouter();
@@ -65,6 +66,11 @@ const Search = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
+            <Head>
+                <title>Resultados da Busca - MGA</title>
+                <meta name="description" content="Resultados da busca realizada no site da MGA Corretora" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <Header />
             <div className='w-full flex items-center justify-center'>
                 <div className='lg:w-10/12 w-full'>
@@ -75,7 +81,7 @@ const Search = () => {
                 {loading ? (
                     <SkeletonLoader /> // Show skeleton loader while loading
                 ) : (
-                    <Cards dataToShow={dataToShow} tipoMostrado={tipoMostrado}/>
+                    <Cards dataToShow={dataToShow} tipoMostrado={tipoMostrado} />
                 )}
             </main>
             <Footer />

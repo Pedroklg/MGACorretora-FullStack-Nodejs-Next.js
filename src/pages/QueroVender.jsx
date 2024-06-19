@@ -2,10 +2,16 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { IconPhone, IconEmail } from '../components/Icons';
 import RegisterForm from '../components/RegisterForm';
+import Head from 'next/head';
 
 function SejaParceiro() {
     return (
         <div className="flex flex-col min-h-screen">
+            <Head>
+                <title>Quero Vender - MGA Corretora</title>
+                <meta name="description" content="Venda seu negócio ou propriedade com a assistência da MGA Corretora. Descubra como podemos ajudá-lo a obter o melhor valor pelo seu ativo." />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <Header />
             <main className="flex-grow flex flex-col items-center justify-center">
                 <div className='md:w-8/12 w-full pt-5 md:pt-10 lg:pt-15'>

@@ -12,6 +12,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { showErrorToast } from '../../components/animations/toastService';
 import RecommendedItems from '../../components/RecommendedItems';
+import Head from 'next/head';
 
 const ProductPage = () => {
     const router = useRouter();
@@ -205,6 +206,10 @@ const ProductPage = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
+            <Head>
+                <title>MGA | Detalhes - {product.item.titulo}</title>
+                <meta name="description" content={`Detalhes do ${product.tipo === 'empresa' ? 'Empresa' : 'Imóvel'} ${product.item.titulo}. Saiba mais sobre ${product.item.titulo} oferecido pela MGA Corretora.`} />
+            </Head>
             <Header />
             <div className="flex w-full justify-center">
                 <div className="sm:w-10/12 w-full">

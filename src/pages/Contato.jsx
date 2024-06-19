@@ -2,11 +2,17 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { IconPhone, IconEmail } from '../components/Icons';
 import ContactForm from '../components/ContactForm';
+import Head from 'next/head';
 
 function Contato() {
     return (
         <div className="flex flex-col min-h-screen">
-            <Header/>
+            <Header />
+            <Head>
+                <title>Contato - MGA Corretora</title>
+                <meta name="description" content="Entre em contato com a MGA Corretora para obter consultoria especializada em empresas e imóveis. Preencha nosso formulário ou ligue para marcar uma consulta." />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <main className="flex-grow flex flex-col items-center justify-center">
                 <div className="flex justify-center items-center p-5 sm:flex-row flex-col">
                     <div className="flex justify-center items-center p-3 md:p-10 flex-col">
@@ -36,7 +42,7 @@ function Contato() {
                     </div>
                 </div>
                 <div className='sm:w-10/12 w-full sm:p-5 p-3'>
-                <ContactForm />
+                    <ContactForm />
                 </div>
                 <div className="flex justify-center items-center flex-col md:mt-5 mb-5">
                     <div className="p-1 hover:text-red-800 flex flex-col flex-wrap gap-2 items-center justify-center">
