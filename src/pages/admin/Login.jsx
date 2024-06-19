@@ -1,69 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Head from 'next/head';
-import ReCAPTCHA from 'react-recaptcha';
+import { useRouter } from 'next/router';
 
 const API_ENDPOINT = '/api/auth/login';
-const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
 const Login = () => {
+  const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState('');
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
 
   const handleLogin = async () => {
     console.log('Username:', username); // Log the username for debugging
     console.log('Password:', password); // Log the password for debugging
-    console.log('reCAPTCHA Token:', recaptchaToken); // Log the reCAPTCHA token for debugging
-    if (!username || !password || !recaptchaToken) {
-      setError('Please enter a username, password, and complete reCAPTCHA');
+    if (!username || !password) {
+      setError('Please enter a username, password');
       return;
     }
 
     try {
       setIsLoading(true);
-
-      // Call our server-side API route to validate reCAPTCHA token
-      const recaptchaResponse = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: recaptchaToken }),
-      });
-
-      const recaptchaData = await recaptchaResponse.json();
-
-      if (!recaptchaData.success) {
-        setError('reCAPTCHA verification failed');
-        setIsLoading(false);
-        return;
-      }
-
       // Make API call to authenticate user
       const response = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, token: recaptchaToken }),
+        body: JSON.stringify({ username, password}),
       });
 
       if (response.ok) {
-        router.push('/admin/dashboard'); // Redirect to Dashboard after successful login
+        router.push('/admin/Dashboard');
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed');
@@ -76,10 +44,18 @@ const Login = () => {
     }
   };
 
-  const handleRecaptchaVerify = (token) => {
-    console.log('Received reCAPTCHA Token:', token); // Log for debugging
-    setRecaptchaToken(token); // Set the token in state
-  };
+  useEffect(() => {
+    // Redirect to dashboard if user is already logged in
+    fetch(API_ENDPOINT)
+      .then((response) => {
+        if (response.ok) {
+          router.push('/admin/Dashboard');
+        }
+      })
+      .catch((error) => {
+        console.error('Session check error:', error);
+      });
+  }, [router]);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-stone-900 to-red-900">
@@ -106,13 +82,6 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           onKeyUp={(e) => e.key === 'Enter' && handleLogin()}
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-        />
-        <ReCAPTCHA
-          sitekey={RECAPTCHA_SITE_KEY}
-          onChange={handleRecaptchaVerify}
-          theme="light"
-          size="normal"
-          className="mb-4"
         />
         <button
           onClick={handleLogin}

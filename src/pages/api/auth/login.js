@@ -1,28 +1,23 @@
 import db from '../utils/db';
 import bcrypt from 'bcrypt';
 import { withSession } from '../utils/session';
-import { validateRecaptcha } from '../utils/recaptcha';
 
 async function handler(req, res) {
+  if (req.session.get('adminLoggedIn')) {
+    return res.status(200).json({ message: 'Already logged in' });
+  }
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { username, password, token } = req.body;
+  const { username, password } = req.body;
 
-  console.log('Request Body:', req.body); // Log the request body
-
-  if (!username || !password || !token) {
-    return res.status(400).json({ message: 'Missing username, password, or token' });
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Missing username, password' });
   }
 
   try {
-    // Verify reCAPTCHA token using reCAPTCHA v2 verification function
-    const isRecaptchaValid = await validateRecaptcha(token);
-    if (!isRecaptchaValid) {
-      return res.status(400).json({ message: 'reCAPTCHA validation failed' });
-    }
-
     // Query the database to fetch the user by username
     const result = await db.query('SELECT * FROM admins WHERE username = $1', [username]);
     if (result.rows.length === 0) {
