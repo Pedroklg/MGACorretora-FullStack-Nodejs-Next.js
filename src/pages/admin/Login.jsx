@@ -12,8 +12,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    console.log('Username:', username); // Log the username for debugging
-    console.log('Password:', password); // Log the password for debugging
     if (!username || !password) {
       setError('Please enter a username, password');
       return;
