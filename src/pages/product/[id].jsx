@@ -156,7 +156,7 @@ const ProductPage = () => {
             case 'titulo':
                 return null;
             default:
-                return (value === null || value === undefined || value === 'null') ? 'Não informado' : value;
+                return (value === null || value === undefined || value === 'null' || value == '') ? 'Não informado' : value;
         }
     };
 
