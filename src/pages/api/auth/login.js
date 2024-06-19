@@ -1,7 +1,7 @@
 import db from '../utils/db';
 import bcrypt from 'bcrypt';
 import { withSession } from '../utils/session';
-import { validateRecaptcha } from '../utils/recaptcha'; // Helper function to validate reCAPTCHA
+import { validateRecaptcha } from '../utils/recaptcha';
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -10,24 +10,34 @@ async function handler(req, res) {
 
   const { username, password, token } = req.body;
 
+  console.log('Request Body:', req.body); // Log the request body
+
+  if (!username || !password || !token) {
+    return res.status(400).json({ message: 'Missing username, password, or token' });
+  }
+
   try {
-    // Verify reCAPTCHA token
+    // Verify reCAPTCHA token using reCAPTCHA v2 verification function
     const isRecaptchaValid = await validateRecaptcha(token);
     if (!isRecaptchaValid) {
       return res.status(400).json({ message: 'reCAPTCHA validation failed' });
     }
 
+    // Query the database to fetch the user by username
     const result = await db.query('SELECT * FROM admins WHERE username = $1', [username]);
     if (result.rows.length === 0) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
+    // Retrieve hashed password from the database
     const user = result.rows[0];
     const hashedPasswordFromDatabase = user.password;
 
+    // Compare provided password with hashed password from database
     const match = await bcrypt.compare(password, hashedPasswordFromDatabase);
 
     if (match) {
+      // Set session variables upon successful login
       req.session.set('adminLoggedIn', true);
       req.session.set('lastLoginTimestamp', Date.now());
 

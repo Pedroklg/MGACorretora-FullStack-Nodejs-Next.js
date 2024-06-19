@@ -1,7 +1,6 @@
 import '../styles/globals.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserLayout from '../components/UserLayout';
@@ -13,7 +12,7 @@ function MyApp({ Component, pageProps }) {
   const isUserPage = !router.pathname.startsWith('/admin');
 
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}>
+    <>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -34,7 +33,7 @@ function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
         </AdminLayout>
       )}
-    </GoogleReCaptchaProvider>
+    </>
   );
 }
 

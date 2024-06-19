@@ -1,44 +1,48 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import ReCAPTCHA from 'react-recaptcha';
 
 const API_ENDPOINT = '/api/auth/login';
-const RECAPTCHA_VERIFY_ENDPOINT = '/api/verify-recaptcha';
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
 const Login = () => {
-  const router = useRouter();
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState('');
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleLogin = async () => {
-    if (!username || !password) {
-      setError('Please enter a username and password');
+    console.log('Username:', username); // Log the username for debugging
+    console.log('Password:', password); // Log the password for debugging
+    console.log('reCAPTCHA Token:', recaptchaToken); // Log the reCAPTCHA token for debugging
+    if (!username || !password || !recaptchaToken) {
+      setError('Please enter a username, password, and complete reCAPTCHA');
       return;
     }
 
     try {
       setIsLoading(true);
 
-      if (!executeRecaptcha) {
-        setError('Execute reCAPTCHA function not available');
-        setIsLoading(false);
-        return;
-      }
-
-      // Execute reCAPTCHA verification
-      const token = await executeRecaptcha('login'); // 'login' is the action name for reCAPTCHA v3
-
       // Call our server-side API route to validate reCAPTCHA token
-      const recaptchaResponse = await fetch(RECAPTCHA_VERIFY_ENDPOINT, {
+      const recaptchaResponse = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token: recaptchaToken }),
       });
 
       const recaptchaData = await recaptchaResponse.json();
@@ -55,7 +59,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, token }),
+        body: JSON.stringify({ username, password, token: recaptchaToken }),
       });
 
       if (response.ok) {
@@ -66,9 +70,15 @@ const Login = () => {
       }
     } catch (error) {
       setError('An error occurred. Please try again.');
+      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRecaptchaVerify = (token) => {
+    console.log('Received reCAPTCHA Token:', token); // Log for debugging
+    setRecaptchaToken(token); // Set the token in state
   };
 
   return (
@@ -96,6 +106,13 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           onKeyUp={(e) => e.key === 'Enter' && handleLogin()}
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+        />
+        <ReCAPTCHA
+          sitekey={RECAPTCHA_SITE_KEY}
+          onChange={handleRecaptchaVerify}
+          theme="light"
+          size="normal"
+          className="mb-4"
         />
         <button
           onClick={handleLogin}
