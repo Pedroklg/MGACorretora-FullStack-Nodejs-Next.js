@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import LoadingSpinner from '../../components/animations/LoadingSpinner';
@@ -20,6 +20,7 @@ const ProductPage = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState('');
+    const sliderRef = useRef(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -45,8 +46,11 @@ const ProductPage = () => {
         }
     }, [id]);
 
-    const handleImageClick = (image) => {
+    const handleImageClick = (image, index) => {
         setSelectedImage(image);
+        if (sliderRef.current) {
+            sliderRef.current.slickGoTo(index);
+        }
     };
 
     if (loading) {
@@ -118,7 +122,7 @@ const ProductPage = () => {
             case 'aluguel':
                 return 'Finalidade:';
             case 'id':
-                return 'Código:'
+                return 'Código:';
             case 'data_registro':
                 return null;
             default:
@@ -150,7 +154,7 @@ const ProductPage = () => {
             case 'valor_pretendido':
                 return null;
             case 'titulo':
-                return null
+                return null;
             default:
                 return (value === null || value === undefined || value === 'null') ? 'Não informado' : value;
         }
@@ -195,10 +199,10 @@ const ProductPage = () => {
     const orderedKeys = isImovel ? imovelKeys : empresaKeys;
 
     const settings = {
-        dots: false,
+        dots: product.item.details_images ? (product.item.details_images.length > 6) ? true : false : false,
         infinite: true,
         speed: 500,
-        slidesToShow: product.item.details_images ? product.item.details_images.length + 1 : 1,
+        slidesToShow: product.item.details_images ? (product.item.details_images.length < 6 ? product.item.details_images.length + 1 : 6) : 1,
         slidesToScroll: 1,
         initialSlide: 0,
         arrows: false,
@@ -231,9 +235,9 @@ const ProductPage = () => {
                                     </div>
                                     {product.item.details_images && product.item.details_images.length > 0 &&
                                         <div className="slider-container">
-                                            <Slider {...settings}>
+                                            <Slider ref={sliderRef} {...settings}>
                                                 {[product.item.imagem, ...product.item.details_images].map((image, index) => (
-                                                    <div key={index} className="thumbnail" onClick={() => handleImageClick(image)}>
+                                                    <div key={index} className="thumbnail" onClick={() => handleImageClick(image, index)}>
                                                         <Image src={image} alt={`Imagem ${index + 1}`} width={160} height={120} />
                                                     </div>
                                                 ))}

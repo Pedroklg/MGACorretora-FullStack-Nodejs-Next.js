@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import toBrMoney from '../pages/api/utils/toBrMoney';
 import Image from 'next/image';
 import SkeletonLoader from './animations/SkeletonLoader';
@@ -11,7 +11,6 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [currentData, setcurrentData] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'ascending' });
   const cardsPerPage = 12;
-  const router = useRouter();
 
   // Function to fetch data based on tipoMostrado
   const fetchData = async () => {
@@ -64,11 +63,6 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
 
   // Function to handle pagination
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Function to handle card click
-  const handleCardClick = (id) => {
-    router.push(`/product/${id}`);
-  };
 
   // Function to handle sorting
   const handleSort = (key) => {
@@ -152,29 +146,29 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
         ""}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {sortedData.slice(indexOfFirstCard, indexOfLastCard).map((card, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:cursor-pointer hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out"
-            onClick={() => handleCardClick(card.id)} // Navigate to product page on click
-          >
-            <Image
-              src={card.imagem ? card.imagem : '/placeholder.png'}
-              alt={card.titulo}
-              width={400}
-              height={300}
-              className="w-full h-48 object-cover"
-              priority
-            />
-            <div className="p-6 flex flex-col">
-              <h2 className="text-xl font-bold mb-2">{card.titulo}</h2>
-              <div className="text-gray-700 flex items-center gap-1">
-                <span className='flex items-center text-green-700 mb-0.5'>{IconMapPin}</span>
-                {card.cidade} - {card.estado}
+          <Link key={index} href={`/product/${card.id}`} passHref>
+              <div
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out"
+              >
+                <Image
+                  src={card.imagem ? card.imagem : '/placeholder.png'}
+                  alt={card.titulo}
+                  width={400}
+                  height={300}
+                  className="w-full h-48 object-cover"
+                  priority
+                />
+                <div className="p-6 flex flex-col">
+                  <h2 className="text-xl font-bold mb-2">{card.titulo}</h2>
+                  <div className="text-gray-700 flex items-center gap-1">
+                    <span className='flex items-center text-green-700 mb-0.5'>{IconMapPin}</span>
+                    {card.cidade} - {card.estado}
+                  </div>
+                  <p className="text-green-700 text-sm ml-4">{card.bairro}</p>
+                  <p className="text-yellow-600 text-xl font-semibold">{toBrMoney(card.valor_pretendido)}</p>
+                </div>
               </div>
-              <p className="text-green-700 text-sm ml-4">{card.bairro}</p>
-              <p className="text-yellow-600 text-xl font-semibold">{toBrMoney(card.valor_pretendido)}</p>
-            </div>
-          </div>
+          </Link>
         ))}
       </div>
       <div className="flex justify-center mt-4">

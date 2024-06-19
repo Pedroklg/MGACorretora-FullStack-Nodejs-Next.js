@@ -402,7 +402,7 @@ const ImoveisCRUD = ({ item }) => {
                     </div>
                     <div className='grid-cols-12 grid w-full p-2'>
                         <label className='text-lg text-red-800 col-span-12'>Imagens Adicionais(800x600px):</label>
-                        {[...Array(6)].map((_, index) => (
+                        {[...Array(9)].map((_, index) => (
                             <div key={index} className='p-2 xl:col-span-4 lg:col-span-6 col-span-12'>
                                 <input
                                     type="file"

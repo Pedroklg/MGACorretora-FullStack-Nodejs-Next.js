@@ -11,7 +11,7 @@ const storage = multer.memoryStorage(); // Store images in memory for processing
 // Upload fields configuration
 const uploadFields = [
     { name: 'imagem', maxCount: 1 }, // Main image
-    { name: 'details_images', maxCount: 6 }, // Additional images
+    { name: 'details_images', maxCount: 9 }, // Additional images
 ];
 
 const upload = multer({
