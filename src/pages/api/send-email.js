@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       });
 
       // Construct email body text
-      const emailBody = `Email enviado pelo site.\nEmail enviado: ${email}\nTelefone: ${phone}\nMensagem:\n\n ${message}`;
+      const emailBody = `Email enviado pelo site.\nNome:${name}\nEmail enviado: ${email}\nTelefone: ${phone}\nMensagem:\n\n ${message}`;
 
       // Send mail with defined transport object
       let info = await transporter.sendMail({
