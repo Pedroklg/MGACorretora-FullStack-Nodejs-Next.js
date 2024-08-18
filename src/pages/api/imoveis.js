@@ -4,6 +4,7 @@ import db from './utils/db';
 import processAndStoreImage from './utils/imageProcessing';
 import getCurrentDate from './utils/getCurrentDate';
 import { deleteImageFromCloudinary } from './utils/deleteImage';
+import requireAuth from './utils/authMiddleware';
 
 const storage = multer.memoryStorage();
 
@@ -39,7 +40,7 @@ apiRoute.get(async (req, res) => {
     }
 });
 
-apiRoute.post(async (req, res) => {
+apiRoute.post(requireAuth(async (req, res) => {
     try {
         const {
             titulo, area_construida, area_util, aceita_permuta, tem_divida,
@@ -73,9 +74,9 @@ apiRoute.post(async (req, res) => {
         console.error('Error in POST /api/imoveis:', error.message);
         res.status(500).json({ error: 'Failed to create imóvel' });
     }
-});
+}));
 
-apiRoute.put(async (req, res) => {
+apiRoute.put(require(async (req, res) => {
     try {
         const { id } = req.query;
         const {
@@ -128,7 +129,7 @@ apiRoute.put(async (req, res) => {
         console.error('Error in PUT /api/imoveis:', error.message);
         res.status(500).json({ error: 'Failed to update imóvel' });
     }
-});
+}));
 
 export const config = {
     api: {

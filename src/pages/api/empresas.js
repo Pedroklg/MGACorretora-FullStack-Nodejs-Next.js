@@ -4,6 +4,7 @@ import db from './utils/db';
 import processAndStoreImage from './utils/imageProcessing';
 import getCurrentDate from './utils/getCurrentDate';
 import { deleteImageFromCloudinary } from './utils/deleteImage';
+import requireAuth from './utils/authMiddleware';
 
 const storage = multer.memoryStorage();
 
@@ -39,7 +40,7 @@ apiRoute.get(async (req, res) => {
     }
 });
 
-apiRoute.post(async (req, res) => {
+apiRoute.post(requireAuth(async (req, res) => {
     try {
         const {
             titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
@@ -74,9 +75,9 @@ apiRoute.post(async (req, res) => {
         console.error('Error in POST /api/empresas:', error.message);
         res.status(500).json({ error: 'Failed to create empresa' });
     }
-});
+}));
 
-apiRoute.put(async (req, res) => {
+apiRoute.put(requireAuth(async (req, res) => {
     try {
         const { id } = req.query;
         const {
@@ -130,7 +131,7 @@ apiRoute.put(async (req, res) => {
         console.error('Error in PUT /api/empresas:', error.message);
         res.status(500).json({ error: 'Failed to update empresa' });
     }
-});
+}));
 
 export const config = {
     api: {
