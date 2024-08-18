@@ -29,10 +29,8 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
       setIsMobile(window.innerWidth < 640);
     };
 
-    // Event listener for window resize
     window.addEventListener('resize', handleResize);
 
-    // Clean up event listener on component unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -46,7 +44,6 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
     }
   }, [tipoMostrado]);
 
-  // Fetch estados, cidades, and categorias
   useEffect(() => {
     const fetchEstadosAndCidades = async () => {
       try {
@@ -63,7 +60,7 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
         }
         const cidadesData = await cidadesResponse.json();
         setCidades(cidadesData);
-        setCurrentCidades(cidadesData); // Initially set all cidades
+        setCurrentCidades(cidadesData);
       } catch (error) {
         console.error('Error fetching estados and cidades:', error);
       }
@@ -90,7 +87,7 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
         }
         const data = await response.json();
         setBairros(data);
-        setCurrentBairros(data); // Initially set all bairros
+        setCurrentBairros(data);
       } catch (error) {
         console.error('Error fetching bairros:', error);
       }
@@ -101,39 +98,37 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
     fetchBairros();
   }, [searchMode]);
 
-  // Update currentCidades based on selected estado
   useEffect(() => {
     if (estado) {
       const filteredCidades = cidades.filter(cidadeObject => cidadeObject.estado === estado);
       setCurrentCidades(filteredCidades);
-      setCurrentBairros([]); // Reset bairros when estado changes
+      setCurrentBairros([]);
     } else {
-      setCurrentCidades(cidades); // Show all cidades if no estado is selected
-      setCurrentBairros(bairros); // Show all bairros if no estado is selected
+      setCurrentCidades(cidades); 
+      setCurrentBairros(bairros);
     }
   }, [estado, cidades, bairros]);
 
-  // Update currentBairros based on selected cidade
   useEffect(() => {
     if (cidade) {
       const filteredBairros = bairros.filter(bairroObject => bairroObject.cidade === cidade);
       setCurrentBairros(filteredBairros);
     } else {
-      setCurrentBairros(bairros); // Show all bairros if no cidade is selected
+      setCurrentBairros(bairros);
     }
   }, [cidade, bairros]);
 
   const handleEstadoChange = e => {
     const selectedEstado = e.target.value;
     setEstado(selectedEstado);
-    setCidade(''); // Reset cidade and bairro when estado changes
+    setCidade('');
     setBairro('');
   };
 
   const handleCidadeChange = e => {
     const selectedCidade = e.target.value;
     setCidade(selectedCidade);
-    setBairro(''); // Reset bairro when cidade changes
+    setBairro('');
   };
 
   const handleBairroChange = e => {
@@ -144,13 +139,13 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
   const handleCategoriaChange = e => {
     const selectedCategoria = e.target.value;
     setCategoria(selectedCategoria);
-    setFinalidade(''); // Reset finalidade when categoria changes
+    setFinalidade('');
   };
 
   const handlefinalidadeChange = e => {
     const selectedfinalidade = e.target.value;
     setFinalidade(selectedfinalidade);
-    setCategoria(''); // Reset categoria when finalidade changes
+    setCategoria('');
   };
 
   const handleMinPriceChange = values => {

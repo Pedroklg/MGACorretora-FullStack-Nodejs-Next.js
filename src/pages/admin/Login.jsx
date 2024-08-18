@@ -19,7 +19,6 @@ const Login = () => {
 
     try {
       setIsLoading(true);
-      // Make API call to authenticate user
       const response = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -43,7 +42,6 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // Redirect to dashboard if user is already logged in
     fetch(API_ENDPOINT)
       .then((response) => {
         if (response.ok) {

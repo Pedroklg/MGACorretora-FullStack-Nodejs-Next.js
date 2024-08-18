@@ -5,18 +5,16 @@ import processAndStoreImage from './utils/imageProcessing';
 import getCurrentDate from './utils/getCurrentDate';
 import { deleteImageFromCloudinary } from './utils/deleteImage';
 
-// Configure multer storage
-const storage = multer.memoryStorage(); // Store images in memory for processing
+const storage = multer.memoryStorage();
 
-// Upload fields configuration
 const uploadFields = [
-    { name: 'imagem', maxCount: 1 }, // Main image
-    { name: 'details_images', maxCount: 9 }, // Additional images
+    { name: 'imagem', maxCount: 1 },
+    { name: 'details_images', maxCount: 9 },
 ];
 
 const upload = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB file size limit
+    limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 const apiRoute = nextConnect({
@@ -29,10 +27,8 @@ const apiRoute = nextConnect({
     },
 });
 
-// Middleware to handle file uploads
 apiRoute.use(upload.fields(uploadFields));
 
-// GET endpoint to fetch empresas
 apiRoute.get(async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM empresas');
@@ -43,7 +39,6 @@ apiRoute.get(async (req, res) => {
     }
 });
 
-// POST endpoint to create new empresa
 apiRoute.post(async (req, res) => {
     try {
         const {
@@ -55,20 +50,16 @@ apiRoute.post(async (req, res) => {
         let imageUrl = null;
 
         if (req.files.imagem && req.files.imagem[0]) {
-            // Process and store the main image
             imageUrl = await processAndStoreImage(req.files.imagem[0], 'uploads/empresas');
         }
 
-        // Process and store additional images (details_images)
         const details_images = req.files.details_images || [];
         const detailsImageUrls = await Promise.all(details_images.map(async (file) => {
             return await processAndStoreImage(file, 'uploads/empresas');
         }));
 
-        // Get current date
         const data_registro = getCurrentDate();
 
-        // Insert data into the database
         const result = await db.query(
             'INSERT INTO empresas (titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido, condicoes, descricao, funcionamento, sobre_imovel, bairro, aceita_permuta, tem_divida, imagem, details_images, estado, cidade, categoria, data_registro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) RETURNING *',
             [
@@ -85,7 +76,6 @@ apiRoute.post(async (req, res) => {
     }
 });
 
-// PUT endpoint to update existing empresa
 apiRoute.put(async (req, res) => {
     try {
         const { id } = req.query;
@@ -113,7 +103,6 @@ apiRoute.put(async (req, res) => {
             return await processAndStoreImage(file, 'uploads/empresas');
         }));
 
-        // Combine old and new image URLs, filtering out removed ones
         const removedImages = JSON.parse(req.body.removed_images || '[]');
         const updatedDetailsImageUrls = oldDetailsImageUrls
             .filter((url) => !removedImages.includes(url))
@@ -128,12 +117,10 @@ apiRoute.put(async (req, res) => {
             ]
         );
 
-        // Delete removed images from Cloudinary
         await Promise.all(removedImages.map(async (image) => {
             await deleteImageFromCloudinary(image);
         }));
 
-        // Delete old main image if replaced
         if (oldImageUrl && oldImageUrl !== imageUrl) {
             await deleteImageFromCloudinary(oldImageUrl);
         }
@@ -145,10 +132,9 @@ apiRoute.put(async (req, res) => {
     }
 });
 
-// Export API route and configuration
 export const config = {
     api: {
-        bodyParser: false, // Disable body parsing, so multer can handle it
+        bodyParser: false,
     },
 };
 

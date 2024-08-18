@@ -21,7 +21,6 @@ export default async function handler(req, res) {
     } = req.body;
 
     try {
-      // Create a transporter
       let transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
@@ -32,7 +31,6 @@ export default async function handler(req, res) {
         },
       });
 
-      // Construct email body text
       const emailBody = `
         Nome Completo: ${fullName}
         Email: ${email}
@@ -50,7 +48,6 @@ export default async function handler(req, res) {
         Informações Adicionais: ${additionalInfo}
       `;
 
-      // Send mail with defined transport object
       let info = await transporter.sendMail({
         from: `"Cadastro enviado pelo site" <${process.env.SMTP_USER}>`,
         to: process.env.RECIPIENT_EMAIL,

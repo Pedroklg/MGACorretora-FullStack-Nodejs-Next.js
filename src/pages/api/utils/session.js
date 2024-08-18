@@ -1,7 +1,7 @@
 import { withIronSession } from 'next-iron-session';
 
 export function withSession(handler) {
-  const threeHoursInSeconds = 3 * 60 * 60; // 3 hours in seconds
+  const threeHoursInSeconds = 3 * 60 * 60;
 
   return withIronSession(handler, {
     password: process.env.SESSION_PASSWORD,
@@ -9,7 +9,7 @@ export function withSession(handler) {
     cookieOptions: {
       secure: process.env.NODE_ENV === 'production',
       maxAge: threeHoursInSeconds,
-      expires: new Date(Date.now() + threeHoursInSeconds * 1000), // 3 hours in milliseconds
+      expires: new Date(Date.now() + threeHoursInSeconds * 1000),
     },
   });
 }

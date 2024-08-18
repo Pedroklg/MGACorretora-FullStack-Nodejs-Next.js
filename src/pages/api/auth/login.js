@@ -18,21 +18,17 @@ async function handler(req, res) {
   }
 
   try {
-    // Query the database to fetch the user by username
     const result = await db.query('SELECT * FROM admins WHERE username = $1', [username]);
     if (result.rows.length === 0) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
-    // Retrieve hashed password from the database
     const user = result.rows[0];
     const hashedPasswordFromDatabase = user.password;
 
-    // Compare provided password with hashed password from database
     const match = await bcrypt.compare(password, hashedPasswordFromDatabase);
 
     if (match) {
-      // Set session variables upon successful login
       req.session.set('adminLoggedIn', true);
       req.session.set('lastLoginTimestamp', Date.now());
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import styles from './UserLayout.module.css'; // We'll create this CSS file next
+import styles from './UserLayout.module.css';
 
 const UserLayout = ({ children }) => {
     useEffect(() => {

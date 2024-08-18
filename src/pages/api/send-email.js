@@ -5,7 +5,6 @@ export default async function handler(req, res) {
     const { name, email, subject,phone, message } = req.body;
 
     try {
-      // Create a transporter
       let transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
@@ -16,16 +15,14 @@ export default async function handler(req, res) {
         },
       });
 
-      // Construct email body text
       const emailBody = `Email enviado pelo site.\nNome:${name}\nEmail enviado: ${email}\nTelefone: ${phone}\nMensagem:\n\n ${message}`;
 
-      // Send mail with defined transport object
       let info = await transporter.sendMail({
-        from: `"Contato MGA Corretora" <${process.env.SMTP_USER}>`, // Displayed sender name and address
-        to: process.env.RECIPIENT_EMAIL, // Replace with recipient email address
-        subject: subject, // Subject line
-        text: emailBody, // Plain text body
-        html: `<p>${emailBody.replace(/\n/g, '<br>')}</p>`, // HTML body with line breaks converted to <br> tags
+        from: `"Contato MGA Corretora" <${process.env.SMTP_USER}>`,
+        to: process.env.RECIPIENT_EMAIL,
+        subject: subject,
+        text: emailBody,
+        html: `<p>${emailBody.replace(/\n/g, '<br>')}</p>`,
       });
 
       res.status(200).json({ success: true });

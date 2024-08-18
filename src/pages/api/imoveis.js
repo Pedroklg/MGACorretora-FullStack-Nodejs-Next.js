@@ -5,18 +5,16 @@ import processAndStoreImage from './utils/imageProcessing';
 import getCurrentDate from './utils/getCurrentDate';
 import { deleteImageFromCloudinary } from './utils/deleteImage';
 
-// Configure multer storage
-const storage = multer.memoryStorage(); // Store images in memory for processing
+const storage = multer.memoryStorage();
 
-// Upload fields configuration
 const uploadFields = [
-    { name: 'imagem', maxCount: 1 }, // Main image
-    { name: 'details_images', maxCount: 9 }, // Additional images
+    { name: 'imagem', maxCount: 1 }, 
+    { name: 'details_images', maxCount: 9 },
 ];
 
 const upload = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB file size limit
+    limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 const apiRoute = nextConnect({
@@ -29,10 +27,8 @@ const apiRoute = nextConnect({
     },
 });
 
-// Middleware to handle file uploads
 apiRoute.use(upload.fields(uploadFields));
 
-// GET endpoint to fetch imoveis
 apiRoute.get(async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM imoveis');
@@ -43,7 +39,6 @@ apiRoute.get(async (req, res) => {
     }
 });
 
-// POST endpoint to create new imovel
 apiRoute.post(async (req, res) => {
     try {
         const {
@@ -55,20 +50,16 @@ apiRoute.post(async (req, res) => {
         let imageUrl = null;
 
         if (req.files.imagem && req.files.imagem[0]) {
-            // Process and store the main image
             imageUrl = await processAndStoreImage(req.files.imagem[0], 'uploads/imoveis');
         }
 
-        // Process and store additional images (details_images)
         const details_images = req.files.details_images || [];
         const detailsImageUrls = await Promise.all(details_images.map(async (file) => {
             return await processAndStoreImage(file, 'uploads/imoveis');
         }));
 
-        // Get current date
         const data_registro = getCurrentDate();
 
-        // Insert data into the database
         const result = await db.query(
             'INSERT INTO imoveis (titulo, imagem, area_construida, area_util, aceita_permuta, tem_divida, motivo_da_venda, valor_pretendido, condicoes, descricao, estado, cidade, bairro, aluguel, details_images, comodos, data_registro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *',
             [
@@ -84,7 +75,6 @@ apiRoute.post(async (req, res) => {
     }
 });
 
-// PUT endpoint to update existing imovel
 apiRoute.put(async (req, res) => {
     try {
         const { id } = req.query;
@@ -94,7 +84,6 @@ apiRoute.put(async (req, res) => {
             estado, cidade, bairro, aluguel, comodos
         } = req.body;
 
-        // Default to existing image URL
         let imageUrl = req.body.imagem;
         let oldImageUrl, oldDetailsImageUrls = [];
 
@@ -105,23 +94,19 @@ apiRoute.put(async (req, res) => {
         }
 
         if (req.files.imagem && req.files.imagem[0]) {
-            // Process and store the new image
             imageUrl = await processAndStoreImage(req.files.imagem[0], 'uploads/imoveis');
         }
 
-        // Process and store additional images (details_images)
         const details_images = req.files.details_images || [];
         const newDetailsImageUrls = await Promise.all(details_images.map(async (file) => {
             return await processAndStoreImage(file, 'uploads/imoveis');
         }));
 
-        // Combine old and new image URLs, filtering out removed ones
         const removedImages = JSON.parse(req.body.removed_images || '[]');
         const updatedDetailsImageUrls = oldDetailsImageUrls
             .filter((url) => !removedImages.includes(url))
             .concat(newDetailsImageUrls);
 
-        // Update data in the database
         const updateResult = await db.query(
             'UPDATE imoveis SET titulo = $1, imagem = $2, area_construida = $3, area_util = $4, aceita_permuta = $5, tem_divida = $6, motivo_da_venda = $7, valor_pretendido = $8, condicoes = $9, descricao = $10, estado = $11, cidade = $12, bairro = $13, aluguel = $14, details_images = $15, comodos = $16 WHERE id = $17 RETURNING *',
             [
@@ -130,12 +115,10 @@ apiRoute.put(async (req, res) => {
             ]
         );
 
-        // Delete the old main image from Cloudinary if a new image was uploaded
         if (oldImageUrl && oldImageUrl !== imageUrl) {
             await deleteImageFromCloudinary(oldImageUrl);
         }
 
-        // Delete the removed detail images from Cloudinary
         await Promise.all(removedImages.map(async (image) => {
             await deleteImageFromCloudinary(image);
         }));
@@ -147,10 +130,9 @@ apiRoute.put(async (req, res) => {
     }
 });
 
-// Export API route and configuration
 export const config = {
     api: {
-        bodyParser: false, // Disable body parsing, so multer can handle it
+        bodyParser: false,
     },
 };
 

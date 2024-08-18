@@ -13,7 +13,7 @@ const ImoveisCRUD = ({ item }) => {
     const [comodoName, setComodoName] = useState('');
     const [comodoQuantidade, setComodoQuantidade] = useState('');
     const router = useRouter();
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB 
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     const initialImovelData = {
         titulo: '',
@@ -91,7 +91,7 @@ const ImoveisCRUD = ({ item }) => {
         const file = e.target.files[0];
         if (file && file.size > MAX_FILE_SIZE) {
             showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
-            e.target.value = ''; // Clear the input
+            e.target.value = '';
             return;
         }
         setImovelData(prevData => ({ ...prevData, imagem: file }));
@@ -133,7 +133,7 @@ const ImoveisCRUD = ({ item }) => {
 
     const handleRemoveComodo = (index) => {
         const updatedComodos = [...imovelData.comodos];
-        updatedComodos.splice(index, 1); // Remove comodo at index
+        updatedComodos.splice(index, 1);
         setImovelData(prevData => ({ ...prevData, comodos: updatedComodos }));
         setUnsavedChanges(true);
     };
@@ -182,7 +182,7 @@ const ImoveisCRUD = ({ item }) => {
 
             setUnsavedChanges(false);
             setImovelData(initialImovelData);
-            setRemovedImages([]); // Clear removed images after successful operation
+            setRemovedImages([]);
             setSavedOrUpdated(true);
             showSuccessToast(`Imovel ${item ? 'atualizado' : 'criado'} com sucesso!`);
         } catch (error) {

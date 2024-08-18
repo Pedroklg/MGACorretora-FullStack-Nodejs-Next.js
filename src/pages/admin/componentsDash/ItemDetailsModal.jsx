@@ -28,7 +28,6 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
         fetchItemDetails();
     }, [isOpen, itemId]);
 
-    // Ensure modal content is not rendered if closed or loading
     if (!isOpen || loading) {
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -52,7 +51,6 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
                                 const label = mapKeyToLabel(key);
                                 const component = mapValueToComponent(key, value);
 
-                                // Skip rendering if component is null or undefined
                                 if (component == null) {
                                     return null;
                                 }
@@ -78,7 +76,6 @@ const ItemDetailsModal = ({ isOpen, onRequestClose, itemId }) => {
     );
 };
 
-// Helper function to map database keys to display labels
 const mapKeyToLabel = (key) => {
     switch (key) {
         case 'titulo':
@@ -130,7 +127,6 @@ const mapKeyToLabel = (key) => {
     }
 };
 
-// Helper function to render values based on key
 const mapValueToComponent = (key, value) => {
     switch (key) {
         case 'valor_pretendido':

@@ -12,59 +12,54 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'ascending' });
   const cardsPerPage = 12;
 
-  // Function to fetch data based on tipoMostrado
   const fetchData = async () => {
     try {
-      setLoading(true); // Start loading
+      setLoading(true);
       let url = `/api/tipoSearch?tipoMostrado=${tipoMostrado}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       const data = await response.json();
-      setcurrentData(data); // Set fetched data
+      setcurrentData(data);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Function to fetch data based on tipoMostrado
     const fetchData = async () => {
       try {
-        setLoading(true); // Start loading
+        setLoading(true);
         let url = `/api/tipoSearch?tipoMostrado=${tipoMostrado}`;
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
-        setcurrentData(data); // Set fetched data
+        setcurrentData(data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 
     if (dataToShow) {
-      setcurrentData(dataToShow); // Update currentData with filtered dataToShow
-      setLoading(false); // Stop loading once dataToShow is set
+      setcurrentData(dataToShow);
+      setLoading(false);
     } else {
-      fetchData(); // Fetch data if dataToShow is not available
+      fetchData();
     }
-  }, [dataToShow, tipoMostrado]); // Fetch again if tipoMostrado changes
+  }, [dataToShow, tipoMostrado]);
 
-  // Calculate indexes for slicing data based on pagination
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
 
-  // Function to handle pagination
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Function to handle sorting
   const handleSort = (key) => {
     if (sortConfig.key === key) {
       setSortConfig({
@@ -79,7 +74,6 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
     }
   };
 
-  // Memoized sorted data
   const sortedData = useMemo(() => {
     if (sortConfig.key) {
       const sortableData = [...currentData];
@@ -97,11 +91,10 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
       });
       return sortableData;
     } else {
-      return currentData; // Return unsorted data if no sort key is set
+      return currentData;
     }
   }, [currentData, sortConfig]);
 
-  // Determine title based on tipoMostrado
   let titulo;
   if (tipoMostrado === "Empresas") {
     titulo = "Empresas";
@@ -111,7 +104,6 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
     titulo = "Empresas e Imóveis";
   }
 
-  // Conditional rendering for loading state
   if (loading) {
     return (
       <div className="container mx-auto p-4 m-5">
@@ -120,7 +112,6 @@ const CardsEmpresas = ({ tipoMostrado = 'ambos', dataToShow }) => {
     );
   }
 
-  // Render content once loading is false
   return (
     <div className="container mx-auto p-4 m-5">
       <div className="flex items-center mb-6">

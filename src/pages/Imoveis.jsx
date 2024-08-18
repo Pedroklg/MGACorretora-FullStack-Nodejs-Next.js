@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Cards from "../components/Cards";
-import SkeletonLoader from "../components/animations/SkeletonLoader"; // Import the SkeletonLoader component
+import SkeletonLoader from "../components/animations/SkeletonLoader";
 import { useState, useEffect } from "react";
 import EncontrarEmpresa from "../components/EncontrarEmpresa";
 import Head from "next/head";
@@ -9,7 +9,7 @@ import Head from "next/head";
 function Imoveis() {
     const [modalidade, setModalidade] = useState('');
     const [dataToShow, setDataToShow] = useState([]);
-    const [loading, setLoading] = useState(true); // State to manage loading state
+    const [loading, setLoading] = useState(true);
 
     const FilteredData = (data, modalidade) => {
         if (!modalidade) return data;
@@ -28,10 +28,10 @@ function Imoveis() {
             }
             const data = await response.json();
             setDataToShow(data);
-            setLoading(false); // Set loading to false once data is fetched
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching imoveis:', error);
-            setLoading(false); // Handle loading state in case of error
+            setLoading(false);
         }
     };
 
@@ -75,7 +75,7 @@ function Imoveis() {
                 <div className="flex flex-grow">
                     <div className="sm:w-11/12 w-full p-4">
                         {loading ? (
-                            <SkeletonLoader /> // Show skeleton loader while loading
+                            <SkeletonLoader />
                         ) : (
                             <Cards tipoMostrado="Imoveis" dataToShow={filteredData} />
                         )}

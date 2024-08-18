@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Cards from "../components/Cards";
-import SkeletonLoader from "../components/animations/SkeletonLoader"; // Import the SkeletonLoader component
+import SkeletonLoader from "../components/animations/SkeletonLoader";
 import EncontrarEmpresa from "../components/EncontrarEmpresa";
 import { IconBars, IconClose } from "../components/Icons";
 import Head from "next/head";
@@ -11,9 +11,9 @@ function Empresas() {
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
     const [dataToShow, setDataToShow] = useState([]);
-    const [loading, setLoading] = useState(true); // State to manage loading state
-    const [isMobile, setIsMobile] = useState(false); // State to manage mobile view
-    const [menuOpen, setMenuOpen] = useState(false); // State to manage mobile menu
+    const [loading, setLoading] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         setIsMobile(window.innerWidth < 640);
@@ -21,10 +21,8 @@ function Empresas() {
             setIsMobile(window.innerWidth < 640);
         };
 
-        // Event listener for window resize
         window.addEventListener('resize', handleResize);
 
-        // Clean up event listener on component unmount
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
@@ -60,10 +58,10 @@ function Empresas() {
             }
             const data = await response.json();
             setDataToShow(data);
-            setLoading(false); // Set loading to false once data is fetched
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching empresas:', error);
-            setLoading(false); // Handle loading state in case of error
+            setLoading(false);
         }
     };
 
@@ -74,7 +72,7 @@ function Empresas() {
     const filteredData = FilteredData(dataToShow, categoriaSelecionada);
 
     const handleMenuClick = () => {
-        setMenuOpen(!menuOpen); // Toggle menuOpen state
+        setMenuOpen(!menuOpen);
     }
 
     return (
@@ -114,7 +112,7 @@ function Empresas() {
                 <div className="flex flex-grow w-full">
                     <div className="sm:w-11/12 w-full md:p-4">
                         {loading ? (
-                            <SkeletonLoader /> // Show skeleton loader while loading
+                            <SkeletonLoader />
                         ) : (
                             <Cards tipoMostrado="Empresas" dataToShow={filteredData} />
                         )}

@@ -19,11 +19,9 @@ const Search = () => {
             let queryParams = {};
 
             if (q) {
-                // Handle search by query term (q)
                 queryParams = { query: q };
                 url = `/api/globalSearch?${new URLSearchParams(queryParams).toString()}`;
             } else if (estado || cidade || bairro || categoria || finalidade || minPrice || maxPrice) {
-                // Handle search by various parameters
                 if (estado) queryParams.estado = estado;
                 if (cidade) queryParams.cidade = cidade;
                 if (bairro) queryParams.bairro = bairro;
@@ -35,7 +33,6 @@ const Search = () => {
 
                 url = `/api/especificSearch?${new URLSearchParams(queryParams).toString()}`;
             } else {
-                // If no search parameters are provided, fetch all data
                 url = '/api/tipoSearch';
             }
 
@@ -81,7 +78,7 @@ const Search = () => {
             </div>
             <main className="flex-grow">
                 {loading ? (
-                    <SkeletonLoader /> // Show skeleton loader while loading
+                    <SkeletonLoader />
                 ) : (
                     <Cards dataToShow={dataToShow} tipoMostrado={tipoMostrado} />
                 )}

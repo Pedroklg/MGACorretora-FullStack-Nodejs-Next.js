@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const result = await db.query(queryText); // Pass the queryText to db.query()
+      const result = await db.query(queryText);
       res.status(200).json(result.rows);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });

@@ -11,7 +11,7 @@ const EmpresasCRUD = ({ item }) => {
     const [savedOrUpdated, setSavedOrUpdated] = useState(false);
     const [removedImages, setRemovedImages] = useState([]);
     const router = useRouter();
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     const initialEmpresaData = {
         titulo: '',
@@ -91,7 +91,7 @@ const EmpresasCRUD = ({ item }) => {
         const file = e.target.files[0];
         if (file && file.size > MAX_FILE_SIZE) {
             showErrorToast('Tamanho do arquivo muito grande, limite: 10MB.');
-            e.target.value = ''; // Clear the input
+            e.target.value = '';
             return;
         }
         setEmpresaData(prevData => ({ ...prevData, imagem: file }));
@@ -137,7 +137,6 @@ const EmpresasCRUD = ({ item }) => {
                 }
             });
 
-            // Append removed images for deletion
             formData.append('removed_images', JSON.stringify(removedImages));
 
             const endpoint = item ? `/api/empresas?id=${item.id}` : '/api/empresas';
@@ -155,7 +154,7 @@ const EmpresasCRUD = ({ item }) => {
 
             setUnsavedChanges(false);
             setEmpresaData(initialEmpresaData);
-            setRemovedImages([]); // Clear removed images after successful operation
+            setRemovedImages([]);
             setSavedOrUpdated(true);
             showSuccessToast(`Empresa ${item ? 'atualizada' : 'criada'} com sucesso!`);
         } catch (error) {

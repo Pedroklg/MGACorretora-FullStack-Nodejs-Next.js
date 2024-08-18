@@ -28,7 +28,7 @@ const RecommendedItems = ({ tipo, id }) => {
     }, [tipo, id]);
 
     const handleCardClick = (itemId) => {
-        router.push(`/product/${itemId}`); // Adjust route as per your application
+        router.push(`/product/${itemId}`);
     };
 
     return (

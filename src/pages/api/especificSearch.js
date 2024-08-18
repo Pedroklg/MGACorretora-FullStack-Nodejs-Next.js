@@ -9,7 +9,6 @@ export default async function handler(req, res) {
         aluguel = true;
     }
 
-    // Initialize search queries
     let searchQueryEmpresas = `
         SELECT id, titulo, imagem, estado, cidade, bairro, valor_pretendido, categoria
         FROM empresas
@@ -22,7 +21,6 @@ export default async function handler(req, res) {
         WHERE 1=1
     `; 
 
-    // Add filters based on provided parameters
     if (cidade) {
         searchQueryEmpresas += ` AND LOWER(cidade) LIKE LOWER('%${cidade}%')`;
         searchQueryImoveis += ` AND LOWER(cidade) LIKE LOWER('%${cidade}%')`;
@@ -51,11 +49,9 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Execute queries to fetch data
         const { rows: empresas } = await db.query(searchQueryEmpresas);
         const { rows: imoveis } = await db.query(searchQueryImoveis);
 
-        // Combine results based on searchMode
         let combinedResults = [];
         if (searchMode === 'both' && !categoria) {
             combinedResults = [...empresas, ...imoveis];
@@ -67,7 +63,6 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Invalid search mode' });
         }
 
-        // Return combined or individual results
         res.status(200).json(combinedResults);
     } catch (error) {
         console.error('Error executing query', error);

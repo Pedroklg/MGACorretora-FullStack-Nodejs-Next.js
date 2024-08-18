@@ -5,29 +5,26 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState(''); // State to store search term
-  const [isOtherMenusetIsOtherMenu, setIsOtherMenu] = useState(false); // State to manage OtherMenusetIsOtherMenu view
-  const [menuOpen, setMenuOpen] = useState(false); // State to manage OtherMenusetIsOtherMenu menu
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isOtherMenusetIsOtherMenu, setIsOtherMenu] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setIsOtherMenu(window.innerWidth < 1270); // Set initial isOtherMenusetIsOtherMenu state based on window width
+    setIsOtherMenu(window.innerWidth < 1270);
     const handleResize = () => {
-      setIsOtherMenu(window.innerWidth < 1270); // Update isOtherMenusetIsOtherMenu state on window resize
+      setIsOtherMenu(window.innerWidth < 1270);
     };
 
-    window.addEventListener('resize', handleResize); // Add event listener for window resize
-    return () => window.removeEventListener('resize', handleResize); // Clean up event listener on unmount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Function to handle search term change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Function to handle search button click
   const handleSearchSend = () => {
-    // Redirect to the search page with the search term as a query parameter
     if (searchTerm.toLowerCase() === 'empresas') {
       router.push(`/Empresas`);
     } else if (searchTerm.toLowerCase() === 'imoveis') {
@@ -37,7 +34,6 @@ const Header = () => {
     }
   };
 
-  // Function to toggle OtherMenusetIsOtherMenu menu
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -56,7 +52,6 @@ const Header = () => {
         </div>
       </Link>
 
-      {/* Navigation links */}
       <nav className="flex space-x-3 md:space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">
         <Link href="/Empresas" passHref>
           <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
@@ -97,7 +92,6 @@ const Header = () => {
         )}
       </nav>
 
-      {/* OtherMenusetIsOtherMenu menu */}
       <div className="flex items-center justify-center ml-3 mb-4 md:mb-0">
         <input
           type="text"
@@ -113,7 +107,6 @@ const Header = () => {
         >
           {IconSearchSmall}
         </button>
-        {/* OtherMenusetIsOtherMenu menu toggle button */}
         {isOtherMenusetIsOtherMenu && (
           <div className="flex items-center justify-center ml-8">
             <button onClick={toggleMenu} className="text-gray-100 text-3xl">

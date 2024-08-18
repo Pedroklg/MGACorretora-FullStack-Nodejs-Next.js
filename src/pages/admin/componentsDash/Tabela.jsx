@@ -11,11 +11,10 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     const [dataToShow, setDataToShow] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedItemId, setSelectedItemId] = useState(null); // State to store selected item id
-    const [isModalOpen, setIsModalOpen] = useState(false);  // State to manage modal visibility
-    const [loading, setLoading] = useState(false); // State to manage loading state
+    const [selectedItemId, setSelectedItemId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    // Function to fetch data based on tipoMostrado
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
@@ -31,16 +30,14 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     }, [tipoMostrado]);
 
     useEffect(() => {
-        fetchData(); // Initial fetch when tipoMostrado changes
+        fetchData();
     }, [tipoMostrado, fetchData]);
 
-    // Function to handle search term change
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
         setCurrentPage(1);
     };
 
-    // Function to handle opening item details modal
     const handleDetails = async (id) => {
         try {
             setLoading(true);
@@ -59,7 +56,6 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
         }
     };
 
-    // Function to handle item deletion
     const handleDelete = async (id) => {
         try {
             setLoading(true);
@@ -71,7 +67,7 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
                 throw new Error('Falha ao deletar item!');
             }
             showSuccessToast('Item deletado com sucesso!');
-            fetchData(); // Fetch data again after successful deletion to update table
+            fetchData();
         } catch (error) {
             setLoading(false);
             console.error('Error deleting item:', error);
@@ -79,19 +75,16 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
         }
     };
 
-    // Function to handle editing an item
     const handleEdit = (id) => {
         Router.push('/admin/Registrar?id=' + id);
     };
 
 
-    // Function to paginate through table pages
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
         window.scrollTo(0, 0);
     };
 
-    // Calculate items per page and current page items
     const itemsPerPage = 9;
     const filteredData = FilteredData(dataToShow, searchTerm);
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -99,7 +92,6 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
     const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-    // Determine table title based on tipoMostrado
     let titulo;
     if (tipoMostrado === "Empresas") {
         titulo = "Empresas cadastradas";
@@ -210,12 +202,11 @@ const EmpresasImoveisTable = ({ tipoMostrado }) => {
                 </div>
             </div>
 
-            {/* Modal Component */}
             {isModalOpen && (
                 <ItemDetailsModal
                     isOpen={isModalOpen}
                     onRequestClose={() => setIsModalOpen(false)}
-                    itemId={selectedItemId} // Pass the selected item id to the modal
+                    itemId={selectedItemId}
                 />
             )}
         </div>

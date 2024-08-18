@@ -279,7 +279,6 @@ const ProductPage = () => {
                                 const label = mapKeyToLabel(key);
                                 const component = mapValueToComponent(key, value);
 
-                                // Skip rendering if component is null or undefined
                                 if (component == null) {
                                     return null;
                                 }

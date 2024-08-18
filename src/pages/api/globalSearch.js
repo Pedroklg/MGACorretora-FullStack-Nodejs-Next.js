@@ -11,14 +11,12 @@ export default async function handler(req, res) {
   const searchTerm = '%' + query + '%';
   let queryParams = [searchTerm, searchTerm];
 
-  // Check if query contains a number (indicating search for comodos)
   const matchComodos = query.match(/\d+/);
 
   if (matchComodos) {
     const searchQuantity = parseInt(matchComodos[0], 10);
     const searchName = query.replace(searchQuantity, '').trim();
 
-    // Adjust search query and parameters for comodos search
     searchQuery = `
       SELECT id, titulo, imagem, valor_pretendido, estado, cidade, bairro, 'imovel' AS tipo
       FROM (
@@ -37,10 +35,8 @@ export default async function handler(req, res) {
       ) AS resultados
     `;
 
-    // Adjust queryParams for comodos search
     queryParams = [ `%${searchName}%`, searchQuantity, `%${searchName}%` ];
   } else {
-    // Default keyword search (no comodos specified)
     searchQuery = `
       SELECT id, titulo, imagem, valor_pretendido, estado, cidade, bairro, 'imovel' AS tipo
       FROM imoveis

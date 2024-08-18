@@ -8,7 +8,7 @@ export default async function handler(req, res) {
                 queryText = `SELECT DISTINCT cidade, estado FROM empresas WHERE cidade IS NOT NULL `;
             } else if (req.query.searchMode === 'imoveis') {
                 queryText = `SELECT DISTINCT cidade, estado FROM imoveis WHERE cidade IS NOT NULL`;
-            } else { // Default to both if searchMode is not specified or invalid
+            } else {
                 queryText = `
                     SELECT DISTINCT cidade, estado FROM empresas WHERE cidade IS NOT NULL  
                     UNION 
