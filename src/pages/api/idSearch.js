@@ -1,6 +1,7 @@
 import nextConnect from 'next-connect';
 import db from './utils/db';
 import { deleteImagesFromCloudinary } from './utils/deleteImage';
+import requireAuth from './utils/authMiddleware';
 
 const apiRoute = nextConnect({
     onError: (err, req, res) => {
@@ -39,7 +40,7 @@ apiRoute.get(async (req, res) => {
     }
 });
 
-apiRoute.delete(async (req, res) => {
+apiRoute.delete(requireAuth(async (req, res) => {
     try {
         const { id } = req.query;
         if (!id) {
@@ -74,6 +75,6 @@ apiRoute.delete(async (req, res) => {
         console.error('Error in DELETE /api/idSearch:', error.message);
         res.status(500).json({ error: 'Failed to delete item and associated images' });
     }
-});
+}));
 
 export default apiRoute;
