@@ -1,11 +1,17 @@
-import { withSession } from '../utils/session';
+import { getSession, isAdmin } from '@/lib/session';
 
-export default withSession(async (req, res) => {
-  const adminLoggedIn = req.session.get('adminLoggedIn');
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', ['GET']);
+    return res.status(405).json({ message: 'Method Not Allowed' });
+  }
 
-  if (adminLoggedIn) {
+  const session = await getSession(req, res);
+  res.setHeader('Cache-Control', 'no-store');
+
+  if (isAdmin(session)) {
     res.status(200).json({ loggedIn: true });
   } else {
     res.status(401).json({ loggedIn: false });
   }
-});
+}

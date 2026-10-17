@@ -6,44 +6,44 @@ export default function Footer() {
     return (
         <footer className="h-fit md:pb-5" style={{ backgroundImage: "url(/footer-bg.png)" }}>
             <div className='flex flex-col md:flex-row text-xl font-bold xl:gap-24 justify-center items-center h-fit'>
-                <Link href="/" passHref legacyBehavior>
+                <Link href="/" aria-label="MGA Corretora - página inicial">
                     <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 cursor-pointer">
                         <div>
                             <div className='hidden sm:block'>
-                                <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} quality={100} priority />
+                                <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} quality={100} />
                             </div>
                             <div className='block sm:hidden'>
-                                <Image src="/logo_mobile.png" alt='MGA Corretora' width={300} height={200} quality={100} priority />
+                                <Image src="/logo_mobile.png" alt='MGA Corretora' width={300} height={200} quality={100} />
                             </div>
                         </div>
                         <span className="text-lg text-red-900 font-medium mt-2 subpixel-antialiased hidden lg:flex">CRECI J5087</span>
                     </div>
                 </Link>
                 <div className="md:mx-8 pl-5 flex flex-col items-center sm:items-start">
-                    <h4 className="p-2 text-2xl text-red-800">A MGA</h4>
+                    <h2 className="p-2 text-2xl text-red-800">A MGA</h2>
                     <ul>
                         <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
-                            <Link href="/QueroVender" passHref>
+                            <Link href="/quero-vender">
                                 <span>Quero Vender</span>
                             </Link>
                         </li>
                         <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
-                            <Link href="/SejaParceiro" passHref>
+                            <Link href="/seja-parceiro">
                                 <span>Seja Parceiro</span>
                             </Link>
                         </li>
                         <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
-                            <Link href="/Sobre" passHref>
+                            <Link href="/sobre">
                                 <span>Sobre</span>
                             </Link>
                         </li>
                         <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
-                            <Link href="/Contato" passHref>
+                            <Link href="/contato">
                                 <span>Fale Conosco</span>
                             </Link>
                         </li>
                         <li className="p-1 hover:text-red-800 hover:scale-105 duration-150 text-base">
-                            <Link href="/PoliticasDePrivacidade" passHref>
+                            <Link href="/politica-de-privacidade">
                                 <span>Políticas de Privacidade</span>
                             </Link>
                         </li>
@@ -51,7 +51,7 @@ export default function Footer() {
                 </div>
                 <div className="flex ml-4 flex-col lg:flex-row">
                     <div className="xl:mx-16 flex flex-col items-center sm:items-start">
-                        <h4 className="p-2 text-2xl text-red-800">ONDE ESTAMOS?</h4>
+                        <h2 className="p-2 text-2xl text-red-800">ONDE ESTAMOS?</h2>
 
                         <a href="tel:+5541995400788" className="p-1 hover:text-red-800 flex flex-wrap gap-2 justify-start items-center hover:scale-105 duration-150">
                             {IconWhatsapp}

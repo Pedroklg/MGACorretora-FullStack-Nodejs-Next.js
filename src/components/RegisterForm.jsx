@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './animations/LoadingSpinner';
 import { showSuccessToast, showErrorToast } from './animations/toastService';
+import { HoneypotField, RecaptchaScript, useRecaptcha } from './Recaptcha';
 
 export default function RegisterForm() {
     const initialFormData = {
@@ -17,11 +18,13 @@ export default function RegisterForm() {
         phone: '',
         complement: '',
         description: '',
-        additionalInfo: ''
+        additionalInfo: '',
+        website: ''
     }
     const [formData, setFormData] = useState(initialFormData);
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const getRecaptchaToken = useRecaptcha();
 
     useEffect(() => {
         if (unsavedChanges) {
@@ -61,7 +64,7 @@ export default function RegisterForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, recaptchaToken: await getRecaptchaToken('register') }),
             });
 
             const result = await response.json();
@@ -83,12 +86,14 @@ export default function RegisterForm() {
 
     return (
         <div className="col-span-12 shadow-md p-2 rounded-md">
+            <RecaptchaScript />
             <LoadingSpinner isLoading={isLoading} />
             <h2 className='text-xl text-red-900 ml-3 font-semibold'>Cadastre sua Empresa</h2>
             <form className='w-full grid grid-cols-12 p-2 rounded-md items-stretch' onSubmit={handleSubmit}>
+                <HoneypotField value={formData.website} onChange={handleChange} />
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Nome Completo *</label>
-                    <input
+                    <label htmlFor="cadastro-fullName">Nome Completo *</label>
+                    <input id="cadastro-fullName"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="fullName"
@@ -97,8 +102,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Empresa ou Imóvel *</label>
-                    <input
+                    <label htmlFor="cadastro-type">Empresa ou Imóvel *</label>
+                    <input id="cadastro-type"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="type"
@@ -107,8 +112,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Celular *</label>
-                    <input
+                    <label htmlFor="cadastro-mobile">Celular *</label>
+                    <input id="cadastro-mobile"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="mobile"
@@ -117,8 +122,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Email</label>
-                    <input
+                    <label htmlFor="cadastro-email">Email</label>
+                    <input id="cadastro-email"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="email"
                         name="email"
@@ -127,8 +132,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Tipo de Empresa</label>
-                    <input
+                    <label htmlFor="cadastro-companyType">Tipo de Empresa</label>
+                    <input id="cadastro-companyType"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="companyType"
@@ -137,8 +142,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Estado *</label>
-                    <input
+                    <label htmlFor="cadastro-state">Estado *</label>
+                    <input id="cadastro-state"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="state"
@@ -147,8 +152,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Cidade *</label>
-                    <input
+                    <label htmlFor="cadastro-city">Cidade *</label>
+                    <input id="cadastro-city"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="city"
@@ -157,8 +162,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Bairro</label>
-                    <input
+                    <label htmlFor="cadastro-district">Bairro</label>
+                    <input id="cadastro-district"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="district"
@@ -167,8 +172,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Número</label>
-                    <input
+                    <label htmlFor="cadastro-number">Número</label>
+                    <input id="cadastro-number"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="number"
@@ -177,8 +182,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Endereço</label>
-                    <input
+                    <label htmlFor="cadastro-address">Endereço</label>
+                    <input id="cadastro-address"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="address"
@@ -187,8 +192,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Telefone da empresa</label>
-                    <input
+                    <label htmlFor="cadastro-phone">Telefone da empresa</label>
+                    <input id="cadastro-phone"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="phone"
@@ -197,8 +202,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Complemento</label>
-                    <input
+                    <label htmlFor="cadastro-complement">Complemento</label>
+                    <input id="cadastro-complement"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="complement"
@@ -207,8 +212,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 p-1 md:p-2 text-lg'>
-                    <label>Descrição *</label>
-                    <textarea
+                    <label htmlFor="cadastro-description">Descrição *</label>
+                    <textarea id="cadastro-description"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         name="description"
                         value={formData.description}
@@ -216,8 +221,8 @@ export default function RegisterForm() {
                     />
                 </div>
                 <div className='col-span-12 p-1 md:p-2 text-lg'>
-                    <label>Informações Adicionais</label>
-                    <textarea
+                    <label htmlFor="cadastro-additionalInfo">Informações Adicionais</label>
+                    <textarea id="cadastro-additionalInfo"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         name="additionalInfo"
                         value={formData.additionalInfo}

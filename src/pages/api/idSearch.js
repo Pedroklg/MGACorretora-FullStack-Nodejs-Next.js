@@ -1,12 +1,13 @@
 import nextConnect from 'next-connect';
-import db from './utils/db';
-import { deleteImagesFromCloudinary } from './utils/deleteImage';
-import requireAuth from './utils/authMiddleware';
+import db from '@/lib/db';
+import { deleteImagesFromCloudinary } from '@/lib/deleteImage';
+import { requireAuth } from '@/lib/session';
+import { getListingById, parseId } from '@/lib/listings';
 
 const apiRoute = nextConnect({
     onError: (err, req, res) => {
         console.error(err.stack);
-        res.status(500).end('Something broke!');
+        res.status(500).json({ error: 'Something broke!' });
     },
     onNoMatch: (req, res) => {
         res.status(405).json({ error: `Method ${req.method} Not Allowed` });
@@ -15,24 +16,16 @@ const apiRoute = nextConnect({
 
 apiRoute.get(async (req, res) => {
     try {
-        const { id } = req.query;
-        let result;
-
-        if (id) {
-            const empresa = await db.query('SELECT * FROM empresas WHERE id = $1', [id]);
-            const imovel = await db.query('SELECT * FROM imoveis WHERE id = $1', [id]);
-
-            if (empresa.rows.length > 0) {
-                result = { tipo: 'Empresa', item: empresa.rows[0] };
-            } else if (imovel.rows.length > 0) {
-                result = { tipo: 'Imovel', item: imovel.rows[0] };
-            } else {
-                result = { tipo: null, item: null };
-            }
-        } else {
-            result = { error: 'ID not provided' };
+        const id = parseId(req.query.id);
+        if (!id) {
+            return res.status(400).json({ error: 'ID not provided' });
         }
-        
+
+        const result = await getListingById(id);
+        if (!result) {
+            return res.status(404).json({ tipo: null, item: null });
+        }
+
         res.status(200).json(result);
     } catch (error) {
         console.error('Error in GET /api/idSearch:', error.message);
@@ -42,7 +35,7 @@ apiRoute.get(async (req, res) => {
 
 apiRoute.delete(requireAuth(async (req, res) => {
     try {
-        const { id } = req.query;
+        const id = parseId(req.query.id);
         if (!id) {
             return res.status(400).json({ error: 'ID not provided' });
         }

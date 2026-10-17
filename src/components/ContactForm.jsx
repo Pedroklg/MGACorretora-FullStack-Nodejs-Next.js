@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './animations/LoadingSpinner';
 import { showSuccessToast, showErrorToast } from './animations/toastService';
+import { HoneypotField, RecaptchaScript, useRecaptcha } from './Recaptcha';
 
-export default function ContactForm() {
-    const [formData, setFormData] = useState({
+export default function ContactForm({ defaultSubject = '' }) {
+    const initialFormData = {
         name: '',
         email: '',
-        subject: '',
+        subject: defaultSubject,
         phone: '',
         message: '',
-    });
+        website: '',
+    };
+    const [formData, setFormData] = useState(initialFormData);
+    const getRecaptchaToken = useRecaptcha();
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -36,11 +40,11 @@ export default function ContactForm() {
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         if (!formData.name || (!formData.email && !formData.phone) || !formData.subject || !formData.message) {
             showErrorToast('Por favor, preencha os campos.');
             return;
         }
-        e.preventDefault();
 
         try {
             setIsLoading(true);
@@ -49,14 +53,18 @@ export default function ContactForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    ...formData,
+                    page: window.location.pathname,
+                    recaptchaToken: await getRecaptchaToken('contact'),
+                }),
             });
 
             const result = await response.json();
 
             if (result.success) {
                 showSuccessToast('Email enviado com sucesso!');
-                setFormData({ name: '', email: '', subject: '',phone:'', message: '' });
+                setFormData(initialFormData);
             } else {
                 showErrorToast('Falha ao enviar o email.');
             }
@@ -71,13 +79,15 @@ export default function ContactForm() {
 
     return (
         <div className="col-span-12 shadow-md p-2 rounded-md">
+            <RecaptchaScript />
             <LoadingSpinner isLoading={isLoading} />
             <h2 className='text-xl text-red-900 ml-3 font-semibold'>Entre em contato por E-mail</h2>
             <form className='w-full grid grid-cols-12 p-2 rounded-md items-stretch' 
                 onSubmit={handleSubmit}>
+                <HoneypotField value={formData.website} onChange={handleChange} />
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Nome:</label>
-                    <input
+                    <label htmlFor="contato-name">Nome:</label>
+                    <input id="contato-name"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="name"
@@ -87,10 +97,11 @@ export default function ContactForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Email para contato:</label>
-                    <input
+                    <label htmlFor="contato-email">Email para contato:</label>
+                    <input id="contato-email"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
-                        type="text"
+                        type="email"
+                        autoComplete="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
@@ -98,8 +109,8 @@ export default function ContactForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Assunto:</label>
-                    <input
+                    <label htmlFor="contato-subject">Assunto:</label>
+                    <input id="contato-subject"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         type="text"
                         name="subject"
@@ -109,10 +120,11 @@ export default function ContactForm() {
                     />
                 </div>
                 <div className='col-span-12 md:col-span-6 p-1 md:p-2 text-lg'>
-                    <label>Telefone:</label>
-                    <input
+                    <label htmlFor="contato-phone">Telefone:</label>
+                    <input id="contato-phone"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
-                        type="text"
+                        type="tel"
+                        autoComplete="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
@@ -120,8 +132,8 @@ export default function ContactForm() {
                     />
                 </div>
                 <div className='col-span-12 p-1 md:p-2 text-lg'>
-                    <label>Mensagem:</label>
-                    <textarea
+                    <label htmlFor="contato-message">Mensagem:</label>
+                    <textarea id="contato-message"
                         className='shadow-md p-1 md:p-2 rounded-md w-full'
                         name="message"
                         value={formData.message}

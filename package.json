@@ -4,38 +4,34 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "cloudinary": "^2.2.0",
-    "formidable": "^3.5.1",
-    "multer": "^1.4.5-lts.1",
-    "next": "14.2.3",
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.11.0",
+    "iron-session": "^9.0.1",
+    "multer": "^2.4.0",
+    "next": "^16.4.2",
     "next-connect": "^0.12.1",
-    "next-iron-session": "^4.2.0",
-    "nodemailer": "^6.9.13",
-    "pg": "^8.11.5",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-number-format": "^5.4.0",
-    "react-slick": "^0.30.2",
-    "react-toastify": "^10.0.5",
-    "sharp": "^0.33.4",
-    "slick-carousel": "^1.8.1",
-    "uuid": "^9.0.1"
+    "nodemailer": "^10.1.2",
+    "pg": "^8.23.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-number-format": "^5.4.5",
+    "react-slick": "^0.31.0",
+    "react-toastify": "^11.1.0",
+    "sharp": "^0.35.5",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
-    "@types/react": "18.3.3",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.3",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.2",
+    "postcss": "^8.5.30",
+    "tailwindcss": "^3.4.19"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   }
 }

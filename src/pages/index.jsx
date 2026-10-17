@@ -3,18 +3,21 @@ import Cards from '../components/Cards';
 import Banner from '../components/Banner';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Head from 'next/head';
+import Seo from '../components/Seo';
+import { getCardListings } from '@/lib/listings';
+import { organizationJsonLd, websiteJsonLd } from '@/lib/site';
 
-export default function Home() {
+export default function Home({ listings }) {
   return (
     <>
-      <Head>
-        <title>MGA Corretora</title>
-        <meta name="description" content="Descubra os serviços da MGA Corretora de empresas e imóveis. Oferecemos mediação profissional na compra e venda de empresas. Atendemos clientes em Paraná,Ponta-Grossa,Curitiba,Guarapuava e outrar regiões, proporcionando soluções personalizadas e suporte excepcional. Entre em contato conosco para começar sua jornada rumo ao sucesso empresarial e imobiliário hoje mesmo!"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
+      <Seo
+        path="/"
+        description="MGA Corretora: intermediação na compra e venda de empresas e imóveis em Curitiba, Ponta Grossa, Guarapuava e todo o Paraná."
+        jsonLd={[organizationJsonLd(), websiteJsonLd()]}
+      />
       <Header />
-      <div className="w-full flex flex-col items-center">
+      <main className="w-full flex flex-col items-center">
+        <h1 className="sr-only">MGA Corretora: compra e venda de empresas e imóveis no Paraná</h1>
         <div className="flex flex-col md:relative w-full items-center">
           <Banner />
           <div className="flex xl:absolute xl:bottom-0 xl:left-1/2 xl:transform xl:-translate-x-1/2 xl:z-10 xl:mb-2 lg:w-10/12 xl:opacity-90">
@@ -22,10 +25,21 @@ export default function Home() {
           </div>
         </div>
         <div className="xl:w-10/12 w-full">
-          <Cards tipoMostrado="ambos" />
+          <Cards tipoMostrado="ambos" dataToShow={listings ?? undefined} />
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );
+}
+
+export async function getServerSideProps({ res }) {
+  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+  try {
+    return { props: { listings: await getCardListings('ambos') } };
+  } catch (error) {
+    console.error('Error loading home listings:', error.message);
+    // Sem banco, a página ainda abre e os cards tentam carregar no navegador
+    return { props: { listings: null } };
+  }
 }

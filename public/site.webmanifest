@@ -1,6 +1,9 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "MGA Corretora",
+    "short_name": "MGA",
+    "description": "Compra e venda de empresas e imóveis no Paraná",
+    "lang": "pt-BR",
+    "start_url": "/",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -8,7 +11,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
+    "theme_color": "#7f1d1d",
     "background_color": "#ffffff",
     "display": "standalone"
 }

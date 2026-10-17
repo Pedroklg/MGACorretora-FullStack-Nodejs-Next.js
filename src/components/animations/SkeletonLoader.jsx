@@ -2,7 +2,7 @@ const SkeletonLoader = () => {
   return (
       <div className="container mx-auto p-4 m-5">
           <div className="flex items-center mb-6">
-              <h1 className="text-4xl font-bold text-red-700">Loading...</h1>
+              <div className="text-4xl font-bold text-red-700" aria-live="polite">Carregando...</div>
               <div className="flex-grow h-px bg-red-700 ml-4 p-0.5 rounded-md"></div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

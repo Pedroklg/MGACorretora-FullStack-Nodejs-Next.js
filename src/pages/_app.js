@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import UserLayout from '../components/UserLayout';
 import AdminLayout from '../components/AdminLayout';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -13,6 +14,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport" />
+      </Head>
       <ToastContainer
         position="top-right"
         autoClose={3000}

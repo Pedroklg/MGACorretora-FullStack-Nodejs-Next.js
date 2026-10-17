@@ -1,37 +1,44 @@
-import nodemailer from 'nodemailer';
+import { guardPublicForm } from '@/lib/formGuard';
+import { isValidEmail, multiLine, sendFormEmail, singleLine } from '@/lib/mailer';
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { name, email, subject,phone, message } = req.body;
+  if (!(await guardPublicForm(req, res, { name: 'contact', recaptchaAction: 'contact' }))) {
+    return;
+  }
 
-    try {
-      let transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
+  const name = singleLine(req.body.name, 120);
+  const email = singleLine(req.body.email, 200);
+  const phone = singleLine(req.body.phone, 40);
+  const subject = singleLine(req.body.subject, 150);
+  const message = multiLine(req.body.message, 5000);
+  const page = singleLine(req.body.page, 300);
 
-      const emailBody = `Email enviado pelo site.\nNome:${name}\nEmail enviado: ${email}\nTelefone: ${phone}\nMensagem:\n\n ${message}`;
+  if (!name || (!email && !phone) || !subject || !message) {
+    return res.status(400).json({ success: false, error: 'Campos obrigatórios ausentes' });
+  }
 
-      let info = await transporter.sendMail({
-        from: `"Contato MGA Corretora" <${process.env.SMTP_USER}>`,
-        to: process.env.RECIPIENT_EMAIL,
-        subject: subject,
-        text: emailBody,
-        html: `<p>${emailBody.replace(/\n/g, '<br>')}</p>`,
-      });
+  if (email && !isValidEmail(email)) {
+    return res.status(400).json({ success: false, error: 'E-mail inválido' });
+  }
 
-      res.status(200).json({ success: true });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, error: 'Failed to send email' });
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  try {
+    await sendFormEmail({
+      fromName: 'Contato MGA Corretora',
+      subject: `[Site] ${subject}`,
+      intro: 'E-mail enviado pelo formulário de contato do site.',
+      replyTo: email,
+      fields: [
+        ['Nome', name],
+        ['E-mail', email],
+        ['Telefone', phone],
+        ['Página', page],
+        ['Mensagem', message],
+      ],
+    });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error sending contact email:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to send email' });
   }
 }

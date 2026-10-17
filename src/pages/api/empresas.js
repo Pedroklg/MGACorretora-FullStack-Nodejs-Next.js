@@ -1,10 +1,11 @@
 import nextConnect from 'next-connect';
 import multer from 'multer';
-import db from './utils/db';
-import processAndStoreImage from './utils/imageProcessing';
-import getCurrentDate from './utils/getCurrentDate';
-import { deleteImageFromCloudinary } from './utils/deleteImage';
-import requireAuth from './utils/authMiddleware';
+import db from '@/lib/db';
+import processAndStoreImage from '@/lib/imageProcessing';
+import getCurrentDate from '@/lib/getCurrentDate';
+import { deleteImageFromCloudinary } from '@/lib/deleteImage';
+import { requireAuth } from '@/lib/session';
+import { parseId } from '@/lib/listings';
 
 const storage = multer.memoryStorage();
 
@@ -13,13 +14,25 @@ const uploadFields = [
     { name: 'details_images', maxCount: 9 },
 ];
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif', 'image/heic', 'image/heif'];
+
 const upload = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024, files: 10, fields: 50, fieldSize: 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname));
+        }
+    },
 });
 
 const apiRoute = nextConnect({
     onError: (err, req, res) => {
+        if (err instanceof multer.MulterError) {
+            return res.status(400).json({ error: 'Arquivo inválido ou grande demais' });
+        }
         console.error(err.stack);
         res.status(500).json({ error: 'Something broke!' });
     },
@@ -28,11 +41,16 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.use(upload.fields(uploadFields));
+// Só aceita uploads de quem está autenticado
+const uploadMiddleware = upload.fields(uploadFields);
+apiRoute.use((req, res, next) => {
+    if (req.method === 'GET') return next();
+    return requireAuth(() => uploadMiddleware(req, res, next))(req, res);
+});
 
 apiRoute.get(async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM empresas');
+        const result = await db.query('SELECT * FROM empresas ORDER BY id DESC');
         res.status(200).json(result.rows);
     } catch (error) {
         console.error('Error in GET /api/empresas:', error.message);
@@ -50,11 +68,11 @@ apiRoute.post(requireAuth(async (req, res) => {
 
         let imageUrl = null;
 
-        if (req.files.imagem && req.files.imagem[0]) {
+        if (req.files?.imagem && req.files.imagem[0]) {
             imageUrl = await processAndStoreImage(req.files.imagem[0], 'uploads/empresas');
         }
 
-        const details_images = req.files.details_images || [];
+        const details_images = req.files?.details_images || [];
         const detailsImageUrls = await Promise.all(details_images.map(async (file) => {
             return await processAndStoreImage(file, 'uploads/empresas');
         }));
@@ -79,7 +97,10 @@ apiRoute.post(requireAuth(async (req, res) => {
 
 apiRoute.put(requireAuth(async (req, res) => {
     try {
-        const { id } = req.query;
+        const id = parseId(req.query.id);
+        if (!id) {
+            return res.status(400).json({ error: 'ID not provided' });
+        }
         const {
             titulo, tempo_de_mercado, funcionarios, motivo_da_venda, valor_pretendido,
             condicoes, descricao, funcionamento, sobre_imovel, bairro, aceita_permuta, tem_divida,
@@ -90,21 +111,34 @@ apiRoute.put(requireAuth(async (req, res) => {
         let oldImageUrl, oldDetailsImageUrls = [];
 
         const result = await db.query('SELECT imagem, details_images FROM empresas WHERE id = $1', [id]);
-        if (result.rows.length > 0) {
-            oldImageUrl = result.rows[0].imagem;
-            oldDetailsImageUrls = result.rows[0].details_images || [];
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+        oldImageUrl = result.rows[0].imagem;
+        oldDetailsImageUrls = result.rows[0].details_images || [];
+
+        // A imagem principal só muda por upload; não aceita URLs arbitrárias vindas do formulário
+        if (imageUrl !== oldImageUrl) {
+            imageUrl = oldImageUrl || null;
         }
 
-        if (req.files.imagem && req.files.imagem[0]) {
+        if (req.files?.imagem && req.files.imagem[0]) {
             imageUrl = await processAndStoreImage(req.files.imagem[0], 'uploads/empresas');
         }
 
-        const details_images = req.files.details_images || [];
+        const details_images = req.files?.details_images || [];
         const newDetailsImageUrls = await Promise.all(details_images.map(async (file) => {
             return await processAndStoreImage(file, 'uploads/empresas');
         }));
 
-        const removedImages = JSON.parse(req.body.removed_images || '[]');
+        let removedImages = [];
+        try {
+            removedImages = JSON.parse(req.body.removed_images || '[]');
+        } catch {
+            return res.status(400).json({ error: 'removed_images inválido' });
+        }
+        // Só permite apagar imagens que realmente pertencem a este anúncio
+        removedImages = Array.isArray(removedImages) ? removedImages.filter((url) => oldDetailsImageUrls.includes(url)) : [];
         const updatedDetailsImageUrls = oldDetailsImageUrls
             .filter((url) => !removedImages.includes(url))
             .concat(newDetailsImageUrls);

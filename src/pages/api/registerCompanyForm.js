@@ -1,68 +1,64 @@
-import nodemailer from 'nodemailer';
+import { guardPublicForm } from '@/lib/formGuard';
+import { isValidEmail, multiLine, sendFormEmail, singleLine } from '@/lib/mailer';
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const {
-      fullName,
-      email,
-      subject = 'Cadastro',
-      phone,
-      mobile,
-      type,
-      state,
-      city,
-      district,
-      number,
-      address,
-      companyType,
-      complement,
-      description,
-      additionalInfo
-    } = req.body;
+  if (!(await guardPublicForm(req, res, { name: 'register', recaptchaAction: 'register' }))) {
+    return;
+  }
 
-    try {
-      let transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
+  const body = req.body;
+  const data = {
+    fullName: singleLine(body.fullName, 120),
+    email: singleLine(body.email, 200),
+    phone: singleLine(body.phone, 40),
+    mobile: singleLine(body.mobile, 40),
+    type: singleLine(body.type, 50),
+    companyType: singleLine(body.companyType, 100),
+    state: singleLine(body.state, 50),
+    city: singleLine(body.city, 100),
+    district: singleLine(body.district, 100),
+    address: singleLine(body.address, 200),
+    number: singleLine(body.number, 20),
+    complement: singleLine(body.complement, 100),
+    description: multiLine(body.description, 5000),
+    additionalInfo: multiLine(body.additionalInfo, 5000),
+  };
 
-      const emailBody = `
-        Nome Completo: ${fullName}
-        Email: ${email}
-        Telefone: ${phone}
-        Celular: ${mobile}
-        Tipo: ${type}
-        Tipo de Empresa: ${companyType}
-        Estado: ${state}
-        Cidade: ${city}
-        Bairro: ${district}
-        Número: ${number}
-        Endereço: ${address}
-        Complemento: ${complement}
-        Descrição: ${description}
-        Informações Adicionais: ${additionalInfo}
-      `;
+  if (!data.fullName || (!data.email && !data.mobile) || !data.type || !data.state || !data.city || !data.description) {
+    return res.status(400).json({ success: false, error: 'Campos obrigatórios ausentes' });
+  }
 
-      let info = await transporter.sendMail({
-        from: `"Cadastro enviado pelo site" <${process.env.SMTP_USER}>`,
-        to: process.env.RECIPIENT_EMAIL,
-        subject: subject,
-        text: emailBody,
-        html: `<p>${emailBody.replace(/\n/g, '<br>')}</p>`,
-      });
+  if (data.email && !isValidEmail(data.email)) {
+    return res.status(400).json({ success: false, error: 'E-mail inválido' });
+  }
 
-      res.status(200).json({ success: true });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, error: 'Failed to send email' });
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  try {
+    await sendFormEmail({
+      fromName: 'Cadastro enviado pelo site',
+      subject: `[Site] Cadastro de ${data.type}: ${data.fullName}`,
+      intro: 'Cadastro enviado pelo formulário "Quero Vender" do site.',
+      replyTo: data.email,
+      fields: [
+        ['Nome completo', data.fullName],
+        ['E-mail', data.email],
+        ['Telefone', data.phone],
+        ['Celular', data.mobile],
+        ['Tipo', data.type],
+        ['Tipo de empresa', data.companyType],
+        ['Estado', data.state],
+        ['Cidade', data.city],
+        ['Bairro', data.district],
+        ['Endereço', data.address],
+        ['Número', data.number],
+        ['Complemento', data.complement],
+        ['Descrição', data.description],
+        ['Informações adicionais', data.additionalInfo],
+      ],
+    });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error sending register email:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to send email' });
   }
 }

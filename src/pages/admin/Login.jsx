@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    fetch(API_ENDPOINT)
+    fetch('/api/auth/check-session')
       .then((response) => {
         if (response.ok) {
           router.push('/admin/Dashboard');
@@ -57,37 +57,48 @@ const Login = () => {
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-stone-900 to-red-900">
       <Head>
         <title>Login - MGA</title>
+        <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Login administrador MGA Corretora." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div className="p-6 bg-gray-100 rounded-md shadow-md m-4">
+      <form
+        className="p-6 bg-gray-100 rounded-md shadow-md m-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+      >
         <h1 className="text-3xl font-semibold mb-3 text-red-800">MGA Corretora Admin</h1>
-        <label className="text-lb font-semibold ml-2">Usuário</label>
+        <label htmlFor="login-username" className="text-lb font-semibold ml-2">Usuário</label>
         <input
+          id="login-username"
+          name="username"
+          autoComplete="username"
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
         />
-        <label className="text-lb font-semibold ml-2">Senha</label>
+        <label htmlFor="login-password" className="text-lb font-semibold ml-2">Senha</label>
         <input
+          id="login-password"
+          name="password"
+          autoComplete="current-password"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          onKeyUp={(e) => e.key === 'Enter' && handleLogin()}
           className="w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
         />
         <button
-          onClick={handleLogin}
+          type="submit"
           disabled={isLoading}
           className="w-full mt-5 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </div>
+        {error && <p className="text-red-500 mt-2" role="alert">{error}</p>}
+      </form>
     </div>
   );
 };

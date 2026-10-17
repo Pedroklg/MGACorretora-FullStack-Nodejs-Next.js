@@ -1,13 +1,12 @@
-import db from './utils/db';
+import { getCategorias } from '@/lib/listings';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            const queryText = `SELECT DISTINCT categoria FROM empresas WHERE categoria IS NOT NULL`;
-            const result = await db.query(queryText);
-            res.status(200).json(result.rows);
+            const result = await getCategorias();
+            res.status(200).json(result);
         } catch (error) {
-            console.error('Error fetching categorias:', error);
+            console.error('Error fetching categorias:', error.message);
             res.status(500).json({ message: 'Internal server error' });
         }
     } else {

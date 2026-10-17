@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import EmpresaCRUD from './componentsDash/CRUDs/EmpresaCRUD';
-import ImovelCRUD from './componentsDash/CRUDs/ImovelCRUD';
+import EmpresaCRUD from '@/components/admin/CRUDs/EmpresaCRUD';
+import ImovelCRUD from '@/components/admin/CRUDs/ImovelCRUD';
 import ProgressBar from '../../components/animations/ProgressBar';
-import Nav from './componentsDash/Nav';
-import { protectRoute } from '../api/utils/sessionProtection';
+import Nav from '@/components/admin/Nav';
+import { protectRoute } from '@/lib/session';
 import { showErrorToast } from '../../components/animations/toastService';
 import Head from 'next/head';
 
@@ -47,8 +47,8 @@ const Registrar = () => {
         <div className="flex flex-col lg:flex-row min-h-screen overflow-auto">
             <Head>
                 <title>Registrar - MGA</title>
+                <meta name="robots" content="noindex, nofollow" />
                 <meta name="description" content="Registre a empresa ou imóvel no banco de dados." />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <Nav className="flex-shrink-0 lg:flex-grow-0" />
             <div className="flex-grow h-full">

@@ -180,9 +180,13 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
       searchMode,
     };
 
-    const queryString = new URLSearchParams(queryParams).toString();
+    // Não envia filtros vazios (antes iam como "undefined" na URL)
+    const definedParams = Object.fromEntries(
+      Object.entries(queryParams).filter(([, value]) => value !== undefined && value !== null && value !== '')
+    );
+    const queryString = new URLSearchParams(definedParams).toString();
 
-    router.push(`/Search?${queryString}`);
+    router.push(`/busca?${queryString}`);
   };
 
   const toggleMenu = () => {
@@ -223,9 +227,9 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
             >
               <div className="flex items-center">
                 {IconSearch}
-                <h1 className="text-2xl md:text-xl lg:text-3xl text-red-900 ml-3">
+                <h2 className="text-2xl md:text-xl lg:text-3xl text-red-900 ml-3">
                   Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
-                </h1>
+                </h2>
                 {menuOpen ? IconClose : IconBars}
               </div>
             </button>
@@ -234,9 +238,9 @@ export default function EncontrarEmpresa({ tipoMostrado }) {
           {(!isMobile) &&
             <div className="flex items-center mb-1">
               {IconSearch}
-              <h1 className="text-3xl text-red-900 ml-3">
+              <h2 className="text-3xl text-red-900 ml-3">
                 Encontre {searchMode === 'both' ? "sua Empresa ou Imóvel" : searchMode === 'empresas' ? "sua Empresa" : "seu Imóvel"}
-              </h1>
+              </h2>
             </div>}
           <div className={`${isMobile && !menuOpen ? 'hidden' : ''}`}>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 items-baseline">

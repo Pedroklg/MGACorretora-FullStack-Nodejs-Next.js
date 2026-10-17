@@ -25,12 +25,15 @@ const Header = () => {
   };
 
   const handleSearchSend = () => {
+    if (!searchTerm.trim()) {
+      return;
+    }
     if (searchTerm.toLowerCase() === 'empresas') {
-      router.push(`/Empresas`);
+      router.push(`/empresas`);
     } else if (searchTerm.toLowerCase() === 'imoveis') {
-      router.push(`/Imoveis`);
+      router.push(`/imoveis`);
     } else {
-      router.push(`/Search?q=${searchTerm}`);
+      router.push(`/busca?q=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
 
@@ -40,7 +43,7 @@ const Header = () => {
 
   return (
     <header className="flex flex-col lg:flex-row justify-evenly items-center px-1 lg:px-10 bg-red-900 text-black shadow-lg">
-      <Link href="/" passHref>
+      <Link href="/">
         <div className="p-2 flex flex-col justify-center items-center hover:scale-105 duration-150 bg-slate-100 cursor-pointer">
           <div className='hidden sm:block'>
             <Image src="/logo.png" alt="MGA Corretora" width={150} height={150} quality={100} priority />
@@ -53,19 +56,19 @@ const Header = () => {
       </Link>
 
       <nav className="flex space-x-3 md:space-x-6 mt-4 md:mt-0 mb-4 sm:mb-0">
-        <Link href="/Empresas" passHref>
+        <Link href="/empresas">
           <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconShop}
             <span className="ml-2">Empresas</span>
           </div>
         </Link>
-        <Link href="/Imoveis" passHref>
+        <Link href="/imoveis">
           <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconHouse}
             <span className="ml-2">Imóveis</span>
           </div>
         </Link>
-        <Link href="/Contato" passHref>
+        <Link href="/contato">
           <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer flex-col md:flex-row hover:scale-105">
             {IconEmail}
             <span className="ml-2">Contato</span>
@@ -73,17 +76,17 @@ const Header = () => {
         </Link>
         {!isOtherMenusetIsOtherMenu && (
           <>
-            <Link href="/Sobre" passHref>
+            <Link href="/sobre">
               <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
                 <span className="ml-2">Sobre nós</span>
               </div>
             </Link>
-            <Link href="/QueroVender" passHref>
+            <Link href="/quero-vender">
               <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
                 <span className="ml-2">Quero Vender</span>
               </div>
             </Link>
-            <Link href="/SejaParceiro" passHref>
+            <Link href="/seja-parceiro">
               <div className="flex hover:text-gray-400 text-gray-100 text-2xl items-center justify-center font-semibold duration-150 cursor-pointer hover:scale-105">
                 <span className="ml-2">Seja Parceiro</span>
               </div>
@@ -94,7 +97,8 @@ const Header = () => {
 
       <div className="flex items-center justify-center ml-3 mb-4 md:mb-0">
         <input
-          type="text"
+          type="search"
+          aria-label="Buscar empresas e imóveis"
           placeholder=" O que você procura?  "
           className="p-1 rounded-sm shadow-md"
           value={searchTerm}
@@ -104,12 +108,13 @@ const Header = () => {
         <button
           className="flex bg-gray-200 text-red-800 p-1 ml-2 rounded-sm shadow-lg duration-150 hover:scale-105"
           onClick={handleSearchSend}
+          aria-label="Buscar"
         >
           {IconSearchSmall}
         </button>
         {isOtherMenusetIsOtherMenu && (
           <div className="flex items-center justify-center ml-8">
-            <button onClick={toggleMenu} className="text-gray-100 text-3xl">
+            <button onClick={toggleMenu} className="text-gray-100 text-3xl" aria-label="Menu" aria-expanded={menuOpen}>
               {menuOpen ? IconClose : IconBars}
             </button>
           </div>
@@ -119,17 +124,17 @@ const Header = () => {
       {
         isOtherMenusetIsOtherMenu && menuOpen && (
           <aside className="w-full bg-red-900 text-gray-100 flex flex-col items-center shadow-lg">
-            <Link href="/Sobre" passHref>
+            <Link href="/sobre">
               <div className="w-full p-4 text-center hover:text-gray-400 duration-150 cursor-pointer" onClick={toggleMenu}>
                 Sobre nós
               </div>
             </Link>
-            <Link href="/QueroVender" passHref>
+            <Link href="/quero-vender">
               <div className="w-full p-4 text-center hover:text-gray-400 duration-150 cursor-pointer" onClick={toggleMenu}>
                 Quero Vender
               </div>
             </Link>
-            <Link href="/SejaParceiro" passHref>
+            <Link href="/seja-parceiro">
               <div className="w-full p-4 text-center hover:text-gray-400 duration-150 cursor-pointer" onClick={toggleMenu}>
                 Seja Parceiro
               </div>

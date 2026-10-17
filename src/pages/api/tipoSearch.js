@@ -1,28 +1,14 @@
-import db from './utils/db';
+import { getCardListings } from '@/lib/listings';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const { tipoMostrado, q } = req.query;
-    let queryText;
-
-    if (tipoMostrado === 'Empresas') {
-      queryText = 'SELECT * FROM empresas WHERE 1=1';
-    } else if (tipoMostrado === 'Imoveis') {
-      queryText = 'SELECT * FROM imoveis WHERE 1=1';
-    } else {
-      queryText = `
-        SELECT id, titulo, imagem, valor_pretendido, estado, cidade, bairro, descricao
-        FROM empresas
-        UNION ALL
-        SELECT id, titulo, imagem, valor_pretendido, estado, cidade, bairro, descricao
-        FROM imoveis
-      `;
-    }
+    const { tipoMostrado } = req.query;
 
     try {
-      const result = await db.query(queryText);
-      res.status(200).json(result.rows);
+      const rows = await getCardListings(tipoMostrado, { withDescription: true });
+      res.status(200).json(rows);
     } catch (error) {
+      console.error('Error in GET /api/tipoSearch:', error.message);
       res.status(500).json({ message: 'Internal server error' });
     }
   } else {
