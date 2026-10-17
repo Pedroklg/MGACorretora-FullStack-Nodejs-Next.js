@@ -6,7 +6,8 @@ import { SITE_URL } from '@/lib/site';
 const AI_SEARCH_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User'];
 const AI_TRAINING_BOTS = ['GPTBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended', 'CCBot'];
 
-const PRIVATE_PATHS = ['/admin', '/api/', '/busca'];
+// /busca fica fora daqui de propósito: ela tem "noindex", e o robô precisa acessá-la para ler isso
+const PRIVATE_PATHS = ['/admin', '/api/'];
 
 export const buildRobotsTxt = () => {
     const privateRules = PRIVATE_PATHS.map((path) => `Disallow: ${path}`).join('\n');

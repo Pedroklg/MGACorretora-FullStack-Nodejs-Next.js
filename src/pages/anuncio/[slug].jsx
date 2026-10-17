@@ -363,7 +363,11 @@ const ProductPage = ({ product, recommended }) => {
     );
 };
 
-export default ProductPage;
+// A navegação entre anúncios (ex.: "Relacionados") reaproveita a página no cliente; a key força
+// remontar para a foto selecionada e o assunto do formulário não ficarem os do anúncio anterior.
+const ProductPageRoute = (props) => <ProductPage key={props.product.item.id} {...props} />;
+
+export default ProductPageRoute;
 
 export async function getServerSideProps({ params, res }) {
     const id = parseId(params.slug);

@@ -65,7 +65,7 @@ const Search = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
-            {/* Resultados de busca não devem ser indexados (conteúdo duplicado/infinito) */}
+            {/* Resultados de busca não devem ser indexados (conteúdo duplicado/infinito); o robots.txt deixa acessar para o noindex ser lido */}
             <Seo
                 title={q ? `Busca: ${q}` : 'Resultados da busca'}
                 description="Resultados da busca no site da MGA Corretora"

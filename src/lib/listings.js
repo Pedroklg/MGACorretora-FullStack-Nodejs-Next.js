@@ -10,14 +10,17 @@ export const parseId = (value) => {
     return Number.isSafeInteger(id) && id > 0 ? id : null;
 };
 
-const CARD_COLUMNS_EMPRESA = `id, titulo, imagem, valor_pretendido, estado, cidade, bairro, categoria, NULL::boolean AS aluguel, 'Empresa' AS tipo`;
-const CARD_COLUMNS_IMOVEL = `id, titulo, imagem, valor_pretendido, estado, cidade, bairro, NULL::varchar AS categoria, aluguel, 'Imovel' AS tipo`;
+export const CARD_COLUMNS_EMPRESA = `id, titulo, imagem, valor_pretendido, estado, cidade, bairro, categoria, NULL::boolean AS aluguel, 'Empresa' AS tipo`;
+export const CARD_COLUMNS_IMOVEL = `id, titulo, imagem, valor_pretendido, estado, cidade, bairro, NULL::varchar AS categoria, aluguel, 'Imovel' AS tipo`;
 
-// withDescription: inclui a descrição (usada pela tabela do admin); as páginas públicas não precisam dela
-export const getCardListings = async (tipoMostrado = 'ambos', { withDescription = false } = {}) => {
-    const extra = withDescription ? ', descricao' : '';
-    const empresaColumns = CARD_COLUMNS_EMPRESA + extra;
-    const imovelColumns = CARD_COLUMNS_IMOVEL + extra;
+// withAdminFields: inclui os campos que a tabela do admin exibe e filtra; as páginas públicas não precisam deles
+export const getCardListings = async (tipoMostrado = 'ambos', { withAdminFields = false } = {}) => {
+    const empresaColumns = CARD_COLUMNS_EMPRESA + (withAdminFields
+        ? ', descricao, motivo_da_venda, condicoes, NULL::numeric AS area_construida, NULL::numeric AS area_util'
+        : '');
+    const imovelColumns = CARD_COLUMNS_IMOVEL + (withAdminFields
+        ? ', descricao, motivo_da_venda, condicoes, area_construida, area_util'
+        : '');
     let queryText;
     if (tipoMostrado === 'Empresas') {
         queryText = `SELECT ${empresaColumns} FROM empresas ORDER BY id DESC`;

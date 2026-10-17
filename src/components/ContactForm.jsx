@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './animations/LoadingSpinner';
 import { showSuccessToast, showErrorToast } from './animations/toastService';
-import { HoneypotField, RecaptchaScript, useRecaptcha } from './Recaptcha';
+import { HoneypotField, isRecaptchaConfigured, RecaptchaScript, useRecaptcha } from './Recaptcha';
 
 export default function ContactForm({ defaultSubject = '' }) {
     const initialFormData = {
@@ -48,6 +48,11 @@ export default function ContactForm({ defaultSubject = '' }) {
 
         try {
             setIsLoading(true);
+            const recaptchaToken = await getRecaptchaToken('contact');
+            if (isRecaptchaConfigured && !recaptchaToken) {
+                showErrorToast('Não foi possível validar o envio. Verifique sua conexão e tente novamente.');
+                return;
+            }
             const response = await fetch('/api/send-email', {
                 method: 'POST',
                 headers: {
@@ -56,7 +61,7 @@ export default function ContactForm({ defaultSubject = '' }) {
                 body: JSON.stringify({
                     ...formData,
                     page: window.location.pathname,
-                    recaptchaToken: await getRecaptchaToken('contact'),
+                    recaptchaToken,
                 }),
             });
 

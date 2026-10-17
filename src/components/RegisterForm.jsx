@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './animations/LoadingSpinner';
 import { showSuccessToast, showErrorToast } from './animations/toastService';
-import { HoneypotField, RecaptchaScript, useRecaptcha } from './Recaptcha';
+import { HoneypotField, isRecaptchaConfigured, RecaptchaScript, useRecaptcha } from './Recaptcha';
 
 export default function RegisterForm() {
     const initialFormData = {
@@ -59,12 +59,17 @@ export default function RegisterForm() {
 
         try {
             setIsLoading(true);
+            const recaptchaToken = await getRecaptchaToken('register');
+            if (isRecaptchaConfigured && !recaptchaToken) {
+                showErrorToast('Não foi possível validar o envio. Verifique sua conexão e tente novamente.');
+                return;
+            }
             const response = await fetch('/api/registerCompanyForm', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ...formData, recaptchaToken: await getRecaptchaToken('register') }),
+                body: JSON.stringify({ ...formData, recaptchaToken }),
             });
 
             const result = await response.json();

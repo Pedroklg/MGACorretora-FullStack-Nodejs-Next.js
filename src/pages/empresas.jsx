@@ -85,13 +85,17 @@ function Empresas({ empresas, categorias }) {
     );
 }
 
+// Com o banco fora do ar a página sai vazia: nesse caso não pode ficar em cache
+const CACHE_OK = 'public, s-maxage=60, stale-while-revalidate=300';
+
 export async function getServerSideProps({ res }) {
-    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
     try {
         const [empresas, categorias] = await Promise.all([getCardListings('Empresas'), getCategorias()]);
+        res.setHeader('Cache-Control', CACHE_OK);
         return { props: { empresas, categorias } };
     } catch (error) {
         console.error('Error loading empresas:', error.message);
+        res.setHeader('Cache-Control', 'no-store');
         return { props: { empresas: [], categorias: [] } };
     }
 }

@@ -7,6 +7,9 @@ import { enforceRateLimit, getClientIp, rateLimit, resetRateLimit } from '@/lib/
 const DUMMY_HASH = '$2b$10$CwTycUXWue0Thq9StjUM0uJ8.ZqAPm7y1H0yBzMsoQ0F2yWJ6Y6dC';
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
+const FAILED_LOGIN_DELAY_MS = 2000;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -37,13 +40,6 @@ async function handler(req, res) {
     return res.status(401).json({ message: 'Invalid username or password' });
   }
 
-  // Limite extra por usuário, contra tentativas distribuídas em vários IPs
-  const perUser = rateLimit({ key: `login-user:${username.toLowerCase()}`, limit: 20, windowMs: FIFTEEN_MINUTES });
-  if (!perUser.allowed) {
-    res.setHeader('Retry-After', String(perUser.retryAfter));
-    return res.status(429).json({ message: 'Muitas tentativas. Tente novamente mais tarde.' });
-  }
-
   try {
     const result = await db.query('SELECT id, password FROM admins WHERE username = $1', [username]);
     const user = result.rows[0];
@@ -58,6 +54,13 @@ async function handler(req, res) {
       resetRateLimit(`login:${getClientIp(req)}`);
       resetRateLimit(`login-user:${username.toLowerCase()}`);
       return res.status(200).json({ message: 'Login successful' });
+    }
+
+    // Falhas por usuário (de vários IPs) não bloqueiam o login, para um atacante não conseguir
+    // trancar o admin de verdade; só atrasam as próximas respostas de erro.
+    const perUser = rateLimit({ key: `login-user:${username.toLowerCase()}`, limit: 20, windowMs: FIFTEEN_MINUTES });
+    if (!perUser.allowed) {
+      await sleep(FAILED_LOGIN_DELAY_MS);
     }
 
     console.warn(`Failed admin login from ${getClientIp(req)}`);

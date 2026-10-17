@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const { tipoMostrado } = req.query;
 
     try {
-      const rows = await getCardListings(tipoMostrado, { withDescription: true });
+      const rows = await getCardListings(tipoMostrado, { withAdminFields: true });
       res.status(200).json(rows);
     } catch (error) {
       console.error('Error in GET /api/tipoSearch:', error.message);

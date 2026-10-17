@@ -2,12 +2,17 @@
 // com várias instâncias, trocar por um armazenamento compartilhado (ex.: Redis).
 const buckets = new Map();
 
+// Quantos proxies confiáveis ficam na frente do app. Heroku sozinho: 1 (padrão).
+// Cloudflare/CDN + Heroku: 2. Sem proxy (next start direto): 0, e o X-Forwarded-For é ignorado.
+const TRUSTED_PROXY_HOPS = Number.parseInt(process.env.TRUSTED_PROXY_HOPS ?? '1', 10);
+
 export const getClientIp = (req) => {
     const forwarded = req.headers['x-forwarded-for'];
-    if (forwarded) {
-        // O roteador do Heroku acrescenta o IP real ao final do cabeçalho
+    if (forwarded && TRUSTED_PROXY_HOPS > 0) {
+        // Cada proxy confiável acrescenta o IP de quem o chamou ao final do cabeçalho
         const parts = String(forwarded).split(',').map((part) => part.trim()).filter(Boolean);
-        if (parts.length) return parts[parts.length - 1];
+        const index = parts.length - TRUSTED_PROXY_HOPS;
+        if (index >= 0) return parts[index];
     }
     return req.socket?.remoteAddress || 'unknown';
 };

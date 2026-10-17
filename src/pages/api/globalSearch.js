@@ -1,8 +1,6 @@
 import db from '@/lib/db';
 import { escapeLike } from '@/lib/sqlUtils';
-
-const IMOVEL_COLUMNS = `id, titulo, imagem, valor_pretendido, estado, cidade, bairro, aluguel, NULL::varchar AS categoria, 'Imovel' AS tipo`;
-const EMPRESA_COLUMNS = `id, titulo, imagem, valor_pretendido, estado, cidade, bairro, NULL::boolean AS aluguel, categoria, 'Empresa' AS tipo`;
+import { CARD_COLUMNS_EMPRESA as EMPRESA_COLUMNS, CARD_COLUMNS_IMOVEL as IMOVEL_COLUMNS } from '@/lib/listings';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

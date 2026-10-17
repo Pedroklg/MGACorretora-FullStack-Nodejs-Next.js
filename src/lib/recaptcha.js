@@ -1,5 +1,6 @@
-// Verificação do reCAPTCHA v3. Só é exigida quando RECAPTCHA_SECRET_KEY está configurada.
-export const isRecaptchaEnabled = () => Boolean(process.env.RECAPTCHA_SECRET_KEY);
+// Verificação do reCAPTCHA v3. Só é exigida quando as duas chaves (pública e secreta) estão configuradas,
+// para uma chave pública ausente não fazer o servidor recusar todos os envios.
+export const isRecaptchaEnabled = () => Boolean(process.env.RECAPTCHA_SECRET_KEY && process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY);
 
 export const verifyRecaptcha = async (token, expectedAction, remoteIp) => {
     if (!isRecaptchaEnabled()) return true;

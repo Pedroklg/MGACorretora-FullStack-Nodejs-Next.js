@@ -63,6 +63,7 @@ Visit the temporarily hosted website at [https://mga-b9a93fb117c5.herokuapp.com/
    | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `RECIPIENT_EMAIL` | yes | Contact form e-mails |
    | `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY` | recommended | reCAPTCHA v3 keys. When set, the public forms require a valid token |
    | `RECAPTCHA_MIN_SCORE` | no | Minimum reCAPTCHA score (default `0.5`) |
+   | `TRUSTED_PROXY_HOPS` | no | Trusted proxies in front of the app, used to find the client IP for rate limiting. `1` = Heroku only (default), `2` = CDN/Cloudflare + Heroku, `0` = no proxy |
 
    Generate a session secret with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
 
